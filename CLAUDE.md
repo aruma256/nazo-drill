@@ -30,6 +30,36 @@
 - 都道府県名の穴埋め（と◯◯ま → 徳島）
 - モールス信号toアルファベット（"-.."→D）
 
+## ドリルの内部名と命名規則
+
+各ドリルには、コード内やURL、localStorageで使用する**内部名**があります。
+
+### 命名規則
+
+- **形式**: kebab-case（ハイフン区切り）
+- **方針**: 短さとわかりやすさを両立
+
+### ドリル一覧
+
+| ドリル名 | 内部名 | URL | クラス名 |
+|---------|--------|-----|----------|
+| 五十音表の文字拾い | `50on-pick` | `/drill/50on-pick.html` | `GojuonPickDrill` |
+| 数字toアルファベット | `123-abc` | `/drill/123-abc.html` | `NumberToAlphaDrill` |
+| 五十音シフト | `50on-shift` | `/drill/50on-shift.html` | `GojuonShiftDrill` |
+| アルファベットシフト | `abc-shift` | `/drill/abc-shift.html` | `AlphaShiftDrill` |
+
+### 使用例
+
+```javascript
+// localStorageのキー
+localStorage.setItem('50on-pick-rank', 'A');
+
+// データ構造
+const drillConfig = {
+  '50on-pick': { name: '五十音表の文字拾い', class: GojuonPickDrill }
+};
+```
+
 ## 技術スタック
 
 - **フロントエンド**: Tailwind CSS
