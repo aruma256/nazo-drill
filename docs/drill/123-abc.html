@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字toアルファベット - ナゾドリル</title>
+    <meta name="description" content="数字をアルファベットに変換するトレーニング（1→A, 2→B, ...）">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-6 max-w-2xl">
+        <!-- ヘッダー -->
+        <header class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                    <span class="text-xl mr-2">←</span>
+                    <span class="font-medium">トップへ戻る</span>
+                </a>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2 text-center">
+                🔢 数字toアルファベット
+            </h1>
+            <p class="text-center text-gray-700">
+                数字をアルファベットに変換しよう
+            </p>
+        </header>
+
+        <!-- スコア表示 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div class="flex items-center justify-around text-center">
+                <div>
+                    <div class="text-2xl font-bold text-indigo-600" id="score-display">0</div>
+                    <div class="text-sm text-gray-600">正解数</div>
+                </div>
+                <div class="border-l-2 border-gray-300"></div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-700" id="total-display">0</div>
+                    <div class="text-sm text-gray-600">出題数</div>
+                </div>
+                <div class="border-l-2 border-gray-300"></div>
+                <div>
+                    <div class="text-2xl font-bold text-green-600" id="percentage-display">0%</div>
+                    <div class="text-sm text-gray-600">正答率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 問題エリア -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <!-- 問題表示 -->
+            <div class="text-center mb-8">
+                <div class="text-sm text-gray-600 mb-2">問題</div>
+                <div class="text-6xl md:text-7xl font-bold text-indigo-900 mb-6" id="question-display">
+                    --
+                </div>
+                <div class="text-sm text-gray-500">
+                    この数字をアルファベットに変換してください
+                </div>
+            </div>
+
+            <!-- 回答入力 -->
+            <div class="mb-6">
+                <label for="answer-input" class="block text-sm font-medium text-gray-700 mb-2">
+                    あなたの答え:
+                </label>
+                <input
+                    type="text"
+                    id="answer-input"
+                    class="w-full text-center text-3xl font-bold p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
+                    placeholder="A"
+                    maxlength="1"
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- ボタンエリア -->
+            <div class="flex gap-3">
+                <button
+                    id="submit-button"
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    回答する
+                </button>
+                <button
+                    id="next-button"
+                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg hidden">
+                    次の問題
+                </button>
+            </div>
+        </div>
+
+        <!-- フィードバックエリア -->
+        <div id="feedback" class="hidden rounded-lg p-4 mb-6 text-center font-bold text-lg"></div>
+
+        <!-- ヒント -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div class="flex">
+                <div class="text-2xl mr-3">💡</div>
+                <div>
+                    <p class="font-bold text-blue-800 mb-1">変換ルール</p>
+                    <p class="text-sm text-blue-700">
+                        1→A, 2→B, 3→C, 4→D, 5→E ... 26→Z
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- リセットボタン -->
+        <div class="text-center">
+            <button
+                id="reset-button"
+                class="text-gray-600 hover:text-gray-800 font-medium underline">
+                スコアをリセット
+            </button>
+        </div>
+    </div>
+
+    <!-- スクリプト -->
+    <script src="../js/common.js"></script>
+    <script src="../js/123-abc.js"></script>
+    <script>
+        // ドリルのインスタンス
+        const drill = new NumberToAlphaDrill();
+
+        // DOM要素の取得
+        const questionDisplay = document.getElementById('question-display');
+        const answerInput = document.getElementById('answer-input');
+        const submitButton = document.getElementById('submit-button');
+        const nextButton = document.getElementById('next-button');
+        const feedback = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('score-display');
+        const totalDisplay = document.getElementById('total-display');
+        const percentageDisplay = document.getElementById('percentage-display');
+        const resetButton = document.getElementById('reset-button');
+
+        // 初期化
+        function init() {
+            presentNewQuestion();
+            answerInput.focus();
+        }
+
+        // 新しい問題を出題
+        function presentNewQuestion() {
+            const question = drill.presentQuestion();
+            questionDisplay.textContent = question.question;
+            answerInput.value = '';
+            answerInput.disabled = false;
+            submitButton.classList.remove('hidden');
+            nextButton.classList.add('hidden');
+            feedback.classList.add('hidden');
+            answerInput.focus();
+        }
+
+        // スコア表示を更新
+        function updateScoreDisplay() {
+            const score = drill.getScore();
+            scoreDisplay.textContent = score.score;
+            totalDisplay.textContent = score.total;
+            percentageDisplay.textContent = score.percentage + '%';
+        }
+
+        // 回答を提出
+        function submitAnswer() {
+            const userAnswer = answerInput.value.trim();
+
+            if (!userAnswer) {
+                showFeedback('回答を入力してください', 'warning');
+                return;
+            }
+
+            const isCorrect = drill.checkAnswer(userAnswer);
+            updateScoreDisplay();
+
+            if (isCorrect) {
+                showFeedback('✓ 正解！', 'success');
+            } else {
+                const correctAnswer = drill.currentQuestion.answer;
+                showFeedback(`✗ 不正解... 正解は「${correctAnswer}」です`, 'error');
+            }
+
+            answerInput.disabled = true;
+            submitButton.classList.add('hidden');
+            nextButton.classList.remove('hidden');
+            nextButton.focus();
+        }
+
+        // フィードバックを表示
+        function showFeedback(message, type) {
+            feedback.textContent = message;
+            feedback.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
+
+            if (type === 'success') {
+                feedback.classList.add('bg-green-100', 'text-green-800');
+            } else if (type === 'error') {
+                feedback.classList.add('bg-red-100', 'text-red-800');
+            } else if (type === 'warning') {
+                feedback.classList.add('bg-yellow-100', 'text-yellow-800');
+            }
+        }
+
+        // スコアをリセット
+        function resetScore() {
+            if (confirm('スコアをリセットしてもよろしいですか？')) {
+                drill.resetScore();
+                updateScoreDisplay();
+                presentNewQuestion();
+            }
+        }
+
+        // イベントリスナーの設定
+        submitButton.addEventListener('click', submitAnswer);
+        nextButton.addEventListener('click', presentNewQuestion);
+        resetButton.addEventListener('click', resetScore);
+
+        // Enterキーで回答/次の問題
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (!submitButton.classList.contains('hidden')) {
+                    submitAnswer();
+                }
+            }
+        });
+
+        nextButton.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                presentNewQuestion();
+            }
+        });
+
+        // 自動的に大文字変換
+        answerInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // 初期化実行
+        init();
+    </script>
+</body>
+</html>
