@@ -116,123 +116,16 @@
 
     <!-- スクリプト -->
     <script src="../js/common.js"></script>
+    <script src="../js/drill-controller.js"></script>
     <script src="../js/123-abc.js"></script>
     <script>
-        // ドリルのインスタンス
+        // ドリルを初期化
         const drill = new NumberToAlphaDrill();
-
-        // DOM要素の取得
-        const questionDisplay = document.getElementById('question-display');
-        const answerInput = document.getElementById('answer-input');
-        const submitButton = document.getElementById('submit-button');
-        const nextButton = document.getElementById('next-button');
-        const feedback = document.getElementById('feedback');
-        const scoreDisplay = document.getElementById('score-display');
-        const totalDisplay = document.getElementById('total-display');
-        const percentageDisplay = document.getElementById('percentage-display');
-        const resetButton = document.getElementById('reset-button');
-
-        // 初期化
-        function init() {
-            presentNewQuestion();
-            answerInput.focus();
-        }
-
-        // 新しい問題を出題
-        function presentNewQuestion() {
-            const question = drill.presentQuestion();
-            questionDisplay.textContent = question.question;
-            answerInput.value = '';
-            answerInput.disabled = false;
-            submitButton.classList.remove('hidden');
-            nextButton.classList.add('hidden');
-            feedback.classList.add('hidden');
-            answerInput.focus();
-        }
-
-        // スコア表示を更新
-        function updateScoreDisplay() {
-            const score = drill.getScore();
-            scoreDisplay.textContent = score.score;
-            totalDisplay.textContent = score.total;
-            percentageDisplay.textContent = score.percentage + '%';
-        }
-
-        // 回答を提出
-        function submitAnswer() {
-            const userAnswer = answerInput.value.trim();
-
-            if (!userAnswer) {
-                showFeedback('回答を入力してください', 'warning');
-                return;
-            }
-
-            const isCorrect = drill.checkAnswer(userAnswer);
-            updateScoreDisplay();
-
-            if (isCorrect) {
-                showFeedback('✓ 正解！', 'success');
-            } else {
-                const correctAnswer = drill.currentQuestion.answer;
-                showFeedback(`✗ 不正解... 正解は「${correctAnswer}」です`, 'error');
-            }
-
-            answerInput.disabled = true;
-            submitButton.classList.add('hidden');
-            nextButton.classList.remove('hidden');
-            nextButton.focus();
-        }
-
-        // フィードバックを表示
-        function showFeedback(message, type) {
-            feedback.textContent = message;
-            feedback.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
-
-            if (type === 'success') {
-                feedback.classList.add('bg-green-100', 'text-green-800');
-            } else if (type === 'error') {
-                feedback.classList.add('bg-red-100', 'text-red-800');
-            } else if (type === 'warning') {
-                feedback.classList.add('bg-yellow-100', 'text-yellow-800');
-            }
-        }
-
-        // スコアをリセット
-        function resetScore() {
-            if (confirm('スコアをリセットしてもよろしいですか？')) {
-                drill.resetScore();
-                updateScoreDisplay();
-                presentNewQuestion();
-            }
-        }
-
-        // イベントリスナーの設定
-        submitButton.addEventListener('click', submitAnswer);
-        nextButton.addEventListener('click', presentNewQuestion);
-        resetButton.addEventListener('click', resetScore);
-
-        // Enterキーで回答/次の問題
-        answerInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                if (!submitButton.classList.contains('hidden')) {
-                    submitAnswer();
-                }
-            }
+        const controller = new DrillController(drill, {
+            autoUppercase: true,
+            maxLength: 1,
+            placeholder: 'A'
         });
-
-        nextButton.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                presentNewQuestion();
-            }
-        });
-
-        // 自動的に大文字変換
-        answerInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase();
-        });
-
-        // 初期化実行
-        init();
     </script>
 </body>
 </html>
