@@ -13,23 +13,23 @@ class AlphaShiftDrill extends DrillBase {
      */
     generateQuestion() {
         // A〜Zのランダムなアルファベットを生成
-        const baseChar = String.fromCharCode(65 + DrillUtils.getRandomInt(0, 25)); // A=65
+        const baseCode = DrillUtils.getRandomInt(0, 25); // 0-25
+        const baseChar = String.fromCharCode(65 + baseCode); // A=65
 
-        // シフト量を-5〜+5の範囲でランダムに生成（0は除外）
-        let shift;
-        do {
-            shift = DrillUtils.getRandomInt(-5, 5);
-        } while (shift === 0);
-
-        // シフト後の文字を計算（A-Z範囲内で循環）
-        const baseCode = baseChar.charCodeAt(0) - 65; // 0-25の範囲に正規化
-        let shiftedCode = (baseCode + shift) % 26;
-
-        // 負の値の場合は正の値に変換
-        if (shiftedCode < 0) {
-            shiftedCode += 26;
+        // このアルファベットに対して有効なシフト量の候補を計算
+        // -5〜+5の範囲で、0を除き、かつ結果がA-Z範囲内（0-25）に収まるもの
+        const validShifts = [];
+        for (let shift = -5; shift <= 5; shift++) {
+            if (shift === 0) continue; // 0は除外
+            const shiftedCode = baseCode + shift;
+            if (shiftedCode >= 0 && shiftedCode <= 25) {
+                validShifts.push(shift);
+            }
         }
 
+        // 有効なシフト量の中からランダムに1つ選ぶ
+        const shift = validShifts[DrillUtils.getRandomInt(0, validShifts.length - 1)];
+        const shiftedCode = baseCode + shift;
         const answer = String.fromCharCode(65 + shiftedCode);
 
         // 問題文を生成
