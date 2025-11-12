@@ -22,11 +22,7 @@ class DrillController {
             answerInput: document.getElementById('answer-input'),
             submitButton: document.getElementById('submit-button'),
             nextButton: document.getElementById('next-button'),
-            feedback: document.getElementById('feedback'),
-            scoreDisplay: document.getElementById('score-display'),
-            totalDisplay: document.getElementById('total-display'),
-            percentageDisplay: document.getElementById('percentage-display'),
-            resetButton: document.getElementById('reset-button')
+            feedback: document.getElementById('feedback')
         };
 
         this.setupEventListeners();
@@ -56,7 +52,6 @@ class DrillController {
         // ボタンクリック
         this.elements.submitButton.addEventListener('click', () => this.submitAnswer());
         this.elements.nextButton.addEventListener('click', () => this.presentNewQuestion());
-        this.elements.resetButton.addEventListener('click', () => this.resetScore());
 
         // Enterキーで回答/次の問題
         this.elements.answerInput.addEventListener('keypress', (e) => {
@@ -94,16 +89,6 @@ class DrillController {
     }
 
     /**
-     * スコア表示を更新
-     */
-    updateScoreDisplay() {
-        const score = this.drill.getScore();
-        this.elements.scoreDisplay.textContent = score.score;
-        this.elements.totalDisplay.textContent = score.total;
-        this.elements.percentageDisplay.textContent = score.percentage + '%';
-    }
-
-    /**
      * 回答を提出
      */
     submitAnswer() {
@@ -115,7 +100,6 @@ class DrillController {
         }
 
         const isCorrect = this.drill.checkAnswer(userAnswer);
-        this.updateScoreDisplay();
 
         if (isCorrect) {
             this.showFeedback('✓ 正解！', 'success');
@@ -153,17 +137,6 @@ class DrillController {
 
         if (typeClasses[type]) {
             feedback.classList.add(...typeClasses[type]);
-        }
-    }
-
-    /**
-     * スコアをリセット
-     */
-    resetScore() {
-        if (confirm('スコアをリセットしてもよろしいですか？')) {
-            this.drill.resetScore();
-            this.updateScoreDisplay();
-            this.presentNewQuestion();
         }
     }
 }
