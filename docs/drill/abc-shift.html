@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アルファベットシフト - ナゾドリル</title>
+    <meta name="description" content="アルファベットをずらして変換するトレーニング（A+1→B, Z-1→Y）">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-6 max-w-2xl">
+        <!-- ヘッダー -->
+        <header class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                    <span class="text-xl mr-2">←</span>
+                    <span class="font-medium">トップへ戻る</span>
+                </a>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2 text-center">
+                🔠 アルファベットシフト
+            </h1>
+            <p class="text-center text-gray-700">
+                アルファベットをずらして変換しよう
+            </p>
+        </header>
+
+        <!-- スコア表示 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div class="flex items-center justify-around text-center">
+                <div>
+                    <div class="text-2xl font-bold text-indigo-600" id="score-display">0</div>
+                    <div class="text-sm text-gray-600">正解数</div>
+                </div>
+                <div class="border-l-2 border-gray-300"></div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-700" id="total-display">0</div>
+                    <div class="text-sm text-gray-600">出題数</div>
+                </div>
+                <div class="border-l-2 border-gray-300"></div>
+                <div>
+                    <div class="text-2xl font-bold text-green-600" id="percentage-display">0%</div>
+                    <div class="text-sm text-gray-600">正答率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 問題エリア -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <!-- 問題表示 -->
+            <div class="text-center mb-8">
+                <div class="text-sm text-gray-600 mb-2">問題</div>
+                <div class="text-6xl md:text-7xl font-bold text-indigo-900 mb-6" id="question-display">
+                    --
+                </div>
+                <div class="text-sm text-gray-500">
+                    この計算結果のアルファベットを答えてください
+                </div>
+            </div>
+
+            <!-- 回答入力 -->
+            <div class="mb-6">
+                <label for="answer-input" class="block text-sm font-medium text-gray-700 mb-2">
+                    あなたの答え:
+                </label>
+                <input
+                    type="text"
+                    id="answer-input"
+                    class="w-full text-center text-3xl font-bold p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
+                    placeholder="A"
+                    maxlength="1"
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- ボタンエリア -->
+            <div class="flex gap-3">
+                <button
+                    id="submit-button"
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    回答する
+                </button>
+                <button
+                    id="next-button"
+                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg hidden">
+                    次の問題
+                </button>
+            </div>
+        </div>
+
+        <!-- フィードバックエリア -->
+        <div id="feedback" class="hidden rounded-lg p-4 mb-6 text-center font-bold text-lg"></div>
+
+        <!-- ヒント -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div class="flex">
+                <div class="text-2xl mr-3">💡</div>
+                <div>
+                    <p class="font-bold text-blue-800 mb-1">変換ルール</p>
+                    <p class="text-sm text-blue-700">
+                        A+1→B, B+2→D, C-1→B のように、アルファベットをずらします<br>
+                        シフトは-5〜+5の範囲で、循環する問題は出題されません
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- リセットボタン -->
+        <div class="text-center">
+            <button
+                id="reset-button"
+                class="text-gray-600 hover:text-gray-800 font-medium underline">
+                スコアをリセット
+            </button>
+        </div>
+    </div>
+
+    <!-- スクリプト -->
+    <script src="../js/common.js"></script>
+    <script src="../js/drill-controller.js"></script>
+    <script src="../js/abc-shift.js"></script>
+    <script>
+        // ドリルを初期化
+        const drill = new AlphaShiftDrill();
+        const controller = new DrillController(drill, {
+            autoUppercase: true,
+            maxLength: 1,
+            placeholder: 'A'
+        });
+    </script>
+</body>
+</html>
