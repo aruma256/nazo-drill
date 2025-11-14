@@ -65,17 +65,6 @@
                 </div>
             </div>
 
-            <!-- 問題表示 -->
-            <div class="text-center mb-8">
-                <div class="text-sm text-gray-600 mb-2">問題</div>
-                <div class="text-6xl md:text-7xl font-bold text-indigo-900 mb-6" id="question-display">
-                    --
-                </div>
-                <div class="text-sm text-gray-500">
-                    この数字をアルファベットに変換してください
-                </div>
-            </div>
-
             <!-- 回答入力 -->
             <div class="mb-6">
                 <label for="answer-input" class="block text-sm font-medium text-gray-700 mb-2">
@@ -128,6 +117,13 @@
     <script src="../js/drill-controller.js"></script>
     <script src="../js/123-abc.js"></script>
     <script>
+        // DrillControllerが期待するquestion-display要素のダミーを作成
+        // （問題表示は不要だがエラー回避のため）
+        const dummyQuestionDisplay = document.createElement('div');
+        dummyQuestionDisplay.id = 'question-display';
+        dummyQuestionDisplay.style.display = 'none';
+        document.body.appendChild(dummyQuestionDisplay);
+
         // ドリルを初期化
         const drill = new NumberToAlphaDrill();
         const controller = new DrillController(drill, {
