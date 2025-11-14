@@ -27,6 +27,44 @@
 
         <!-- 問題エリア -->
         <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <!-- 数字グリッド -->
+            <div class="mb-8">
+                <div class="grid grid-cols-5 gap-2 max-w-md mx-auto">
+                    <!-- 1-26の数字を5×6グリッドで表示 -->
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="1">1</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="2">2</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="3">3</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="4">4</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="5">5</div>
+
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="6">6</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="7">7</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="8">8</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="9">9</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="10">10</div>
+
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="11">11</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="12">12</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="13">13</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="14">14</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="15">15</div>
+
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="16">16</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="17">17</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="18">18</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="19">19</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="20">20</div>
+
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="21">21</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="22">22</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="23">23</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="24">24</div>
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="25">25</div>
+
+                    <div class="aspect-square border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="26">26</div>
+                </div>
+            </div>
+
             <!-- 問題表示 -->
             <div class="text-center mb-8">
                 <div class="text-sm text-gray-600 mb-2">問題</div>
@@ -97,6 +135,38 @@
             maxLength: 1,
             placeholder: 'A'
         });
+
+        // グリッドのハイライト機能を追加
+        const originalPresentNewQuestion = controller.presentNewQuestion.bind(controller);
+        controller.presentNewQuestion = function() {
+            originalPresentNewQuestion();
+            highlightCurrentNumber();
+        };
+
+        /**
+         * 現在の問題番号に対応するセルをハイライトする
+         */
+        function highlightCurrentNumber() {
+            // すべてのセルのハイライトをリセット
+            const allCells = document.querySelectorAll('[data-number]');
+            allCells.forEach(cell => {
+                cell.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110');
+                cell.classList.add('border-gray-300');
+            });
+
+            // 現在の問題番号を取得
+            const currentNumber = controller.drill.currentQuestion.question;
+
+            // 対応するセルをハイライト
+            const targetCell = document.querySelector(`[data-number="${currentNumber}"]`);
+            if (targetCell) {
+                targetCell.classList.remove('border-gray-300');
+                targetCell.classList.add('bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110');
+            }
+        }
+
+        // 初回のハイライト表示
+        highlightCurrentNumber();
     </script>
 </body>
 </html>
