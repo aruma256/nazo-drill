@@ -9,6 +9,7 @@ class DrillBase {
     constructor(drillName) {
         this.drillName = drillName;
         this.currentQuestion = null;
+        this.previousQuestion = null;
         this.score = 0;
         this.totalQuestions = 0;
     }
@@ -22,10 +23,25 @@ class DrillBase {
     }
 
     /**
-     * 問題を出題する
+     * 問題を出題する（前回と同じ問題を避ける）
      */
     presentQuestion() {
-        this.currentQuestion = this.generateQuestion();
+        const maxRetries = 100;
+        let newQuestion;
+        let retries = 0;
+
+        // 前回と異なる問題が出るまで生成（最大100回）
+        do {
+            newQuestion = this.generateQuestion();
+            retries++;
+        } while (
+            this.previousQuestion &&
+            newQuestion.question === this.previousQuestion.question &&
+            retries < maxRetries
+        );
+
+        this.currentQuestion = newQuestion;
+        this.previousQuestion = newQuestion;
         this.totalQuestions++;
         return this.currentQuestion;
     }
@@ -80,6 +96,7 @@ class DrillBase {
         this.score = 0;
         this.totalQuestions = 0;
         this.currentQuestion = null;
+        this.previousQuestion = null;
     }
 }
 
