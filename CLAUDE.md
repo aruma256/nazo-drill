@@ -83,3 +83,17 @@ const drillConfig = {
 - テーマごとにランク（D/C/B/A/S）で実力を表現する機能
 - 実力データをCookieで保存する機能
 - 設計意図：「文字拾いはランクA取れたけど五十音シフトはまだランクC、このトレーニングをしよう」というモチベーションにつながるようなユーザー体験を提供
+
+## 実装時の注意点
+
+### コミット
+
+1行 + 署名 のスタイル。以下のフォーマット。
+
+```
+（変更点よりも変更目的を端的に表現する日本語の1行）
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
