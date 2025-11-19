@@ -142,8 +142,13 @@
 
         const originalSubmitAnswer = controller.submitAnswer.bind(controller);
         controller.submitAnswer = function() {
+            // 回答前に正誤判定を行う
+            const userAnswer = controller.elements.answerInput.value.trim();
+            const isCorrect = controller.drill.checkAnswer(userAnswer);
+
             originalSubmitAnswer();
             showAlphabetOnGrid(); // アルファベット表示に切り替え
+            showAnswerFeedbackOnGrid(isCorrect); // 正誤に応じて色を変える
         };
 
         /**
@@ -153,7 +158,11 @@
             // すべてのセルのハイライトをリセット
             const allCells = document.querySelectorAll('[data-number]');
             allCells.forEach(cell => {
-                cell.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110');
+                cell.classList.remove(
+                    'bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110',
+                    'bg-green-500', 'border-green-600',
+                    'bg-red-500', 'border-red-600'
+                );
                 cell.classList.add('border-gray-300');
             });
 
@@ -165,6 +174,27 @@
             if (targetCell) {
                 targetCell.classList.remove('border-gray-300');
                 targetCell.classList.add('bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110');
+            }
+        }
+
+        /**
+         * 回答の正誤に応じてセルの色を変える
+         * @param {boolean} isCorrect - 正解ならtrue、不正解ならfalse
+         */
+        function showAnswerFeedbackOnGrid(isCorrect) {
+            const currentNumber = controller.drill.currentQuestion.question;
+            const targetCell = document.querySelector(`[data-number="${currentNumber}"]`);
+
+            if (targetCell) {
+                // 既存のハイライトを削除
+                targetCell.classList.remove('bg-indigo-500', 'border-indigo-600');
+
+                // 正誤に応じて色を追加
+                if (isCorrect) {
+                    targetCell.classList.add('bg-green-500', 'border-green-600');
+                } else {
+                    targetCell.classList.add('bg-red-500', 'border-red-600');
+                }
             }
         }
 
