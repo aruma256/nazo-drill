@@ -27,41 +27,48 @@
 
         <!-- 問題エリア -->
         <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
-            <!-- 数字グリッド -->
+            <!-- 問題表示 -->
+            <div class="text-center mb-8">
+                <div class="text-6xl md:text-7xl font-bold text-indigo-900" id="question-display">
+                    --
+                </div>
+            </div>
+
+            <!-- アルファベット参照表 -->
             <div class="mb-6">
-                <div class="grid grid-cols-5 gap-1.5 max-w-md mx-auto">
-                    <!-- 1-26の数字を5×6グリッドで表示 -->
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="1">1</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="2">2</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="3">3</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="4">4</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="5">5</div>
+                <div class="grid grid-cols-5 gap-0 max-w-md mx-auto border border-gray-300">
+                    <!-- A-Zのアルファベットを5×6グリッドで表示（マージンなし） -->
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">A</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">B</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">C</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">D</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">E</div>
 
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="6">6</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="7">7</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="8">8</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="9">9</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="10">10</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">F</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">G</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">H</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">I</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">J</div>
 
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="11">11</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="12">12</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="13">13</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="14">14</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="15">15</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">K</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">L</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">M</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">N</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">O</div>
 
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="16">16</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="17">17</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="18">18</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="19">19</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="20">20</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">P</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">Q</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">R</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">S</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">T</div>
 
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="21">21</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="22">22</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="23">23</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="24">24</div>
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="25">25</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">U</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">V</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">W</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">X</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">Y</div>
 
-                    <div class="h-10 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-lg transition-all duration-200" data-number="26">26</div>
+                    <div class="h-8 border border-gray-300 flex items-center justify-center text-sm font-medium text-gray-700">Z</div>
                 </div>
             </div>
 
@@ -105,7 +112,8 @@
                 <div>
                     <p class="font-bold text-blue-800 mb-1">変換ルール</p>
                     <p class="text-sm text-blue-700">
-                        1→A, 2→B, 3→C, 4→D, 5→E ... 26→Z
+                        1→A, 2→B, 3→C, 4→D, 5→E ... 26→Z<br>
+                        参照表を見ながら位置で覚えましょう
                     </p>
                 </div>
             </div>
@@ -117,13 +125,6 @@
     <script src="../js/drill-controller.js"></script>
     <script src="../js/123-abc.js"></script>
     <script>
-        // DrillControllerが期待するquestion-display要素のダミーを作成
-        // （問題表示は不要だがエラー回避のため）
-        const dummyQuestionDisplay = document.createElement('div');
-        dummyQuestionDisplay.id = 'question-display';
-        dummyQuestionDisplay.style.display = 'none';
-        document.body.appendChild(dummyQuestionDisplay);
-
         // ドリルを初期化
         const drill = new NumberToAlphaDrill();
         const controller = new DrillController(drill, {
@@ -131,98 +132,6 @@
             maxLength: 1,
             placeholder: 'A'
         });
-
-        // グリッドのハイライト機能とアルファベット表示機能を追加
-        const originalPresentNewQuestion = controller.presentNewQuestion.bind(controller);
-        controller.presentNewQuestion = function() {
-            showNumbersOnGrid(); // 数字表示に戻す
-            originalPresentNewQuestion();
-            highlightCurrentNumber();
-        };
-
-        const originalSubmitAnswer = controller.submitAnswer.bind(controller);
-        controller.submitAnswer = function() {
-            // 回答前に正誤判定を行う
-            const userAnswer = controller.elements.answerInput.value.trim();
-            const isCorrect = controller.drill.checkAnswer(userAnswer);
-
-            originalSubmitAnswer();
-            showAlphabetOnGrid(); // アルファベット表示に切り替え
-            showAnswerFeedbackOnGrid(isCorrect); // 正誤に応じて色を変える
-        };
-
-        /**
-         * 現在の問題番号に対応するセルをハイライトする
-         */
-        function highlightCurrentNumber() {
-            // すべてのセルのハイライトをリセット
-            const allCells = document.querySelectorAll('[data-number]');
-            allCells.forEach(cell => {
-                cell.classList.remove(
-                    'bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110',
-                    'bg-green-500', 'border-green-600',
-                    'bg-red-500', 'border-red-600'
-                );
-                cell.classList.add('border-gray-300');
-            });
-
-            // 現在の問題番号を取得
-            const currentNumber = controller.drill.currentQuestion.question;
-
-            // 対応するセルをハイライト
-            const targetCell = document.querySelector(`[data-number="${currentNumber}"]`);
-            if (targetCell) {
-                targetCell.classList.remove('border-gray-300');
-                targetCell.classList.add('bg-indigo-500', 'text-white', 'border-indigo-600', 'scale-110');
-            }
-        }
-
-        /**
-         * 回答の正誤に応じてセルの色を変える
-         * @param {boolean} isCorrect - 正解ならtrue、不正解ならfalse
-         */
-        function showAnswerFeedbackOnGrid(isCorrect) {
-            const currentNumber = controller.drill.currentQuestion.question;
-            const targetCell = document.querySelector(`[data-number="${currentNumber}"]`);
-
-            if (targetCell) {
-                // 既存のハイライトを削除
-                targetCell.classList.remove('bg-indigo-500', 'border-indigo-600');
-
-                // 正誤に応じて色を追加
-                if (isCorrect) {
-                    targetCell.classList.add('bg-green-500', 'border-green-600');
-                } else {
-                    targetCell.classList.add('bg-red-500', 'border-red-600');
-                }
-            }
-        }
-
-        /**
-         * グリッドのすべてのセルをアルファベット表示に切り替える
-         */
-        function showAlphabetOnGrid() {
-            const allCells = document.querySelectorAll('[data-number]');
-            allCells.forEach(cell => {
-                const number = parseInt(cell.getAttribute('data-number'));
-                const alphabet = DrillUtils.numberToAlpha(number);
-                cell.textContent = alphabet;
-            });
-        }
-
-        /**
-         * グリッドのすべてのセルを数字表示に戻す
-         */
-        function showNumbersOnGrid() {
-            const allCells = document.querySelectorAll('[data-number]');
-            allCells.forEach(cell => {
-                const number = cell.getAttribute('data-number');
-                cell.textContent = number;
-            });
-        }
-
-        // 初回のハイライト表示
-        highlightCurrentNumber();
     </script>
 </body>
 </html>
