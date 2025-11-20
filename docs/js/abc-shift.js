@@ -41,15 +41,6 @@ class AlphaShiftDrill extends DrillBase {
             answer: answer
         };
     }
-
-    /**
-     * 回答を正規化する（大文字に統一）
-     * @param {string} answer
-     * @returns {string}
-     */
-    normalizeAnswer(answer) {
-        return answer.toString().trim().toUpperCase();
-    }
 }
 
 // グローバルに公開

@@ -72,7 +72,7 @@ class DrillBase {
      * @returns {string}
      */
     normalizeAnswer(answer) {
-        return answer.toString().trim().toLowerCase();
+        return answer.toString().trim().toUpperCase();
     }
 
     /**
