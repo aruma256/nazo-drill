@@ -15,8 +15,8 @@ class NumberToAlphaDrill extends DrillBase {
         // 1〜26のランダムな数字を生成
         const number = DrillUtils.getRandomInt(1, 26);
 
-        // 対応するアルファベットを計算 (1→A, 2→B, ...)
-        const answer = String.fromCharCode(64 + number); // 65 = 'A', 64+1 = 'A'
+        // 対応するアルファベットを計算
+        const answer = DrillUtils.numberToAlpha(number);
 
         return {
             question: number.toString(),

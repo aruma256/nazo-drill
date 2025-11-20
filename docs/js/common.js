@@ -162,6 +162,15 @@ function loadFromStorage(key, defaultValue = null) {
     }
 }
 
+/**
+ * 数字をアルファベットに変換する（1→A, 2→B, ...）
+ * @param {number} number - 1〜26の数字
+ * @returns {string} 対応するアルファベット（A-Z）
+ */
+function numberToAlpha(number) {
+    return String.fromCharCode(64 + number); // 65 = 'A', 64+1 = 'A'
+}
+
 // グローバルに公開
 if (typeof window !== 'undefined') {
     window.DrillBase = DrillBase;
@@ -170,6 +179,7 @@ if (typeof window !== 'undefined') {
         getRandomElement,
         shuffleArray,
         saveToStorage,
-        loadFromStorage
+        loadFromStorage,
+        numberToAlpha
     };
 }

@@ -205,7 +205,7 @@
             const allCells = document.querySelectorAll('[data-number]');
             allCells.forEach(cell => {
                 const number = parseInt(cell.getAttribute('data-number'));
-                const alphabet = String.fromCharCode(64 + number); // 1→A, 2→B, ...
+                const alphabet = DrillUtils.numberToAlpha(number);
                 cell.textContent = alphabet;
             });
         }
