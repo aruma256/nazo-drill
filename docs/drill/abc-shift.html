@@ -34,33 +34,31 @@
                 </div>
             </div>
 
-            <!-- 回答入力 -->
-            <div class="mb-6">
+            <!-- 回答入力＆ボタンエリア -->
+            <div>
                 <label for="answer-input" class="block text-sm font-medium text-gray-700 mb-2">
                     あなたの答え:
                 </label>
-                <input
-                    type="text"
-                    id="answer-input"
-                    class="w-full text-center text-3xl font-bold p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
-                    placeholder="A"
-                    maxlength="1"
-                    autocomplete="off"
-                >
-            </div>
-
-            <!-- ボタンエリア -->
-            <div class="flex gap-3">
-                <button
-                    id="submit-button"
-                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
-                    回答する
-                </button>
-                <button
-                    id="next-button"
-                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 text-lg hidden">
-                    次の問題
-                </button>
+                <div class="flex gap-2 items-stretch">
+                    <input
+                        type="text"
+                        id="answer-input"
+                        class="flex-1 text-center text-2xl md:text-3xl font-bold p-3 md:p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
+                        placeholder="A"
+                        maxlength="1"
+                        autocomplete="off"
+                    >
+                    <button
+                        id="submit-button"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 md:py-4 md:px-8 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px] md:min-w-[120px]">
+                        <span class="text-lg md:text-xl">→</span>
+                    </button>
+                    <button
+                        id="next-button"
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 md:py-4 md:px-8 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px] md:min-w-[120px]">
+                        <span class="text-lg md:text-xl">→</span>
+                    </button>
+                </div>
             </div>
         </div>
 
