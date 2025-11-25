@@ -86,6 +86,14 @@ const drillConfig = {
 
 ## 実装時の注意点
 
+### 動作確認
+
+Chrome DevTools MCPでローカルのHTMLファイルを直接開いて確認する。
+
+```
+file:///home/aruma/git/aruma256/nazo-drill/docs/index.html
+```
+
 ### コミット
 
 1行 + 署名 のスタイル。以下のフォーマット。
