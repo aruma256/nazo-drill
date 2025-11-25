@@ -8,9 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <div class="container mx-auto px-4 py-6 max-w-2xl">
-        <!-- ヘッダー -->
-        <header class="mb-6">
+    <div id="main-container" class="container mx-auto px-4 py-6 max-w-2xl">
+        <!-- ヘッダー（ドリル中は非表示） -->
+        <header id="header" class="mb-6">
             <div class="flex items-center justify-between mb-4">
                 <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
                     <span class="text-xl mr-2">←</span>
@@ -72,69 +72,78 @@
             </div>
         </div>
 
-        <!-- ドリル画面 -->
+        <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
         <div id="drill-screen" class="hidden">
-            <!-- 問題エリア -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <!-- スマホ用ミニヘッダー（戻るボタンのみ） -->
+            <div class="flex items-center justify-between mb-2">
+                <button id="back-to-start" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
+                    <span class="mr-1">←</span>
+                    <span>やめる</span>
+                </button>
+                <span class="text-sm text-gray-500">数字→ABC</span>
+            </div>
+
+            <!-- 問題エリア（コンパクト化） -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
                 <!-- 問題表示 -->
-                <div class="text-center mb-8">
-                    <div class="text-6xl md:text-7xl font-bold text-indigo-900" id="question-display">
+                <div class="text-center mb-4">
+                    <div class="text-5xl font-bold text-indigo-900" id="question-display">
                         --
                     </div>
                 </div>
 
-                <!-- アルファベット参照表 -->
-                <div class="mb-6 flex justify-center">
-                    <table class="border-collapse border border-gray-300 max-w-md">
+                <!-- アルファベット参照表（コンパクト化） -->
+                <div class="mb-4 flex justify-center">
+                    <table class="border-collapse border border-gray-300">
                         <tbody>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">A</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">B</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">C</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">D</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">E</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">A</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">B</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">C</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">D</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">E</td>
                             </tr>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">F</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">G</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">H</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">I</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">J</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">F</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">G</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">H</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">I</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">J</td>
                             </tr>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">K</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">L</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">M</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">N</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">O</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">K</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">L</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">M</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">N</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">O</td>
                             </tr>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">P</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">Q</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">R</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">S</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">T</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">P</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Q</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">R</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">S</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">T</td>
                             </tr>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">U</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">V</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">W</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">X</td>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">Y</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">U</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">V</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">W</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">X</td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Y</td>
                             </tr>
                             <tr>
-                                <td class="h-8 w-16 border border-gray-300 text-center text-sm font-medium text-gray-700">Z</td>
-                                <td class="h-8 w-16 border border-transparent"></td>
-                                <td class="h-8 w-16 border border-transparent"></td>
-                                <td class="h-8 w-16 border border-transparent"></td>
-                                <td class="h-8 w-16 border border-transparent"></td>
+                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Z</td>
+                                <td class="h-7 w-12 border border-transparent"></td>
+                                <td class="h-7 w-12 border border-transparent"></td>
+                                <td class="h-7 w-12 border border-transparent"></td>
+                                <td class="h-7 w-12 border border-transparent"></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- 回答入力＆ボタンエリア -->
-                <div>
+                <div class="mb-2">
                     <label for="answer-input" class="sr-only">
                         あなたの答え:
                     </label>
@@ -142,29 +151,29 @@
                         <input
                             type="text"
                             id="answer-input"
-                            class="flex-1 min-w-0 text-center text-2xl md:text-3xl font-bold p-3 md:p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
+                            class="flex-1 min-w-0 text-center text-2xl font-bold p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
                             maxlength="1"
                             autocomplete="off"
                         >
                         <button
                             id="submit-button"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 md:py-4 md:px-8 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px] md:min-w-[120px]">
-                            <span class="text-lg md:text-xl">➤</span>
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">➤</span>
                         </button>
                         <button
                             id="next-button"
-                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 md:py-4 md:px-8 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px] md:min-w-[120px]">
-                            <span class="text-lg md:text-xl">→</span>
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">→</span>
                         </button>
                     </div>
                 </div>
+
+                <!-- フィードバックエリア（インライン表示） -->
+                <div id="feedback" class="hidden rounded-lg p-2 text-center font-bold"></div>
             </div>
 
-            <!-- フィードバックエリア -->
-            <div id="feedback" class="hidden rounded-lg p-4 mb-6 text-center font-bold text-lg"></div>
-
-            <!-- ヒント -->
-            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <!-- ヒント（ドリル中は非表示） -->
+            <div id="hint" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
                 <div class="flex">
                     <div class="text-2xl mr-3">💡</div>
                     <div>

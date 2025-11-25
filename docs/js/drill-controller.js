@@ -25,7 +25,12 @@ class DrillController {
             submitButton: document.getElementById('submit-button'),
             nextButton: document.getElementById('next-button'),
             feedback: document.getElementById('feedback'),
-            difficultyButtons: document.querySelectorAll('[data-difficulty]')
+            difficultyButtons: document.querySelectorAll('[data-difficulty]'),
+            // スマホ最適化用の追加要素
+            header: document.getElementById('header'),
+            backToStartButton: document.getElementById('back-to-start'),
+            mainContainer: document.getElementById('main-container'),
+            body: document.body
         };
 
         this.currentDifficulty = null;
@@ -48,6 +53,19 @@ class DrillController {
         if (this.elements.drillScreen) {
             this.elements.drillScreen.classList.add('hidden');
         }
+        // ヘッダーを表示
+        if (this.elements.header) {
+            this.elements.header.classList.remove('hidden');
+        }
+        // スクロール可能に戻す
+        if (this.elements.body) {
+            this.elements.body.classList.remove('overflow-hidden', 'h-dvh');
+            this.elements.body.classList.add('min-h-screen');
+        }
+        if (this.elements.mainContainer) {
+            this.elements.mainContainer.classList.remove('h-dvh', 'overflow-hidden', 'py-2');
+            this.elements.mainContainer.classList.add('py-6');
+        }
     }
 
     /**
@@ -59,6 +77,19 @@ class DrillController {
         }
         if (this.elements.drillScreen) {
             this.elements.drillScreen.classList.remove('hidden');
+        }
+        // ヘッダーを非表示（スマホ最適化）
+        if (this.elements.header) {
+            this.elements.header.classList.add('hidden');
+        }
+        // スクロール無効化（スマホ最適化）
+        if (this.elements.body) {
+            this.elements.body.classList.remove('min-h-screen');
+            this.elements.body.classList.add('overflow-hidden', 'h-dvh');
+        }
+        if (this.elements.mainContainer) {
+            this.elements.mainContainer.classList.remove('py-6');
+            this.elements.mainContainer.classList.add('h-dvh', 'overflow-hidden', 'py-2');
         }
         this.initDrill();
     }
@@ -103,6 +134,13 @@ class DrillController {
                 }
             });
         });
+
+        // 「やめる」ボタン（スタート画面に戻る）
+        if (this.elements.backToStartButton) {
+            this.elements.backToStartButton.addEventListener('click', () => {
+                this.showStartScreen();
+            });
+        }
 
         // ボタンクリック
         this.elements.submitButton.addEventListener('click', () => this.submitAnswer());
@@ -158,15 +196,19 @@ class DrillController {
 
         if (isCorrect) {
             this.showFeedback('✓ 正解！', 'success');
+            // 正解時は自動で次の問題へ（フォーカス維持でキーボードを閉じない）
+            setTimeout(() => {
+                this.presentNewQuestion();
+            }, 400);
         } else {
             const correctAnswer = this.drill.currentQuestion.answer;
             this.showFeedback(`✗ 不正解... 正解は「${correctAnswer}」です`, 'error');
+            // 不正解時のみ「次へ」ボタンを表示
+            this.elements.answerInput.disabled = true;
+            this.elements.submitButton.classList.add('hidden');
+            this.elements.nextButton.classList.remove('hidden');
+            this.elements.nextButton.focus();
         }
-
-        this.elements.answerInput.disabled = true;
-        this.elements.submitButton.classList.add('hidden');
-        this.elements.nextButton.classList.remove('hidden');
-        this.elements.nextButton.focus();
     }
 
     /**
