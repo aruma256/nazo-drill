@@ -18,21 +18,65 @@ class DrillController {
 
         // DOM要素の取得
         this.elements = {
+            startScreen: document.getElementById('start-screen'),
+            drillScreen: document.getElementById('drill-screen'),
             questionDisplay: document.getElementById('question-display'),
             answerInput: document.getElementById('answer-input'),
             submitButton: document.getElementById('submit-button'),
             nextButton: document.getElementById('next-button'),
-            feedback: document.getElementById('feedback')
+            feedback: document.getElementById('feedback'),
+            difficultyButtons: document.querySelectorAll('[data-difficulty]')
         };
 
+        this.currentDifficulty = null;
         this.setupEventListeners();
-        this.init();
+        // スタート画面がある場合は画面切り替え、ない場合は従来通り
+        if (this.elements.startScreen) {
+            this.showStartScreen();
+        } else {
+            this.initDrill();
+        }
     }
 
     /**
-     * 初期化
+     * スタート画面を表示
      */
-    init() {
+    showStartScreen() {
+        if (this.elements.startScreen) {
+            this.elements.startScreen.classList.remove('hidden');
+        }
+        if (this.elements.drillScreen) {
+            this.elements.drillScreen.classList.add('hidden');
+        }
+    }
+
+    /**
+     * ドリル画面を表示
+     */
+    showDrillScreen() {
+        if (this.elements.startScreen) {
+            this.elements.startScreen.classList.add('hidden');
+        }
+        if (this.elements.drillScreen) {
+            this.elements.drillScreen.classList.remove('hidden');
+        }
+        this.initDrill();
+    }
+
+    /**
+     * 難易度を選択してドリルを開始
+     * @param {string} difficulty - 難易度 (beginner/intermediate/advanced)
+     */
+    selectDifficulty(difficulty) {
+        this.currentDifficulty = difficulty;
+        this.drill.resetScore();
+        this.showDrillScreen();
+    }
+
+    /**
+     * ドリルを初期化
+     */
+    initDrill() {
         // プレースホルダーとmaxlengthの設定
         if (this.options.placeholder) {
             this.elements.answerInput.placeholder = this.options.placeholder;
@@ -49,6 +93,17 @@ class DrillController {
      * イベントリスナーの設定
      */
     setupEventListeners() {
+        // 難易度選択ボタン
+        this.elements.difficultyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const difficulty = button.dataset.difficulty;
+                const disabled = button.dataset.disabled === 'true';
+                if (!disabled) {
+                    this.selectDifficulty(difficulty);
+                }
+            });
+        });
+
         // ボタンクリック
         this.elements.submitButton.addEventListener('click', () => this.submitAnswer());
         this.elements.nextButton.addEventListener('click', () => this.presentNewQuestion());
