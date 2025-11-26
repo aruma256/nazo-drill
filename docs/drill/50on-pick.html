@@ -78,11 +78,11 @@
 
             <!-- 問題エリア（コンパクト化） -->
             <div class="bg-white rounded-lg shadow-lg p-4">
-                <!-- 五十音表（問題表示） -->
+                <!-- 五十音表（問題表示）11列: ん,わ,ら,や,ま,は,な,た,さ,か,あ -->
                 <div class="mb-4 flex justify-center" id="question-display">
                     <table class="border-collapse border border-gray-400" id="gojuon-table">
                         <tbody>
-                            <!-- あ列（右端があ） -->
+                            <!-- あ列（右端があ、左端がん） -->
                             <tr>
                                 <td class="gojuon-cell" data-row="0" data-col="0"></td>
                                 <td class="gojuon-cell" data-row="0" data-col="1"></td>
@@ -94,24 +94,26 @@
                                 <td class="gojuon-cell" data-row="0" data-col="7"></td>
                                 <td class="gojuon-cell" data-row="0" data-col="8"></td>
                                 <td class="gojuon-cell" data-row="0" data-col="9"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="10"></td>
                             </tr>
                             <!-- い列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="1" data-col="0"></td>
-                                <td class="gojuon-cell" data-row="1" data-col="1"></td>
-                                <td class="gojuon-cell empty-cell" data-row="1" data-col="2"></td>
-                                <td class="gojuon-cell" data-row="1" data-col="3"></td>
+                                <td class="gojuon-cell empty-cell" data-row="1" data-col="1"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="2"></td>
+                                <td class="gojuon-cell empty-cell" data-row="1" data-col="3"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="4"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="5"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="6"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="7"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="8"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="9"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="10"></td>
                             </tr>
                             <!-- う列 -->
                             <tr>
-                                <td class="gojuon-cell" data-row="2" data-col="0"></td>
-                                <td class="gojuon-cell" data-row="2" data-col="1"></td>
+                                <td class="gojuon-cell empty-cell" data-row="2" data-col="0"></td>
+                                <td class="gojuon-cell empty-cell" data-row="2" data-col="1"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="2"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="3"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="4"></td>
@@ -120,23 +122,25 @@
                                 <td class="gojuon-cell" data-row="2" data-col="7"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="8"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="9"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="10"></td>
                             </tr>
                             <!-- え列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="3" data-col="0"></td>
-                                <td class="gojuon-cell" data-row="3" data-col="1"></td>
-                                <td class="gojuon-cell empty-cell" data-row="3" data-col="2"></td>
-                                <td class="gojuon-cell" data-row="3" data-col="3"></td>
+                                <td class="gojuon-cell empty-cell" data-row="3" data-col="1"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="2"></td>
+                                <td class="gojuon-cell empty-cell" data-row="3" data-col="3"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="4"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="5"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="6"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="7"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="8"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="9"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="10"></td>
                             </tr>
-                            <!-- お列（左端がん） -->
+                            <!-- お列 -->
                             <tr>
-                                <td class="gojuon-cell" data-row="4" data-col="0"></td>
+                                <td class="gojuon-cell empty-cell" data-row="4" data-col="0"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="1"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="2"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="3"></td>
@@ -146,6 +150,7 @@
                                 <td class="gojuon-cell" data-row="4" data-col="7"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="8"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="9"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="10"></td>
                             </tr>
                         </tbody>
                     </table>
