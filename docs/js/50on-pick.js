@@ -29,19 +29,8 @@ class GojuonPickDrill extends DrillBase {
             }
         }
 
-        // 出題される単語リスト
-        this.words = [
-            'くるま',
-            'さかな',
-            'とけい',
-            'ほたる',
-            'あたま',
-            'せかい',
-            'ひるね',
-            'たから',
-            'ふくろ',
-            'やさい'
-        ];
+        // 出題される単語リスト（外部ファイルから読み込み）
+        this.words = window.GOJUON_PICK_WORDS || [];
     }
 
     /**
