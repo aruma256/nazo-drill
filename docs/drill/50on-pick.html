@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五十音表の文字拾い - ナゾドリル</title>
+    <meta name="description" content="五十音表のマークされたマスから文字を読み取るトレーニング">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="main-container" class="container mx-auto px-4 py-6 max-w-2xl">
+        <!-- ヘッダー（ドリル中は非表示） -->
+        <header id="header" class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                    <span class="text-xl mr-2">←</span>
+                    <span class="font-medium">トップへ戻る</span>
+                </a>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2 text-center">
+                🔤 五十音表の文字拾い
+            </h1>
+            <p class="text-center text-gray-700">
+                数字の順に文字を読み取ろう
+            </p>
+        </header>
+
+        <!-- スタート画面 -->
+        <div id="start-screen">
+            <!-- ルール説明 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-bold text-indigo-900 mb-4">ルール</h2>
+                <div class="text-gray-700 space-y-2">
+                    <p>五十音表の中に数字が書かれたマスがあります。</p>
+                    <p>数字を<span class="font-bold text-indigo-600">1, 2, 3...</span>の順に拾い、そのマスに対応するひらがなを読み取ります。</p>
+                    <div class="bg-gray-50 rounded p-3 text-center">
+                        <p class="text-sm mb-2">例：「く」に1、「る」に2、「ま」に3 と書かれていたら</p>
+                        <p class="text-2xl font-bold text-green-600">くるま</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 難易度選択 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-bold text-indigo-900 mb-4">難易度を選択</h2>
+                <div class="space-y-3">
+                    <button
+                        data-difficulty="beginner"
+                        class="w-full py-4 px-6 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-colors duration-200 text-lg">
+                        初級
+                    </button>
+                    <button
+                        data-difficulty="intermediate"
+                        data-disabled="true"
+                        class="w-full py-4 px-6 bg-gray-300 text-gray-500 font-bold rounded-lg cursor-not-allowed text-lg">
+                        中級（準備中）
+                    </button>
+                    <button
+                        data-difficulty="advanced"
+                        data-disabled="true"
+                        class="w-full py-4 px-6 bg-gray-300 text-gray-500 font-bold rounded-lg cursor-not-allowed text-lg">
+                        上級（準備中）
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
+        <div id="drill-screen" class="hidden">
+            <!-- スマホ用ミニヘッダー（戻るボタンのみ） -->
+            <div class="flex items-center justify-between mb-2">
+                <button id="back-to-start" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
+                    <span class="mr-1">←</span>
+                    <span>やめる</span>
+                </button>
+                <span class="text-sm text-gray-500">文字拾い</span>
+            </div>
+
+            <!-- 問題エリア（コンパクト化） -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <!-- 五十音表（問題表示） -->
+                <div class="mb-4 flex justify-center" id="question-display">
+                    <table class="border-collapse border border-gray-400" id="gojuon-table">
+                        <tbody>
+                            <!-- あ列（右端があ） -->
+                            <tr>
+                                <td class="gojuon-cell" data-row="0" data-col="0"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="1"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="2"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="3"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="4"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="5"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="6"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="7"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="8"></td>
+                                <td class="gojuon-cell" data-row="0" data-col="9"></td>
+                            </tr>
+                            <!-- い列 -->
+                            <tr>
+                                <td class="gojuon-cell empty-cell" data-row="1" data-col="0"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="1"></td>
+                                <td class="gojuon-cell empty-cell" data-row="1" data-col="2"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="3"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="4"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="5"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="6"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="7"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="8"></td>
+                                <td class="gojuon-cell" data-row="1" data-col="9"></td>
+                            </tr>
+                            <!-- う列 -->
+                            <tr>
+                                <td class="gojuon-cell" data-row="2" data-col="0"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="1"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="2"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="3"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="4"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="5"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="6"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="7"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="8"></td>
+                                <td class="gojuon-cell" data-row="2" data-col="9"></td>
+                            </tr>
+                            <!-- え列 -->
+                            <tr>
+                                <td class="gojuon-cell empty-cell" data-row="3" data-col="0"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="1"></td>
+                                <td class="gojuon-cell empty-cell" data-row="3" data-col="2"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="3"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="4"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="5"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="6"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="7"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="8"></td>
+                                <td class="gojuon-cell" data-row="3" data-col="9"></td>
+                            </tr>
+                            <!-- お列（左端がん） -->
+                            <tr>
+                                <td class="gojuon-cell" data-row="4" data-col="0"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="1"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="2"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="3"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="4"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="5"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="6"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="7"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="8"></td>
+                                <td class="gojuon-cell" data-row="4" data-col="9"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 回答入力＆ボタンエリア -->
+                <div class="mb-2">
+                    <label for="answer-input" class="sr-only">
+                        あなたの答え:
+                    </label>
+                    <div class="flex gap-2 items-stretch">
+                        <input
+                            type="text"
+                            id="answer-input"
+                            class="flex-1 min-w-0 text-center text-2xl font-bold p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                            autocomplete="off"
+                        >
+                        <button
+                            id="submit-button"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">➤</span>
+                        </button>
+                        <button
+                            id="next-button"
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- フィードバックエリア（インライン表示） -->
+                <div id="feedback" class="hidden rounded-lg p-2 text-center font-bold"></div>
+            </div>
+
+            <!-- ヒント -->
+            <div id="hint" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+                <div class="flex">
+                    <div class="text-2xl mr-3">💡</div>
+                    <div>
+                        <p class="font-bold text-blue-800 mb-1">ヒント</p>
+                        <p class="text-sm text-blue-700">
+                            数字を1, 2, 3...の順に読み取り、<br>
+                            そのマスのひらがなをつなげましょう
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フィードバックモーダル -->
+    <div id="feedback-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-sm w-full text-center">
+            <div id="modal-message" class="text-3xl font-bold mb-4"></div>
+            <div id="modal-hint" class="hidden text-xl text-indigo-900 mb-4"></div>
+            <div class="text-sm text-gray-400 mt-6">タップして次へ</div>
+        </div>
+    </div>
+
+    <style>
+        .gojuon-cell {
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid #9ca3af;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4f46e5;
+            background-color: #fff;
+        }
+        .gojuon-cell.empty-cell {
+            background-color: #e5e7eb;
+        }
+        .gojuon-cell.marked {
+            background-color: #fef3c7;
+        }
+        @media (min-width: 640px) {
+            .gojuon-cell {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+
+    <!-- スクリプト -->
+    <script src="../js/common.js"></script>
+    <script src="../js/drill-controller.js"></script>
+    <script src="../js/50on-pick.js"></script>
+    <script>
+        // 五十音表を更新する関数
+        function updateGojuonTable(question) {
+            const markedCells = JSON.parse(question.question);
+            const cells = document.querySelectorAll('.gojuon-cell');
+
+            // すべてのセルをリセット（空欄にする）
+            cells.forEach(cell => {
+                cell.classList.remove('marked');
+                cell.textContent = '';
+            });
+
+            // マークされたセルに数字のみ表示
+            markedCells.forEach(({ row, col, number }) => {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (cell) {
+                    cell.classList.add('marked');
+                    cell.textContent = number;
+                }
+            });
+        }
+
+        // ドリルを初期化
+        const drill = new GojuonPickDrill();
+        const controller = new DrillController(drill, {
+            autoUppercase: false,
+            maxLength: 10,
+            placeholder: 'ひらがなで入力',
+            onQuestionDisplay: (question, element) => {
+                updateGojuonTable(question);
+            },
+            getHintContent: (question, answer) => answer
+        });
+    </script>
+</body>
+</html>

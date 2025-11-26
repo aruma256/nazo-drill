@@ -14,6 +14,7 @@ class DrillController {
             maxLength: options.maxLength || null,
             placeholder: options.placeholder || 'あ',
             getHintContent: options.getHintContent || null,
+            onQuestionDisplay: options.onQuestionDisplay || null,
             ...options
         };
 
@@ -177,7 +178,14 @@ class DrillController {
      */
     presentNewQuestion() {
         const question = this.drill.presentQuestion();
-        this.elements.questionDisplay.textContent = question.question;
+
+        // カスタム表示関数があれば呼び出し、なければデフォルト表示
+        if (this.options.onQuestionDisplay) {
+            this.options.onQuestionDisplay(question, this.elements.questionDisplay);
+        } else {
+            this.elements.questionDisplay.textContent = question.question;
+        }
+
         this.elements.answerInput.value = '';
         this.elements.answerInput.disabled = false;
         this.elements.submitButton.classList.remove('hidden');
