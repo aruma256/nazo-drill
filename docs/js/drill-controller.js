@@ -13,6 +13,7 @@ class DrillController {
             autoUppercase: options.autoUppercase || false,
             maxLength: options.maxLength || null,
             placeholder: options.placeholder || 'あ',
+            getHintContent: options.getHintContent || null,
             ...options
         };
 
@@ -30,7 +31,11 @@ class DrillController {
             header: document.getElementById('header'),
             backToStartButton: document.getElementById('back-to-start'),
             mainContainer: document.getElementById('main-container'),
-            body: document.body
+            body: document.body,
+            // モーダル関連
+            feedbackModal: document.getElementById('feedback-modal'),
+            modalMessage: document.getElementById('modal-message'),
+            modalHint: document.getElementById('modal-hint')
         };
 
         this.currentDifficulty = null;
@@ -193,22 +198,23 @@ class DrillController {
         }
 
         const isCorrect = this.drill.checkAnswer(userAnswer);
+        const correctAnswer = this.drill.currentQuestion.answer;
+        const question = this.drill.currentQuestion.question;
+
+        // 補助表示の生成（オプションで渡されたコールバックを使用）
+        let hintContent = null;
+        if (this.options.getHintContent) {
+            hintContent = this.options.getHintContent(question, correctAnswer);
+        }
 
         if (isCorrect) {
-            this.showFeedback('✓ 正解！', 'success');
-            // 正解時は自動で次の問題へ（フォーカス維持でキーボードを閉じない）
-            setTimeout(() => {
-                this.presentNewQuestion();
-            }, 400);
+            this.showModal('✓ 正解！', 'success', hintContent);
         } else {
-            const correctAnswer = this.drill.currentQuestion.answer;
-            this.showFeedback(`✗ 不正解... 正解は「${correctAnswer}」です`, 'error');
-            // 不正解時のみ「次へ」ボタンを表示
-            this.elements.answerInput.disabled = true;
-            this.elements.submitButton.classList.add('hidden');
-            this.elements.nextButton.classList.remove('hidden');
-            this.elements.nextButton.focus();
+            this.showModal(`✗ 不正解\n正解は「${correctAnswer}」`, 'error', hintContent);
         }
+
+        this.elements.answerInput.disabled = true;
+        this.elements.submitButton.classList.add('hidden');
     }
 
     /**
@@ -235,6 +241,59 @@ class DrillController {
         if (typeClasses[type]) {
             feedback.classList.add(...typeClasses[type]);
         }
+    }
+
+    /**
+     * モーダルでフィードバックを表示
+     * @param {string} message - 表示メッセージ
+     * @param {string} type - フィードバックタイプ (success/error)
+     * @param {string|null} hintContent - 補助表示の内容（オプション）
+     */
+    showModal(message, type, hintContent = null) {
+        const modal = this.elements.feedbackModal;
+        const messageEl = this.elements.modalMessage;
+        const hintEl = this.elements.modalHint;
+
+        // メッセージ設定（改行対応）
+        messageEl.innerHTML = message.replace('\n', '<br>');
+
+        // 色設定
+        messageEl.classList.remove('text-green-600', 'text-red-600');
+        if (type === 'success') {
+            messageEl.classList.add('text-green-600');
+        } else if (type === 'error') {
+            messageEl.classList.add('text-red-600');
+        }
+
+        // 補助表示
+        if (hintContent && hintEl) {
+            hintEl.textContent = hintContent;
+            hintEl.classList.remove('hidden');
+        } else if (hintEl) {
+            hintEl.classList.add('hidden');
+        }
+
+        // モーダル表示
+        modal.classList.remove('hidden');
+
+        // クリック/タップで閉じるイベント（一度きり）
+        const closeHandler = () => {
+            modal.classList.add('hidden');
+            modal.removeEventListener('click', closeHandler);
+            document.removeEventListener('keydown', keyHandler);
+            this.presentNewQuestion();
+        };
+
+        // キーボード対応（Enter/Space/Escapeで閉じる）
+        const keyHandler = (e) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+                e.preventDefault();
+                closeHandler();
+            }
+        };
+
+        modal.addEventListener('click', closeHandler);
+        document.addEventListener('keydown', keyHandler);
     }
 }
 
