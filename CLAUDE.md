@@ -88,7 +88,7 @@ const drillConfig = {
 
 ### 動作確認
 
-Chrome DevTools MCPでローカルのHTMLファイルを直接開いて確認する。
+Chrome DevTools MCPで`file://`を使いローカルのHTMLファイルを直接開いて確認する。
 
 ```
 file:///home/aruma/git/aruma256/nazo-drill/docs/index.html
