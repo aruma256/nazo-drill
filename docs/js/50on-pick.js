@@ -22,12 +22,18 @@ class GojuonPickDrill extends DrillBase {
         this.charToPosition = {};
         // 有効な文字のリスト（1文字モード用）
         this.validChars = [];
+        // 「は」～「を」の文字リスト（特訓モード用）
+        this.haWoChars = [];
         for (let row = 0; row < this.gojuonTable.length; row++) {
             for (let col = 0; col < this.gojuonTable[row].length; col++) {
                 const char = this.gojuonTable[row][col];
                 if (char) {
                     this.charToPosition[char] = { row, col };
                     this.validChars.push(char);
+                    // col <= 5 は「は」段以降（は、ま、や、ら、わ、ん）
+                    if (col <= 5) {
+                        this.haWoChars.push(char);
+                    }
                 }
             }
         }
@@ -35,7 +41,7 @@ class GojuonPickDrill extends DrillBase {
         // 出題される単語リスト（外部ファイルから読み込み）
         this.words = window.GOJUON_PICK_WORDS || [];
 
-        // モード（word: 単語モード, single: 1文字モード）
+        // モード（word: 単語モード, single: 1文字モード, ha-wo: 「は」～「を」特訓モード）
         this.mode = 'word';
     }
 
@@ -46,6 +52,8 @@ class GojuonPickDrill extends DrillBase {
     generateQuestion() {
         if (this.mode === 'single') {
             return this.generateSingleCharQuestion();
+        } else if (this.mode === 'ha-wo') {
+            return this.generateHaWoQuestion();
         } else {
             return this.generateWordQuestion();
         }
@@ -86,6 +94,27 @@ class GojuonPickDrill extends DrillBase {
     generateSingleCharQuestion() {
         // ランダムに1文字を選択
         const char = DrillUtils.getRandomElement(this.validChars);
+        const position = this.charToPosition[char];
+
+        const markedCells = [{
+            row: position.row,
+            col: position.col,
+            number: '●'
+        }];
+
+        return {
+            question: JSON.stringify(markedCells),
+            answer: char
+        };
+    }
+
+    /**
+     * 「は」～「を」特訓モードの問題を生成する
+     * @returns {Object} { question: Object, answer: string }
+     */
+    generateHaWoQuestion() {
+        // 「は」～「を」の範囲からランダムに1文字を選択
+        const char = DrillUtils.getRandomElement(this.haWoChars);
         const position = this.charToPosition[char];
 
         const markedCells = [{
