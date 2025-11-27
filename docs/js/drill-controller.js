@@ -27,7 +27,7 @@ class DrillController {
             submitButton: document.getElementById('submit-button'),
             nextButton: document.getElementById('next-button'),
             feedback: document.getElementById('feedback'),
-            difficultyButtons: document.querySelectorAll('[data-difficulty]'),
+            modeButtons: document.querySelectorAll('[data-mode]'),
             // スマホ最適化用の追加要素
             header: document.getElementById('header'),
             backToStartButton: document.getElementById('back-to-start'),
@@ -39,7 +39,7 @@ class DrillController {
             modalHint: document.getElementById('modal-hint')
         };
 
-        this.currentDifficulty = null;
+        this.currentMode = null;
         this.setupEventListeners();
         // スタート画面がある場合は画面切り替え、ない場合は従来通り
         if (this.elements.startScreen) {
@@ -101,11 +101,11 @@ class DrillController {
     }
 
     /**
-     * 難易度を選択してドリルを開始
-     * @param {string} difficulty - 難易度 (beginner/intermediate/advanced)
+     * モードを選択してドリルを開始
+     * @param {string} mode - モード (beginner/intermediate/advanced 等)
      */
-    selectDifficulty(difficulty) {
-        this.currentDifficulty = difficulty;
+    selectMode(mode) {
+        this.currentMode = mode;
         this.drill.resetScore();
         this.showDrillScreen();
     }
@@ -130,13 +130,13 @@ class DrillController {
      * イベントリスナーの設定
      */
     setupEventListeners() {
-        // 難易度選択ボタン
-        this.elements.difficultyButtons.forEach(button => {
+        // モード選択ボタン
+        this.elements.modeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const difficulty = button.dataset.difficulty;
+                const mode = button.dataset.mode;
                 const disabled = button.dataset.disabled === 'true';
                 if (!disabled) {
-                    this.selectDifficulty(difficulty);
+                    this.selectMode(mode);
                 }
             });
         });
