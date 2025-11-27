@@ -28,7 +28,7 @@ class AlphaShiftDrill extends DrillBase {
         }
 
         // 有効なシフト量の中からランダムに1つ選ぶ
-        const shift = validShifts[DrillUtils.getRandomInt(0, validShifts.length - 1)];
+        const shift = DrillUtils.getRandomElement(validShifts);
         const shiftedCode = baseCode + shift;
         const answer = String.fromCharCode(65 + shiftedCode);
 
