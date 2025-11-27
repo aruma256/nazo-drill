@@ -30,8 +30,8 @@ class GojuonPickDrill extends DrillBase {
                 if (char) {
                     this.charToPosition[char] = { row, col };
                     this.validChars.push(char);
-                    // col <= 5 は「は」段以降（は、ま、や、ら、わ、ん）
-                    if (col <= 5) {
+                    // col 1～5 は「は」～「を」の範囲（は、ま、や、ら、わ行）※「ん」は含まない
+                    if (col >= 1 && col <= 5) {
                         this.haWoChars.push(char);
                     }
                 }
