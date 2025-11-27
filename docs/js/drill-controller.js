@@ -106,6 +106,7 @@ class DrillController {
      */
     selectMode(mode) {
         this.currentMode = mode;
+        this.drill.setMode(mode);
         this.drill.resetScore();
         this.showDrillScreen();
     }

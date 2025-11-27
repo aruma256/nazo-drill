@@ -12,6 +12,15 @@ class DrillBase {
         this.previousQuestion = null;
         this.score = 0;
         this.totalQuestions = 0;
+        this.mode = null;
+    }
+
+    /**
+     * モードを設定する
+     * @param {string} mode - モード
+     */
+    setMode(mode) {
+        this.mode = mode;
     }
 
     /**

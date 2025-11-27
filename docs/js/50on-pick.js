@@ -20,17 +20,23 @@ class GojuonPickDrill extends DrillBase {
 
         // 文字から位置へのマッピングを作成
         this.charToPosition = {};
+        // 有効な文字のリスト（1文字モード用）
+        this.validChars = [];
         for (let row = 0; row < this.gojuonTable.length; row++) {
             for (let col = 0; col < this.gojuonTable[row].length; col++) {
                 const char = this.gojuonTable[row][col];
                 if (char) {
                     this.charToPosition[char] = { row, col };
+                    this.validChars.push(char);
                 }
             }
         }
 
         // 出題される単語リスト（外部ファイルから読み込み）
         this.words = window.GOJUON_PICK_WORDS || [];
+
+        // モード（word: 単語モード, single: 1文字モード）
+        this.mode = 'word';
     }
 
     /**
@@ -38,6 +44,18 @@ class GojuonPickDrill extends DrillBase {
      * @returns {Object} { question: Object, answer: string }
      */
     generateQuestion() {
+        if (this.mode === 'single') {
+            return this.generateSingleCharQuestion();
+        } else {
+            return this.generateWordQuestion();
+        }
+    }
+
+    /**
+     * 単語モードの問題を生成する
+     * @returns {Object} { question: Object, answer: string }
+     */
+    generateWordQuestion() {
         // ランダムに単語を選択
         const word = DrillUtils.getRandomElement(this.words);
 
@@ -58,6 +76,27 @@ class GojuonPickDrill extends DrillBase {
         return {
             question: JSON.stringify(markedCells),
             answer: word
+        };
+    }
+
+    /**
+     * 1文字モードの問題を生成する
+     * @returns {Object} { question: Object, answer: string }
+     */
+    generateSingleCharQuestion() {
+        // ランダムに1文字を選択
+        const char = DrillUtils.getRandomElement(this.validChars);
+        const position = this.charToPosition[char];
+
+        const markedCells = [{
+            row: position.row,
+            col: position.col,
+            number: '●'
+        }];
+
+        return {
+            question: JSON.stringify(markedCells),
+            answer: char
         };
     }
 }
