@@ -88,12 +88,12 @@ class GojuonPickDrill extends DrillBase {
     }
 
     /**
-     * 1文字モードの問題を生成する
+     * 1文字モードの問題を生成する（共通処理）
+     * @param {Array} charList - 選択対象の文字配列
      * @returns {Object} { question: Object, answer: string }
      */
-    generateSingleCharQuestion() {
-        // ランダムに1文字を選択
-        const char = DrillUtils.getRandomElement(this.validChars);
+    generateSingleCharQuestionFromList(charList) {
+        const char = DrillUtils.getRandomElement(charList);
         const position = this.charToPosition[char];
 
         const markedCells = [{
@@ -109,24 +109,19 @@ class GojuonPickDrill extends DrillBase {
     }
 
     /**
+     * 1文字モードの問題を生成する
+     * @returns {Object} { question: Object, answer: string }
+     */
+    generateSingleCharQuestion() {
+        return this.generateSingleCharQuestionFromList(this.validChars);
+    }
+
+    /**
      * 「は」～「を」特訓モードの問題を生成する
      * @returns {Object} { question: Object, answer: string }
      */
     generateHaWoQuestion() {
-        // 「は」～「を」の範囲からランダムに1文字を選択
-        const char = DrillUtils.getRandomElement(this.haWoChars);
-        const position = this.charToPosition[char];
-
-        const markedCells = [{
-            row: position.row,
-            col: position.col,
-            number: '●'
-        }];
-
-        return {
-            question: JSON.stringify(markedCells),
-            answer: char
-        };
+        return this.generateSingleCharQuestionFromList(this.haWoChars);
     }
 }
 
