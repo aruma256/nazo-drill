@@ -14,7 +14,7 @@ class AlphaShiftDrill extends DrillBase {
     generateQuestion() {
         // A〜Zのランダムなアルファベットを生成
         const baseCode = DrillUtils.getRandomInt(0, 25); // 0-25
-        const baseChar = String.fromCharCode(65 + baseCode); // A=65
+        const baseChar = String.fromCharCode(DrillUtils.ASCII_CODE_A + baseCode);
 
         // このアルファベットに対して有効なシフト量の候補を計算
         // -5〜+5の範囲で、0を除き、かつ結果がA-Z範囲内（0-25）に収まるもの
@@ -30,7 +30,7 @@ class AlphaShiftDrill extends DrillBase {
         // 有効なシフト量の中からランダムに1つ選ぶ
         const shift = DrillUtils.getRandomElement(validShifts);
         const shiftedCode = baseCode + shift;
-        const answer = String.fromCharCode(65 + shiftedCode);
+        const answer = String.fromCharCode(DrillUtils.ASCII_CODE_A + shiftedCode);
 
         // 問題文を生成
         const sign = shift > 0 ? '+' : '';

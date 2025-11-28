@@ -3,6 +3,11 @@
  */
 
 /**
+ * 定数
+ */
+const ASCII_CODE_A = 65; // 'A'のASCIIコード
+
+/**
  * ドリルの基底クラス
  */
 class DrillBase {
@@ -177,13 +182,14 @@ function loadFromStorage(key, defaultValue = null) {
  * @returns {string} 対応するアルファベット（A-Z）
  */
 function numberToAlpha(number) {
-    return String.fromCharCode(64 + number); // 65 = 'A', 64+1 = 'A'
+    return String.fromCharCode(ASCII_CODE_A + number - 1);
 }
 
 // グローバルに公開
 if (typeof window !== 'undefined') {
     window.DrillBase = DrillBase;
     window.DrillUtils = {
+        ASCII_CODE_A,
         getRandomInt,
         getRandomElement,
         shuffleArray,
