@@ -27,12 +27,15 @@
 
         <!-- スタート画面 -->
         <div id="start-screen">
-            <!-- ルール説明 -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h2 class="text-xl font-bold text-indigo-900 mb-4">ルール</h2>
-                <div class="text-gray-700 space-y-2">
+            <!-- ルール説明（影なしフラットデザイン） -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    ルール
+                </h2>
+                <div class="text-gray-700 space-y-2 pl-3">
                     <p>アルファベットを指定された数だけずらして答えます。</p>
-                    <div class="bg-gray-50 rounded p-3 text-center">
+                    <div class="bg-white/50 rounded-lg p-3 text-center mt-3">
                         <p class="text-lg font-mono">
                             <span class="text-indigo-600">A+1</span> → <span class="text-green-600 font-bold">B</span>
                         </p>
@@ -43,33 +46,36 @@
                             <span class="text-indigo-600">X+3</span> → <span class="text-green-600 font-bold">?</span>
                         </p>
                     </div>
-                    <p class="text-sm text-gray-500">シフトは-5〜+5の範囲で、循環する問題は出題されません</p>
+                    <p class="text-sm text-gray-500 mt-2">シフトは-5〜+5の範囲で、循環する問題は出題されません</p>
                 </div>
-            </div>
+            </section>
 
-            <!-- モード選択 -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h2 class="text-xl font-bold text-indigo-900 mb-4">モードを選択</h2>
+            <!-- モード選択（ボタンをカードスタイルに） -->
+            <section class="mb-6">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    モードを選択
+                </h2>
                 <div class="space-y-3">
                     <button
                         data-mode="beginner"
-                        class="w-full py-4 px-6 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-colors duration-200 text-lg">
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
                         初級
                     </button>
                     <button
                         data-mode="intermediate"
                         data-disabled="true"
-                        class="w-full py-4 px-6 bg-gray-300 text-gray-500 font-bold rounded-lg cursor-not-allowed text-lg">
+                        class="w-full py-4 px-6 bg-gray-100 text-gray-400 font-bold rounded-lg text-lg cursor-not-allowed">
                         中級（準備中）
                     </button>
                     <button
                         data-mode="advanced"
                         data-disabled="true"
-                        class="w-full py-4 px-6 bg-gray-300 text-gray-500 font-bold rounded-lg cursor-not-allowed text-lg">
+                        class="w-full py-4 px-6 bg-gray-100 text-gray-400 font-bold rounded-lg text-lg cursor-not-allowed">
                         上級（準備中）
                     </button>
                 </div>
-            </div>
+            </section>
         </div>
 
         <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
@@ -83,8 +89,8 @@
                 <span class="text-sm text-gray-500">ABCシフト</span>
             </div>
 
-            <!-- 問題エリア（コンパクト化） -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
+            <!-- 問題エリア（影なしフラットデザイン） -->
+            <div class="bg-white/70 rounded-lg p-4">
                 <!-- 問題表示 -->
                 <div class="text-center mb-6">
                     <div class="text-5xl font-bold text-indigo-900" id="question-display">

@@ -27,14 +27,17 @@
 
         <!-- スタート画面 -->
         <div id="start-screen">
-            <!-- ルール説明 -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h2 class="text-xl font-bold text-indigo-900 mb-4">ルール</h2>
-                <div class="text-gray-700 space-y-2">
+            <!-- ルール説明（影なしフラットデザイン） -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    ルール
+                </h2>
+                <div class="text-gray-700 space-y-2 pl-3">
                     <p>五十音表の中に数字が書かれたマスがあります。</p>
                     <p>数字を<span class="font-bold text-indigo-600">1, 2, 3...</span>の順に拾い、そのマスに対応するひらがなを読み取ります。</p>
-                    <div class="bg-gray-50 rounded p-3">
-                        <p class="text-sm mb-3 text-center">例：</p>
+                    <div class="bg-white/50 rounded-lg p-3 mt-3">
+                        <p class="text-sm mb-3 text-center text-gray-500">例：</p>
                         <!-- 例用の五十音表 -->
                         <div class="flex justify-center mb-3">
                             <table class="border-collapse border border-gray-400">
@@ -112,33 +115,36 @@
                                 </tbody>
                             </table>
                         </div>
-                        <p class="text-sm text-center mb-1">1→「く」、2→「る」、3→「ま」</p>
+                        <p class="text-sm text-center mb-1 text-gray-600">1→「く」、2→「る」、3→「ま」</p>
                         <p class="text-center text-xl font-bold text-green-600">答え：くるま</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- モード選択 -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h2 class="text-xl font-bold text-indigo-900 mb-4">モードを選択</h2>
+            <!-- モード選択（ボタンをカードスタイルに） -->
+            <section class="mb-6">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    モードを選択
+                </h2>
                 <div class="space-y-3">
                     <button
                         data-mode="single"
-                        class="w-full py-4 px-6 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold rounded-lg transition-colors duration-200 text-lg">
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
                         1文字モード
                     </button>
                     <button
                         data-mode="ha-wo"
-                        class="w-full py-4 px-6 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold rounded-lg transition-colors duration-200 text-lg">
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
                         「は」〜「を」特訓モード
                     </button>
                     <button
                         data-mode="word"
-                        class="w-full py-4 px-6 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold rounded-lg transition-colors duration-200 text-lg">
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
                         単語モード
                     </button>
                 </div>
-            </div>
+            </section>
         </div>
 
         <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
@@ -152,8 +158,8 @@
                 <span class="text-sm text-gray-500">文字拾い</span>
             </div>
 
-            <!-- 問題エリア（コンパクト化） -->
-            <div class="bg-white rounded-lg shadow-lg p-4">
+            <!-- 問題エリア（影なしフラットデザイン） -->
+            <div class="bg-white/70 rounded-lg p-4">
                 <!-- 五十音表（問題表示）11列: ん,わ,ら,や,ま,は,な,た,さ,か,あ -->
                 <div class="mb-4 flex justify-center" id="question-display">
                     <table class="border-collapse border border-gray-400" id="gojuon-table">
