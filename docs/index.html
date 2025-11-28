@@ -42,8 +42,80 @@
                     <p class="text-gray-600 mb-3">
                         五十音表のマークされたマスから文字を読み取る練習
                     </p>
-                    <div class="text-sm text-gray-500">
-                        例: 1→く, 2→る, 3→ま → くるま
+                    <!-- サンプル五十音表 -->
+                    <div class="flex justify-center mb-2">
+                        <table class="border-collapse border border-gray-400">
+                            <tbody>
+                                <tr>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell card-marked">3</td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                </tr>
+                                <tr>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                </tr>
+                                <tr>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell card-marked">2</td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell card-marked">1</td>
+                                    <td class="card-cell"></td>
+                                </tr>
+                                <tr>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                </tr>
+                                <tr>
+                                    <td class="card-cell card-empty"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                    <td class="card-cell"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-sm text-gray-500 text-center">
+                        答え：<span class="font-bold text-green-600">くるま</span>
                     </div>
                 </a>
 
@@ -59,8 +131,12 @@
                     <p class="text-gray-600 mb-3">
                         数字をアルファベットに変換する練習
                     </p>
-                    <div class="text-sm text-gray-500">
-                        例: 1→A, 2→B, 3→C ...
+                    <!-- 例題 -->
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-indigo-900 mb-1">5, 1, 20</div>
+                        <div class="text-sm text-gray-500">
+                            答え：<span class="font-bold text-green-600">EAT</span>
+                        </div>
                     </div>
                 </a>
 
@@ -96,8 +172,12 @@
                     <p class="text-gray-600 mb-3">
                         アルファベットをずらして変換する練習
                     </p>
-                    <div class="text-sm text-gray-500">
-                        例: A+1→B, Z-1→Y
+                    <!-- 例題 -->
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-indigo-900 mb-1">C+2</div>
+                        <div class="text-sm text-gray-500">
+                            答え：<span class="font-bold text-green-600">E</span>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -108,5 +188,25 @@
             <p>© 2025 ナゾドリル - Powered by aruma256</p>
         </footer>
     </div>
+
+    <style>
+        /* カード用の五十音表セル */
+        .card-cell {
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid #9ca3af;
+            text-align: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #4f46e5;
+            background-color: #fff;
+        }
+        .card-cell.card-empty {
+            background-color: #9ca3af;
+        }
+        .card-cell.card-marked {
+            background-color: #fef3c7;
+        }
+    </style>
 </body>
 </html>
