@@ -43,6 +43,10 @@ class GojuonPickDrill extends DrillBase {
 
         // モード（word: 単語モード, single: 1文字モード, ha-wo: 「は」～「を」特訓モード）
         this.mode = 'word';
+
+        // 重複出題防止用
+        this.lastCol = null;   // 1文字系モード用：前回のcol
+        this.lastWord = null;  // 単語モード用：前回の単語
     }
 
     /**
@@ -64,8 +68,17 @@ class GojuonPickDrill extends DrillBase {
      * @returns {Object} { question: Object, answer: string }
      */
     generateWordQuestion() {
+        // 前回と異なる単語のみをフィルタリング
+        let candidates = this.words;
+        if (this.lastWord !== null && this.words.length > 1) {
+            candidates = this.words.filter(w => w !== this.lastWord);
+        }
+
         // ランダムに単語を選択
-        const word = DrillUtils.getRandomElement(this.words);
+        const word = DrillUtils.getRandomElement(candidates);
+
+        // 今回の単語を記録
+        this.lastWord = word;
 
         // 各文字の位置を取得し、数字を割り当てる
         const markedCells = [];
@@ -93,8 +106,24 @@ class GojuonPickDrill extends DrillBase {
      * @returns {Object} { question: Object, answer: string }
      */
     generateSingleCharQuestionFromList(charList) {
-        const char = DrillUtils.getRandomElement(charList);
+        // 前回と異なるcolの文字のみをフィルタリング
+        let candidates = charList;
+        if (this.lastCol !== null) {
+            const filtered = charList.filter(char => {
+                const pos = this.charToPosition[char];
+                return pos.col !== this.lastCol;
+            });
+            // フィルタ後に候補があれば使用、なければ全体から選択
+            if (filtered.length > 0) {
+                candidates = filtered;
+            }
+        }
+
+        const char = DrillUtils.getRandomElement(candidates);
         const position = this.charToPosition[char];
+
+        // 今回のcolを記録
+        this.lastCol = position.col;
 
         const markedCells = [{
             row: position.row,
