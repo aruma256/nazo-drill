@@ -99,7 +99,7 @@ class GojuonPickDrill extends DrillBase {
         const markedCells = [{
             row: position.row,
             col: position.col,
-            number: '●'
+            number: 1
         }];
 
         return {
