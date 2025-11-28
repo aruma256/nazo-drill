@@ -22,17 +22,17 @@ class GojuonPickDrill extends DrillBase {
         this.charToPosition = {};
         // 有効な文字のリスト（1文字モード用）
         this.validChars = [];
-        // 「は」～「を」の文字リスト（特訓モード用）
-        this.haWoChars = [];
+        // 「た」～「ろ」の文字リスト（特訓モード用）
+        this.taRoChars = [];
         for (let row = 0; row < this.gojuonTable.length; row++) {
             for (let col = 0; col < this.gojuonTable[row].length; col++) {
                 const char = this.gojuonTable[row][col];
                 if (char) {
                     this.charToPosition[char] = { row, col };
                     this.validChars.push(char);
-                    // col 1～5 は「は」～「を」の範囲（は、ま、や、ら、わ行）※「ん」は含まない
-                    if (col >= 1 && col <= 5) {
-                        this.haWoChars.push(char);
+                    // col 2～7 は「た」～「ろ」の範囲（た、な、は、ま、や、ら行）
+                    if (col >= 2 && col <= 7) {
+                        this.taRoChars.push(char);
                     }
                 }
             }
@@ -41,7 +41,7 @@ class GojuonPickDrill extends DrillBase {
         // 出題される単語リスト（外部ファイルから読み込み）
         this.words = window.GOJUON_PICK_WORDS || [];
 
-        // モード（word: 単語モード, single: 1文字モード, ha-wo: 「は」～「を」特訓モード）
+        // モード（word: 単語モード, single: 1文字モード, ta-ro: 「た」～「ろ」特訓モード）
         this.mode = 'word';
 
         // 重複出題防止用
@@ -56,8 +56,8 @@ class GojuonPickDrill extends DrillBase {
     generateQuestion() {
         if (this.mode === 'single') {
             return this.generateSingleCharQuestion();
-        } else if (this.mode === 'ha-wo') {
-            return this.generateHaWoQuestion();
+        } else if (this.mode === 'ta-ro') {
+            return this.generateTaRoQuestion();
         } else {
             return this.generateWordQuestion();
         }
@@ -146,11 +146,11 @@ class GojuonPickDrill extends DrillBase {
     }
 
     /**
-     * 「は」～「を」特訓モードの問題を生成する
+     * 「た」～「ろ」特訓モードの問題を生成する
      * @returns {Object} { question: Object, answer: string }
      */
-    generateHaWoQuestion() {
-        return this.generateSingleCharQuestionFromList(this.haWoChars);
+    generateTaRoQuestion() {
+        return this.generateSingleCharQuestionFromList(this.taRoChars);
     }
 }
 
