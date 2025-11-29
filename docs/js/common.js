@@ -149,49 +149,6 @@ function getRandomElementExcluding(array, lastValue, getKey = x => x) {
 }
 
 /**
- * 配列をシャッフル（Fisher-Yates）
- * @param {Array} array
- * @returns {Array}
- */
-function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
-
-/**
- * LocalStorageにデータを保存
- * @param {string} key
- * @param {*} value
- */
-function saveToStorage(key, value) {
-    try {
-        localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-        console.error('Failed to save to localStorage:', e);
-    }
-}
-
-/**
- * LocalStorageからデータを読み込み
- * @param {string} key
- * @param {*} defaultValue
- * @returns {*}
- */
-function loadFromStorage(key, defaultValue = null) {
-    try {
-        const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : defaultValue;
-    } catch (e) {
-        console.error('Failed to load from localStorage:', e);
-        return defaultValue;
-    }
-}
-
-/**
  * 数字をアルファベットに変換する（1→A, 2→B, ...）
  * @param {number} number - 1〜26の数字
  * @returns {string} 対応するアルファベット（A-Z）
@@ -208,9 +165,6 @@ if (typeof window !== 'undefined') {
         getRandomInt,
         getRandomElement,
         getRandomElementExcluding,
-        shuffleArray,
-        saveToStorage,
-        loadFromStorage,
         numberToAlpha
     };
 }
