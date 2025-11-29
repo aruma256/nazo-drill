@@ -134,6 +134,21 @@ function getRandomElement(array) {
 }
 
 /**
+ * 前回の値を除外して配列からランダムに選択
+ * @param {Array} array - 選択元の配列
+ * @param {*} lastValue - 除外する前回の値（nullなら除外なし）
+ * @param {Function} [getKey] - 比較用キー取得関数（省略時は値そのもの）
+ * @returns {*} 選択された要素
+ */
+function getRandomElementExcluding(array, lastValue, getKey = x => x) {
+    if (lastValue === null || array.length <= 1) {
+        return getRandomElement(array);
+    }
+    const filtered = array.filter(item => getKey(item) !== lastValue);
+    return getRandomElement(filtered.length > 0 ? filtered : array);
+}
+
+/**
  * 配列をシャッフル（Fisher-Yates）
  * @param {Array} array
  * @returns {Array}
@@ -192,6 +207,7 @@ if (typeof window !== 'undefined') {
         ASCII_CODE_A,
         getRandomInt,
         getRandomElement,
+        getRandomElementExcluding,
         shuffleArray,
         saveToStorage,
         loadFromStorage,

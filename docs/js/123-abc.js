@@ -39,13 +39,7 @@ class NumberToAlphaDrill extends DrillBase {
      * @returns {Object} { question: string, answer: string }
      */
     generateEjotyQuestion() {
-        // 前回と異なる数字のみをフィルタリング
-        let candidates = this.ejotyNumbers;
-        if (this.lastNumber !== null && this.ejotyNumbers.length > 1) {
-            candidates = this.ejotyNumbers.filter(n => n !== this.lastNumber);
-        }
-
-        const number = DrillUtils.getRandomElement(candidates);
+        const number = DrillUtils.getRandomElementExcluding(this.ejotyNumbers, this.lastNumber);
         this.lastNumber = number;
 
         const answer = DrillUtils.numberToAlpha(number);
@@ -82,14 +76,7 @@ class NumberToAlphaDrill extends DrillBase {
      * @returns {Object} { question: string, answer: string }
      */
     generateWordQuestion() {
-        // 前回と異なる単語のみをフィルタリング
-        let candidates = this.words;
-        if (this.lastWord !== null && this.words.length > 1) {
-            candidates = this.words.filter(w => w !== this.lastWord);
-        }
-
-        // ランダムに単語を選択
-        const word = DrillUtils.getRandomElement(candidates);
+        const word = DrillUtils.getRandomElementExcluding(this.words, this.lastWord);
         this.lastWord = word;
 
         // 各文字を数字に変換
