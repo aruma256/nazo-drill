@@ -58,21 +58,19 @@
                 </h2>
                 <div class="space-y-3">
                     <button
-                        data-mode="beginner"
+                        data-mode="ejoty"
                         class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
-                        初級
+                        "EJOTY"特訓モード
                     </button>
                     <button
-                        data-mode="intermediate"
-                        data-disabled="true"
-                        class="w-full py-4 px-6 bg-gray-100 text-gray-400 font-bold rounded-lg text-lg cursor-not-allowed">
-                        中級（準備中）
+                        data-mode="single"
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        1文字モード
                     </button>
                     <button
-                        data-mode="advanced"
-                        data-disabled="true"
-                        class="w-full py-4 px-6 bg-gray-100 text-gray-400 font-bold rounded-lg text-lg cursor-not-allowed">
-                        上級（準備中）
+                        data-mode="word"
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        単語モード
                     </button>
                 </div>
             </section>
@@ -98,51 +96,63 @@
                     </div>
                 </div>
 
-                <!-- アルファベット参照表（コンパクト化） -->
-                <div class="mb-4 flex justify-center">
+                <!-- EJOTY特訓モード用ヒントメッセージ -->
+                <div id="ejoty-hint" class="hidden mb-4 text-center">
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <p class="text-amber-800 font-medium">
+                            E=5, J=10, O=15, T=20, Y=25
+                        </p>
+                        <p class="text-amber-600 text-sm mt-1">
+                            5の倍数だけ覚えれば、あとは前後で計算できる！
+                        </p>
+                    </div>
+                </div>
+
+                <!-- アルファベット参照表（EJOTYのみ表示） -->
+                <div id="alpha-table" class="mb-4 flex justify-center">
                     <table class="border-collapse border border-gray-300">
                         <tbody>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">A</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">B</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">C</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">D</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">E</td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell ejoty">E</td>
                             </tr>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">F</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">G</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">H</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">I</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">J</td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell ejoty">J</td>
                             </tr>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">K</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">L</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">M</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">N</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">O</td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell ejoty">O</td>
                             </tr>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">P</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Q</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">R</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">S</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">T</td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell ejoty">T</td>
                             </tr>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">U</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">V</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">W</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">X</td>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Y</td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell"></td>
+                                <td class="alpha-cell ejoty">Y</td>
                             </tr>
                             <tr>
-                                <td class="h-7 w-12 border border-gray-300 text-center text-sm font-medium text-gray-700">Z</td>
-                                <td class="h-7 w-12 border border-transparent"></td>
-                                <td class="h-7 w-12 border border-transparent"></td>
-                                <td class="h-7 w-12 border border-transparent"></td>
-                                <td class="h-7 w-12 border border-transparent"></td>
+                                <td class="alpha-cell">Z</td>
+                                <td class="alpha-cell empty"></td>
+                                <td class="alpha-cell empty"></td>
+                                <td class="alpha-cell empty"></td>
+                                <td class="alpha-cell empty"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -158,7 +168,6 @@
                             type="text"
                             id="answer-input"
                             class="flex-1 min-w-0 text-center text-2xl font-bold p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 uppercase"
-                            maxlength="1"
                             autocomplete="off"
                         >
                         <button
@@ -204,19 +213,72 @@
         </div>
     </div>
 
+    <style>
+        .alpha-cell {
+            height: 1.75rem;
+            width: 3rem;
+            border: 1px solid #d1d5db;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            background-color: #fff;
+        }
+        .alpha-cell.ejoty {
+            font-weight: 700;
+            color: #4f46e5;
+            background-color: #eef2ff;
+        }
+        .alpha-cell.empty {
+            background-color: transparent;
+            border-color: transparent;
+        }
+        @media (min-width: 640px) {
+            .alpha-cell {
+                height: 2rem;
+                width: 3.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+
     <!-- スクリプト -->
     <script src="../js/common.js"></script>
     <script src="../js/drill-controller.js"></script>
+    <script src="../js/words-123-abc.js"></script>
     <script src="../js/123-abc.js"></script>
     <script>
+        // モードに応じてUIを調整
+        function updateUIForMode(mode) {
+            const alphaTable = document.getElementById('alpha-table');
+            const ejotyHint = document.getElementById('ejoty-hint');
+
+            if (mode === 'ejoty') {
+                // EJOTY特訓モード：表なし、ヒントメッセージ表示
+                alphaTable.classList.add('hidden');
+                ejotyHint.classList.remove('hidden');
+            } else {
+                // 1文字・単語モード：表あり（EJOTYのみ）
+                alphaTable.classList.remove('hidden');
+                ejotyHint.classList.add('hidden');
+            }
+        }
+
         // ドリルを初期化
         const drill = new NumberToAlphaDrill();
         const controller = new DrillController(drill, {
             autoUppercase: true,
-            maxLength: 1,
+            maxLength: 10,
             placeholder: '答えを入力',
             getHintContent: (question, answer) => `${answer} = ${question}`
         });
+
+        // モード選択時にUIを更新
+        const originalSelectMode = controller.selectMode.bind(controller);
+        controller.selectMode = function(mode) {
+            originalSelectMode(mode);
+            updateUIForMode(mode);
+        };
     </script>
 </body>
 </html>

@@ -5,6 +5,19 @@
 class NumberToAlphaDrill extends DrillBase {
     constructor() {
         super('123-abc');
+
+        // EJOTY（5の倍数）の定義
+        this.ejotyNumbers = [5, 10, 15, 20, 25]; // E, J, O, T, Y
+
+        // 出題される単語リスト（外部ファイルから読み込み）
+        this.words = window.NUMBER_TO_ALPHA_WORDS || [];
+
+        // モード（ejoty: EJOTY特訓モード, single: 1文字モード, word: 単語モード）
+        this.mode = 'single';
+
+        // 重複出題防止用
+        this.lastNumber = null; // 1文字系モード用
+        this.lastWord = null;   // 単語モード用
     }
 
     /**
@@ -12,15 +25,84 @@ class NumberToAlphaDrill extends DrillBase {
      * @returns {Object} { question: string, answer: string }
      */
     generateQuestion() {
-        // 1〜26のランダムな数字を生成
-        const number = DrillUtils.getRandomInt(1, 26);
+        if (this.mode === 'ejoty') {
+            return this.generateEjotyQuestion();
+        } else if (this.mode === 'word') {
+            return this.generateWordQuestion();
+        } else {
+            return this.generateSingleQuestion();
+        }
+    }
 
-        // 対応するアルファベットを計算
+    /**
+     * EJOTY特訓モードの問題を生成する
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateEjotyQuestion() {
+        // 前回と異なる数字のみをフィルタリング
+        let candidates = this.ejotyNumbers;
+        if (this.lastNumber !== null && this.ejotyNumbers.length > 1) {
+            candidates = this.ejotyNumbers.filter(n => n !== this.lastNumber);
+        }
+
+        const number = DrillUtils.getRandomElement(candidates);
+        this.lastNumber = number;
+
         const answer = DrillUtils.numberToAlpha(number);
 
         return {
             question: number.toString(),
             answer: answer
+        };
+    }
+
+    /**
+     * 1文字モードの問題を生成する
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateSingleQuestion() {
+        // 1〜26のランダムな数字を生成（前回と異なるもの）
+        let number;
+        do {
+            number = DrillUtils.getRandomInt(1, 26);
+        } while (number === this.lastNumber);
+
+        this.lastNumber = number;
+
+        const answer = DrillUtils.numberToAlpha(number);
+
+        return {
+            question: number.toString(),
+            answer: answer
+        };
+    }
+
+    /**
+     * 単語モードの問題を生成する
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateWordQuestion() {
+        // 前回と異なる単語のみをフィルタリング
+        let candidates = this.words;
+        if (this.lastWord !== null && this.words.length > 1) {
+            candidates = this.words.filter(w => w !== this.lastWord);
+        }
+
+        // ランダムに単語を選択
+        const word = DrillUtils.getRandomElement(candidates);
+        this.lastWord = word;
+
+        // 各文字を数字に変換
+        const numbers = [];
+        for (let i = 0; i < word.length; i++) {
+            const char = word[i];
+            const number = char.charCodeAt(0) - DrillUtils.ASCII_CODE_A + 1;
+            numbers.push(number);
+        }
+
+        return {
+            question: numbers.join(', '),
+            answer: word
         };
     }
 }
