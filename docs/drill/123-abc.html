@@ -99,7 +99,7 @@
                 <!-- EJOTY特訓モード用ヒントメッセージ -->
                 <div id="ejoty-hint" class="hidden mb-4 text-center">
                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                        <p class="text-amber-800 font-medium">
+                        <p id="ejoty-formula" class="text-amber-800 font-medium transition-opacity duration-[8000ms]">
                             E, J, O, T, Y = 5, 10, 15, 20, 25
                         </p>
                         <p class="text-amber-600 text-sm mt-1">
@@ -278,6 +278,19 @@
         controller.selectMode = function(mode) {
             originalSelectMode(mode);
             updateUIForMode(mode);
+            // モード切り替え時にフォーミュラを再表示
+            const formula = document.getElementById('ejoty-formula');
+            formula.classList.remove('opacity-0');
+        };
+
+        // 10問目でEJOTYフォーミュラをフェードアウト
+        const originalPresentNewQuestion = controller.presentNewQuestion.bind(controller);
+        controller.presentNewQuestion = function() {
+            originalPresentNewQuestion();
+            if (drill.mode === 'ejoty' && drill.totalQuestions >= 6) {
+                const formula = document.getElementById('ejoty-formula');
+                formula.classList.add('opacity-0');
+            }
         };
     </script>
 </body>
