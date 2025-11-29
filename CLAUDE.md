@@ -68,7 +68,7 @@ const drillConfig = {
 
 ## ディレクトリ構成
 
-- GitHub Pages の公開元として `docs/` を設定
+- `docs/` - GitHub Pages の公開元（サイト本体のソースコード）
 
 ## 実装する機能
 
