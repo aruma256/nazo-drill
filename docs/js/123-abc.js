@@ -6,6 +6,9 @@ class NumberToAlphaDrill extends DrillBase {
     constructor() {
         super('123-abc');
 
+        // 1〜26の数値配列
+        this.allNumbers = Array.from({ length: 26 }, (_, i) => i + 1);
+
         // EJOTY（5の倍数）の定義
         this.ejotyNumbers = [5, 10, 15, 20, 25]; // E, J, O, T, Y
 
@@ -55,12 +58,7 @@ class NumberToAlphaDrill extends DrillBase {
      * @returns {Object} { question: string, answer: string }
      */
     generateSingleQuestion() {
-        // 1〜26のランダムな数字を生成（前回と異なるもの）
-        let number;
-        do {
-            number = DrillUtils.getRandomInt(1, 26);
-        } while (number === this.lastNumber);
-
+        const number = DrillUtils.getRandomElementExcluding(this.allNumbers, this.lastNumber);
         this.lastNumber = number;
 
         const answer = DrillUtils.numberToAlpha(number);
