@@ -301,8 +301,16 @@ class DrillController {
             }
         };
 
-        modal.addEventListener('click', closeHandler);
-        document.addEventListener('keydown', keyHandler);
+        // 誤答時は3秒間スキップ不可
+        if (type === 'error') {
+            setTimeout(() => {
+                modal.addEventListener('click', closeHandler);
+                document.addEventListener('keydown', keyHandler);
+            }, 3000);
+        } else {
+            modal.addEventListener('click', closeHandler);
+            document.addEventListener('keydown', keyHandler);
+        }
     }
 }
 
