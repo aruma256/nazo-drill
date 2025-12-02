@@ -57,6 +57,57 @@ class PrefFillDrill extends DrillBase {
             'おきなわ'
         ];
 
+        // 漢字→ひらがなのマッピング
+        this.kanjiToHiragana = {
+            '北海道': 'ほっかいどう',
+            '青森': 'あおもり',
+            '岩手': 'いわて',
+            '宮城': 'みやぎ',
+            '秋田': 'あきた',
+            '山形': 'やまがた',
+            '福島': 'ふくしま',
+            '茨城': 'いばらき',
+            '栃木': 'とちぎ',
+            '群馬': 'ぐんま',
+            '埼玉': 'さいたま',
+            '千葉': 'ちば',
+            '東京': 'とうきょう',
+            '神奈川': 'かながわ',
+            '新潟': 'にいがた',
+            '富山': 'とやま',
+            '石川': 'いしかわ',
+            '福井': 'ふくい',
+            '山梨': 'やまなし',
+            '長野': 'ながの',
+            '岐阜': 'ぎふ',
+            '静岡': 'しずおか',
+            '愛知': 'あいち',
+            '三重': 'みえ',
+            '滋賀': 'しが',
+            '京都': 'きょうと',
+            '大阪': 'おおさか',
+            '兵庫': 'ひょうご',
+            '奈良': 'なら',
+            '和歌山': 'わかやま',
+            '鳥取': 'とっとり',
+            '島根': 'しまね',
+            '岡山': 'おかやま',
+            '広島': 'ひろしま',
+            '山口': 'やまぐち',
+            '徳島': 'とくしま',
+            '香川': 'かがわ',
+            '愛媛': 'えひめ',
+            '高知': 'こうち',
+            '福岡': 'ふくおか',
+            '佐賀': 'さが',
+            '長崎': 'ながさき',
+            '熊本': 'くまもと',
+            '大分': 'おおいた',
+            '宮崎': 'みやざき',
+            '鹿児島': 'かごしま',
+            '沖縄': 'おきなわ'
+        };
+
     }
 
     /**
@@ -137,6 +188,34 @@ class PrefFillDrill extends DrillBase {
             const j = DrillUtils.getRandomInt(0, i);
             [array[i], array[j]] = [array[j], array[i]];
         }
+    }
+
+    /**
+     * カタカナをひらがなに変換
+     * @param {string} str
+     * @returns {string}
+     */
+    katakanaToHiragana(str) {
+        return str.replace(/[\u30A1-\u30F6]/g, (match) => {
+            return String.fromCharCode(match.charCodeAt(0) - 0x60);
+        });
+    }
+
+    /**
+     * 回答を正規化する（漢字・カタカナをひらがなに変換）
+     * @param {string} answer
+     * @returns {string}
+     */
+    normalizeAnswer(answer) {
+        const trimmed = answer.toString().trim();
+
+        // 漢字の都道府県名をひらがなに変換
+        if (this.kanjiToHiragana[trimmed]) {
+            return this.kanjiToHiragana[trimmed];
+        }
+
+        // カタカナをひらがなに変換
+        return this.katakanaToHiragana(trimmed);
     }
 
     /**
