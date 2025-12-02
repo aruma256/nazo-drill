@@ -57,7 +57,6 @@ class PrefFillDrill extends DrillBase {
             'おきなわ'
         ];
 
-        this.mode = 'hard';
     }
 
     /**
@@ -96,11 +95,11 @@ class PrefFillDrill extends DrillBase {
     }
 
     /**
-     * ハードモード用：できるだけ多くの文字を◯に置換
+     * できるだけ多くの文字を◯に置換した出題文字列を生成
      * @param {string} pref - 都道府県名
      * @returns {string|null} 出題文字列。作成不可ならnull
      */
-    generateHardQuestion(pref) {
+    generateQuestionString(pref) {
         const indices = [];
         // シャッフルした順番で各位置を試す
         const positions = Array.from({ length: pref.length }, (_, i) => i);
@@ -130,27 +129,6 @@ class PrefFillDrill extends DrillBase {
     }
 
     /**
-     * イージーモード用：1文字のみを◯に置換
-     * @param {string} pref - 都道府県名
-     * @returns {string|null} 出題文字列。作成不可ならnull
-     */
-    generateEasyQuestion(pref) {
-        // シャッフルした順番で各位置を試す
-        const positions = Array.from({ length: pref.length }, (_, i) => i);
-        this.shuffleArray(positions);
-
-        for (const pos of positions) {
-            const testStr = this.replaceWithCircle(pref, [pos]);
-            if (this.isUnique(testStr, pref)) {
-                return testStr;
-            }
-        }
-
-        // 1文字も◯にできない場合
-        return null;
-    }
-
-    /**
      * 配列をシャッフル（Fisher-Yates）
      * @param {Array} array
      */
@@ -172,12 +150,7 @@ class PrefFillDrill extends DrillBase {
             // ランダムに都道府県を選択
             const pref = DrillUtils.getRandomElement(this.prefectures);
 
-            let questionStr;
-            if (this.mode === 'easy') {
-                questionStr = this.generateEasyQuestion(pref);
-            } else {
-                questionStr = this.generateHardQuestion(pref);
-            }
+            const questionStr = this.generateQuestionString(pref);
 
             if (questionStr !== null) {
                 return {
