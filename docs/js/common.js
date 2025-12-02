@@ -157,6 +157,17 @@ function numberToAlpha(number) {
     return String.fromCharCode(ASCII_CODE_A + number - 1);
 }
 
+/**
+ * カタカナをひらがなに変換
+ * @param {string} str - 変換する文字列
+ * @returns {string} ひらがなに変換された文字列
+ */
+function katakanaToHiragana(str) {
+    return str.replace(/[\u30A1-\u30F6]/g, (match) => {
+        return String.fromCharCode(match.charCodeAt(0) - 0x60);
+    });
+}
+
 // グローバルに公開
 if (typeof window !== 'undefined') {
     window.DrillBase = DrillBase;
@@ -165,6 +176,7 @@ if (typeof window !== 'undefined') {
         getRandomInt,
         getRandomElement,
         getRandomElementExcluding,
-        numberToAlpha
+        numberToAlpha,
+        katakanaToHiragana
     };
 }

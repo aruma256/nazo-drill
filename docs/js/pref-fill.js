@@ -191,17 +191,6 @@ class PrefFillDrill extends DrillBase {
     }
 
     /**
-     * カタカナをひらがなに変換
-     * @param {string} str
-     * @returns {string}
-     */
-    katakanaToHiragana(str) {
-        return str.replace(/[\u30A1-\u30F6]/g, (match) => {
-            return String.fromCharCode(match.charCodeAt(0) - 0x60);
-        });
-    }
-
-    /**
      * 回答を正規化する（漢字・カタカナをひらがなに変換）
      * @param {string} answer
      * @returns {string}
@@ -215,7 +204,7 @@ class PrefFillDrill extends DrillBase {
         }
 
         // カタカナをひらがなに変換
-        return this.katakanaToHiragana(trimmed);
+        return DrillUtils.katakanaToHiragana(trimmed);
     }
 
     /**
