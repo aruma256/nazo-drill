@@ -301,12 +301,35 @@ class DrillController {
             }
         };
 
-        // 誤答時は3秒間スキップ不可
+        // 誤答時は3秒間スキップ不可（プログレスバー表示）
         if (type === 'error') {
+            // プログレスバーを動的に作成
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'mt-4 w-full bg-gray-200 rounded-full h-2';
+            const progressBar = document.createElement('div');
+            progressBar.className = 'bg-red-500 h-2 rounded-full transition-all duration-100';
+            progressBar.style.width = '100%';
+            progressContainer.appendChild(progressBar);
+            modal.querySelector('.bg-white').appendChild(progressContainer);
+
+            // 3秒間でバーを減らす
+            const startTime = Date.now();
+            const duration = 3000;
+            const updateProgress = () => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
+                progressBar.style.width = remaining + '%';
+                if (elapsed < duration) {
+                    requestAnimationFrame(updateProgress);
+                }
+            };
+            requestAnimationFrame(updateProgress);
+
             setTimeout(() => {
+                progressContainer.remove();
                 modal.addEventListener('click', closeHandler);
                 document.addEventListener('keydown', keyHandler);
-            }, 3000);
+            }, duration);
         } else {
             modal.addEventListener('click', closeHandler);
             document.addEventListener('keydown', keyHandler);
