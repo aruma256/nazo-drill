@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>都道府県名の穴埋め - ナゾドリル</title>
+    <meta name="description" content="都道府県名を穴埋め形式で当てるトレーニング（◯うき◯◯→とうきょう）">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="main-container" class="container mx-auto px-4 py-6 max-w-2xl">
+        <!-- ヘッダー（ドリル中は非表示） -->
+        <header id="header" class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                    <span class="text-xl mr-2">←</span>
+                    <span class="font-medium">トップへ戻る</span>
+                </a>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2 text-center">
+                都道府県名の穴埋め
+            </h1>
+            <p class="text-center text-gray-700">
+                ◯で隠された都道府県名を当てよう
+            </p>
+        </header>
+
+        <!-- スタート画面 -->
+        <div id="start-screen">
+            <!-- ルール説明 -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    ルール
+                </h2>
+                <div class="text-gray-700 space-y-2 pl-3">
+                    <p>◯で隠された文字を推測し、都道府県名を当てます。</p>
+                    <div class="bg-white/50 rounded-lg p-3 text-center mt-3">
+                        <p class="text-lg font-mono">
+                            <span class="text-indigo-600">◯うき◯◯</span> → <span class="text-green-600 font-bold">とうきょう</span>
+                        </p>
+                        <p class="text-lg font-mono mt-2">
+                            <span class="text-indigo-600">◯◯し◯</span> → <span class="text-green-600 font-bold">?</span>
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">答えは全てひらがなで入力してください</p>
+                </div>
+            </section>
+
+            <!-- モード選択 -->
+            <section class="mb-6">
+                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                    モードを選択
+                </h2>
+                <div class="space-y-3">
+                    <button
+                        data-mode="easy"
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        <div class="flex items-center justify-center">
+                            <span>イージー</span>
+                            <span class="ml-2 text-sm text-gray-500">（1文字だけ◯）</span>
+                        </div>
+                    </button>
+                    <button
+                        data-mode="hard"
+                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        <div class="flex items-center justify-center">
+                            <span>ハード</span>
+                            <span class="ml-2 text-sm text-gray-500">（できるだけ◯に伏せる）</span>
+                        </div>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
+        <div id="drill-screen" class="hidden">
+            <!-- スマホ用ミニヘッダー（戻るボタンのみ） -->
+            <div class="flex items-center justify-between mb-2">
+                <button id="back-to-start" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
+                    <span class="mr-1">←</span>
+                    <span>やめる</span>
+                </button>
+                <span class="text-sm text-gray-500">都道府県</span>
+            </div>
+
+            <!-- 問題エリア -->
+            <div class="bg-white/70 rounded-lg p-4">
+                <!-- 問題表示 -->
+                <div class="text-center mb-6">
+                    <div class="text-4xl md:text-5xl font-bold text-indigo-900 tracking-widest" id="question-display">
+                        --
+                    </div>
+                </div>
+
+                <!-- 回答入力＆ボタンエリア -->
+                <div class="mb-2">
+                    <label for="answer-input" class="sr-only">
+                        あなたの答え:
+                    </label>
+                    <div class="flex gap-2 items-stretch">
+                        <input
+                            type="text"
+                            id="answer-input"
+                            class="flex-1 min-w-0 text-center text-2xl font-bold p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                            maxlength="10"
+                            autocomplete="off"
+                            placeholder="ひらがなで入力"
+                        >
+                        <button
+                            id="submit-button"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">➤</span>
+                        </button>
+                        <button
+                            id="next-button"
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px]">
+                            <span class="text-lg">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- フィードバックエリア（インライン表示） -->
+                <div id="feedback" class="hidden rounded-lg p-2 text-center font-bold"></div>
+            </div>
+
+            <!-- ヒント（ドリル中は非表示） -->
+            <div id="hint" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+                <div class="flex">
+                    <div class="text-2xl mr-3">💡</div>
+                    <div>
+                        <p class="font-bold text-blue-800 mb-1">ヒント</p>
+                        <p class="text-sm text-blue-700">
+                            47都道府県の中から、◯の部分に当てはまる都道府県名を答えてください。<br>
+                            答えは全てひらがなで入力してください。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フィードバックモーダル -->
+    <div id="feedback-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-sm w-full text-center">
+            <div id="modal-message" class="text-3xl font-bold mb-4"></div>
+            <div id="modal-hint" class="hidden text-xl text-indigo-900 mb-4"></div>
+            <div class="text-sm text-gray-400 mt-6">タップして次へ</div>
+        </div>
+    </div>
+
+    <!-- スクリプト -->
+    <script src="../js/common.js"></script>
+    <script src="../js/drill-controller.js"></script>
+    <script src="../js/pref-fill.js"></script>
+    <script>
+        // ドリルを初期化
+        const drill = new PrefFillDrill();
+        const controller = new DrillController(drill, {
+            autoUppercase: false,
+            maxLength: 10,
+            placeholder: 'ひらがなで入力'
+        });
+    </script>
+</body>
+</html>
