@@ -5,45 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ナゾドリル - 謎解き変換トレーニング</title>
     <meta name="description" content="謎解きの定番変換パターンをドリル形式でトレーニング">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        :root {
+            --paper-cream: #fffef9;
+            --paper-line: #90cce6;
+            --pencil-yellow: #fcd34d;
+            --pencil-orange: #f59e0b;
+            --red-pen: #dc2626;
+            --green-check: #16a34a;
+            --text-brown: #78350f;
+            --card-bg: #fffdf7;
+        }
+        * {
+            font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic Pro', sans-serif;
+        }
+        body {
+            background-color: var(--paper-cream);
+            background-image:
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 31px,
+                    var(--paper-line) 31px,
+                    var(--paper-line) 32px
+                );
+        }
+        /* 鉛筆イラスト装飾 */
+        .pencil-decoration {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+<body class="min-h-screen relative overflow-x-hidden">
+    <!-- 装飾要素 -->
+    <div class="pencil-decoration top-20 left-4 rotate-12 hidden md:block">✏️</div>
+    <div class="pencil-decoration top-40 right-8 -rotate-12 hidden md:block">📝</div>
+    <div class="pencil-decoration bottom-32 left-8 rotate-6 hidden md:block">📖</div>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl relative">
         <!-- ヘッダー -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 mb-4">
-                🧩 ナゾドリル
-            </h1>
-            <p class="text-lg text-gray-700">
-                謎解きの定番変換パターンを<br class="md:hidden">ドリル形式でトレーニング
-            </p>
-            <div class="mt-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded">
-                <p class="font-semibold">⚠️ 開発中のサイトです</p>
-                <p class="text-sm mt-1">一部機能が未実装または変更される可能性があります。</p>
+        <header class="text-center mb-10">
+            <!-- タイトル：ドリル表紙風 -->
+            <div class="inline-block bg-gradient-to-b from-amber-300 to-amber-400 px-8 py-4 rounded-lg shadow-lg border-4 border-amber-500 transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                <h1 class="text-4xl md:text-5xl font-black text-amber-900 drop-shadow-sm" style="text-shadow: 2px 2px 0 rgba(255,255,255,0.5);">
+                    ナゾドリル
+                </h1>
+                <p class="text-amber-800 font-bold mt-1 text-sm md:text-base">
+                    謎解きの定番変換パターンを<br class="md:hidden">ドリル形式でトレーニング
+                </p>
+            </div>
+            <div class="mt-6 bg-orange-50 border-2 border-dashed border-orange-300 text-orange-700 p-3 rounded-lg inline-block">
+                <p class="font-bold text-sm">📢 開発中のサイトです</p>
+                <p class="text-xs mt-1">一部機能が未実装または変更される可能性があります</p>
             </div>
         </header>
 
         <!-- テーマ一覧 -->
         <main>
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+            <h2 class="text-2xl font-black text-amber-800 mb-6 text-center flex items-center justify-center gap-2">
+                <span class="text-2xl">📚</span>
                 トレーニングテーマを選択
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <!-- 五十音表の文字拾い -->
                 <a href="./drill/50on-pick.html"
-                   class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border-2 border-transparent hover:border-indigo-400">
-                    <div class="flex items-center mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">
+                   class="drill-card group block bg-white rounded-xl p-5 border-3 border-amber-200 hover:border-amber-400 transition-all duration-200 hover:-translate-y-1"
+                   style="box-shadow: 4px 4px 0 #fbbf24;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🔤</span>
+                        <h3 class="text-lg font-black text-amber-900">
                             五十音表の文字拾い
                         </h3>
                     </div>
-                    <p class="text-gray-600 mb-3">
+                    <p class="text-amber-700 text-sm mb-3">
                         五十音表のマークされたマスから文字を読み取る練習
                     </p>
                     <!-- サンプル五十音表 -->
                     <div class="flex justify-center mb-2">
-                        <table class="border-collapse border border-gray-400">
+                        <table class="border-collapse border border-amber-300">
                             <tbody>
                                 <tr>
                                     <td class="card-cell"></td>
@@ -113,43 +159,47 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="text-sm text-gray-500 text-center">
-                        答え：<span class="font-bold text-green-600">くるま</span>
+                    <div class="text-sm text-amber-600 text-center">
+                        答え：<span class="font-black text-red-500">くるま</span>
                     </div>
                 </a>
 
                 <!-- 数字toアルファベット -->
                 <a href="./drill/123-abc.html"
-                   class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border-2 border-transparent hover:border-indigo-400">
-                    <div class="flex items-center mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">
+                   class="drill-card group block bg-white rounded-xl p-5 border-3 border-amber-200 hover:border-amber-400 transition-all duration-200 hover:-translate-y-1"
+                   style="box-shadow: 4px 4px 0 #fbbf24;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🔢</span>
+                        <h3 class="text-lg font-black text-amber-900">
                             数字toアルファベット
                         </h3>
                     </div>
-                    <p class="text-gray-600 mb-3">
+                    <p class="text-amber-700 text-sm mb-3">
                         数字をアルファベットに変換する練習
                     </p>
                     <!-- 例題 -->
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-indigo-900 mb-1">5, 1, 20</div>
-                        <div class="text-sm text-gray-500">
-                            答え：<span class="font-bold text-green-600">EAT</span>
+                    <div class="bg-amber-50 rounded-lg p-3 text-center border-2 border-dashed border-amber-200">
+                        <div class="text-2xl font-black text-amber-900 mb-1">5, 1, 20</div>
+                        <div class="text-sm text-amber-600">
+                            答え：<span class="font-black text-red-500">EAT</span>
                         </div>
                     </div>
                 </a>
 
                 <!-- 五十音シフト（未実装） -->
-                <div class="relative block bg-white rounded-lg shadow-md p-6 border-2 border-gray-200 opacity-50 cursor-not-allowed">
+                <div class="drill-card relative block bg-gray-100 rounded-xl p-5 border-3 border-gray-300 opacity-60 cursor-not-allowed"
+                     style="box-shadow: 4px 4px 0 #d1d5db;">
                     <!-- 準備中バッジ -->
-                    <div class="absolute top-3 right-3 bg-gray-400 text-white text-xs font-bold px-2 py-1 rounded">
+                    <div class="absolute top-3 right-3 bg-gray-500 text-white text-xs font-black px-2 py-1 rounded-full">
                         準備中
                     </div>
-                    <div class="flex items-center mb-3">
-                        <h3 class="text-xl font-bold text-gray-500">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl grayscale">🔄</span>
+                        <h3 class="text-lg font-black text-gray-500">
                             五十音シフト
                         </h3>
                     </div>
-                    <p class="text-gray-400 mb-3">
+                    <p class="text-gray-400 text-sm mb-3">
                         五十音をずらして変換する練習
                     </p>
                     <div class="text-sm text-gray-400">
@@ -159,40 +209,44 @@
 
                 <!-- アルファベットシフト -->
                 <a href="./drill/abc-shift.html"
-                   class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border-2 border-transparent hover:border-indigo-400">
-                    <div class="flex items-center mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">
+                   class="drill-card group block bg-white rounded-xl p-5 border-3 border-amber-200 hover:border-amber-400 transition-all duration-200 hover:-translate-y-1"
+                   style="box-shadow: 4px 4px 0 #fbbf24;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🔠</span>
+                        <h3 class="text-lg font-black text-amber-900">
                             アルファベットシフト
                         </h3>
                     </div>
-                    <p class="text-gray-600 mb-3">
+                    <p class="text-amber-700 text-sm mb-3">
                         アルファベットをずらして変換する練習
                     </p>
                     <!-- 例題 -->
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-indigo-900 mb-1">C+2</div>
-                        <div class="text-sm text-gray-500">
-                            答え：<span class="font-bold text-green-600">E</span>
+                    <div class="bg-amber-50 rounded-lg p-3 text-center border-2 border-dashed border-amber-200">
+                        <div class="text-2xl font-black text-amber-900 mb-1">C+2</div>
+                        <div class="text-sm text-amber-600">
+                            答え：<span class="font-black text-red-500">E</span>
                         </div>
                     </div>
                 </a>
 
                 <!-- 都道府県名の穴埋め -->
-                <a href="./drill/prefecture-fill.html"
-                   class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border-2 border-transparent hover:border-indigo-400">
-                    <div class="flex items-center mb-3">
-                        <h3 class="text-xl font-bold text-gray-800">
+                <a href="./drill/pref-fill.html"
+                   class="drill-card group block bg-white rounded-xl p-5 border-3 border-amber-200 hover:border-amber-400 transition-all duration-200 hover:-translate-y-1"
+                   style="box-shadow: 4px 4px 0 #fbbf24;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">🗾</span>
+                        <h3 class="text-lg font-black text-amber-900">
                             都道府県名の穴埋め
                         </h3>
                     </div>
-                    <p class="text-gray-600 mb-3">
+                    <p class="text-amber-700 text-sm mb-3">
                         ◯で隠された都道府県名を当てる練習
                     </p>
                     <!-- 例題 -->
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <div class="text-2xl font-bold text-indigo-900 mb-1 tracking-widest">◯うき◯◯</div>
-                        <div class="text-sm text-gray-500">
-                            答え：<span class="font-bold text-green-600">とうきょう</span>
+                    <div class="bg-amber-50 rounded-lg p-3 text-center border-2 border-dashed border-amber-200">
+                        <div class="text-2xl font-black text-amber-900 mb-1 tracking-widest">◯うき◯◯</div>
+                        <div class="text-sm text-amber-600">
+                            答え：<span class="font-black text-red-500">とうきょう</span>
                         </div>
                     </div>
                 </a>
@@ -200,7 +254,7 @@
         </main>
 
         <!-- フッター -->
-        <footer class="mt-12 text-center text-gray-600 text-sm">
+        <footer class="mt-12 text-center text-amber-700 text-sm">
             <p>© 2025 ナゾドリル - Powered by aruma256</p>
         </footer>
     </div>
@@ -210,18 +264,25 @@
         .card-cell {
             width: 1rem;
             height: 1rem;
-            border: 1px solid #9ca3af;
+            border: 1px solid #d97706;
             text-align: center;
             font-size: 0.6rem;
-            font-weight: bold;
-            color: #4f46e5;
-            background-color: #fff;
+            font-weight: 900;
+            color: #92400e;
+            background-color: #fffbeb;
         }
         .card-cell.card-empty {
-            background-color: oklch(26.9% 0 0);
+            background-color: #78350f;
         }
         .card-cell.card-marked {
-            background-color: #fef3c7;
+            background-color: #fcd34d;
+        }
+        /* ホバー時のシャドウアニメーション */
+        .drill-card {
+            transition: all 0.2s ease;
+        }
+        .drill-card:hover {
+            box-shadow: 6px 6px 0 #f59e0b !important;
         }
     </style>
 </body>
