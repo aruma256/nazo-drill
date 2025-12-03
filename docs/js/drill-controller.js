@@ -36,7 +36,8 @@ class DrillController {
             // モーダル関連
             feedbackModal: document.getElementById('feedback-modal'),
             modalMessage: document.getElementById('modal-message'),
-            modalHint: document.getElementById('modal-hint')
+            modalHint: document.getElementById('modal-hint'),
+            tapToContinue: document.getElementById('tap-to-continue')
         };
 
         this.currentMode = null;
@@ -338,6 +339,11 @@ class DrillController {
 
         // 誤答時は3秒間スキップ不可（プログレスバー表示）
         if (type === 'error') {
+            // 「タップして次へ」を非表示
+            if (this.elements.tapToContinue) {
+                this.elements.tapToContinue.classList.add('hidden');
+            }
+
             // プログレスバーを動的に作成
             const progressContainer = document.createElement('div');
             progressContainer.className = 'mt-4 w-full bg-gray-200 rounded-full h-2';
@@ -362,6 +368,10 @@ class DrillController {
 
             setTimeout(() => {
                 progressContainer.remove();
+                // 「タップして次へ」を再表示
+                if (this.elements.tapToContinue) {
+                    this.elements.tapToContinue.classList.remove('hidden');
+                }
                 modal.addEventListener('click', closeHandler);
                 document.addEventListener('keydown', keyHandler);
             }, duration);
