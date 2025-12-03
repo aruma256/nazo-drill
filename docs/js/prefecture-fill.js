@@ -2,9 +2,9 @@
  * 都道府県名の穴埋め ドリル
  * 「◯うき◯◯」→「とうきょう」のように都道府県名を当てる
  */
-class PrefFillDrill extends DrillBase {
+class PrefectureFillDrill extends DrillBase {
     constructor() {
-        super('pref-fill');
+        super('prefecture-fill');
 
         // 47都道府県のリスト（ひらがな）
         this.prefectures = [
@@ -58,7 +58,7 @@ class PrefFillDrill extends DrillBase {
         ];
 
         // 重複出題防止用
-        this.lastPref = null;
+        this.lastPrefecture = null;
 
         // 漢字→ひらがなのマッピング
         this.kanjiToHiragana = {
@@ -135,10 +135,10 @@ class PrefFillDrill extends DrillBase {
      */
     isUnique(questionStr, answer) {
         // 出題文字列にマッチする都道府県を探す
-        const matches = this.prefectures.filter(pref => {
-            if (pref.length !== questionStr.length) return false;
+        const matches = this.prefectures.filter(prefecture => {
+            if (prefecture.length !== questionStr.length) return false;
             for (let i = 0; i < questionStr.length; i++) {
-                if (questionStr[i] !== '◯' && questionStr[i] !== pref[i]) {
+                if (questionStr[i] !== '◯' && questionStr[i] !== prefecture[i]) {
                     return false;
                 }
             }
@@ -150,20 +150,20 @@ class PrefFillDrill extends DrillBase {
 
     /**
      * できるだけ多くの文字を◯に置換した出題文字列を生成
-     * @param {string} pref - 都道府県名
+     * @param {string} prefecture - 都道府県名
      * @returns {string|null} 出題文字列。作成不可ならnull
      */
-    generateQuestionString(pref) {
+    generateQuestionString(prefecture) {
         const indices = [];
         // シャッフルした順番で各位置を試す
-        const positions = Array.from({ length: pref.length }, (_, i) => i);
+        const positions = Array.from({ length: prefecture.length }, (_, i) => i);
         this.shuffleArray(positions);
 
         for (const pos of positions) {
             // この位置を◯にしても一意性が保たれるか確認
             const testIndices = [...indices, pos];
-            const testStr = this.replaceWithCircle(pref, testIndices);
-            if (this.isUnique(testStr, pref)) {
+            const testStr = this.replaceWithCircle(prefecture, testIndices);
+            if (this.isUnique(testStr, prefecture)) {
                 indices.push(pos);
             }
         }
@@ -174,12 +174,12 @@ class PrefFillDrill extends DrillBase {
         }
 
         // 少なくとも1文字は見えている必要がある
-        if (indices.length === pref.length) {
+        if (indices.length === prefecture.length) {
             // 全文字◯は不可なので、1つ戻す
             indices.pop();
         }
 
-        return this.replaceWithCircle(pref, indices);
+        return this.replaceWithCircle(prefecture, indices);
     }
 
     /**
@@ -219,15 +219,15 @@ class PrefFillDrill extends DrillBase {
 
         for (let retry = 0; retry < maxRetries; retry++) {
             // ランダムに都道府県を選択（前回と同じものは除外）
-            const pref = DrillUtils.getRandomElementExcluding(this.prefectures, this.lastPref);
+            const prefecture = DrillUtils.getRandomElementExcluding(this.prefectures, this.lastPrefecture);
 
-            const questionStr = this.generateQuestionString(pref);
+            const questionStr = this.generateQuestionString(prefecture);
 
             if (questionStr !== null) {
-                this.lastPref = pref;
+                this.lastPrefecture = prefecture;
                 return {
                     question: questionStr,
-                    answer: pref
+                    answer: prefecture
                 };
             }
         }
@@ -242,5 +242,5 @@ class PrefFillDrill extends DrillBase {
 
 // グローバルに公開
 if (typeof window !== 'undefined') {
-    window.PrefFillDrill = PrefFillDrill;
+    window.PrefectureFillDrill = PrefectureFillDrill;
 }
