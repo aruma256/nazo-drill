@@ -72,6 +72,36 @@ class DrillController {
             this.elements.mainContainer.classList.remove('h-dvh', 'overflow-hidden', 'py-2');
             this.elements.mainContainer.classList.add('py-6');
         }
+        // モードボタンにポイント表示を更新
+        this.updateModeButtonPoints();
+    }
+
+    /**
+     * モードボタンにポイント表示を追加・更新
+     */
+    updateModeButtonPoints() {
+        this.elements.modeButtons.forEach(button => {
+            const mode = button.dataset.mode;
+            const disabled = button.dataset.disabled === 'true';
+
+            // 無効なモードはスキップ
+            if (disabled) return;
+
+            const count = this.drill.getCorrectCount(mode);
+
+            // 既存のポイント表示要素を探す
+            let pointsEl = button.querySelector('.correct-count-display');
+
+            if (!pointsEl) {
+                // ポイント表示要素がなければ作成
+                pointsEl = document.createElement('span');
+                pointsEl.className = 'correct-count-display block text-sm font-normal text-gray-500 mt-1';
+                button.appendChild(pointsEl);
+            }
+
+            // ポイントを表示
+            pointsEl.textContent = `${count} pt`;
+        });
     }
 
     /**
@@ -209,6 +239,11 @@ class DrillController {
         const isCorrect = this.drill.checkAnswer(userAnswer);
         const correctAnswer = this.drill.currentQuestion.answer;
         const question = this.drill.currentQuestion.question;
+
+        // 正解時は累計正答数をインクリメント
+        if (isCorrect && this.currentMode) {
+            this.drill.incrementCorrectCount(this.currentMode);
+        }
 
         // 補助表示の生成（オプションで渡されたコールバックを使用）
         let hintContent = null;

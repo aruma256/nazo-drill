@@ -112,6 +112,39 @@ class DrillBase {
         this.currentQuestion = null;
         this.previousQuestion = null;
     }
+
+    /**
+     * localStorageのキーを生成
+     * @param {string} mode - モード
+     * @returns {string} localStorageのキー
+     */
+    getCorrectCountKey(mode) {
+        return `${this.drillName}-${mode}-correctCount`;
+    }
+
+    /**
+     * 累計正答数を取得
+     * @param {string} mode - モード
+     * @returns {number} 累計正答数
+     */
+    getCorrectCount(mode) {
+        const key = this.getCorrectCountKey(mode);
+        const value = localStorage.getItem(key);
+        return value ? parseInt(value, 10) : 0;
+    }
+
+    /**
+     * 累計正答数をインクリメント
+     * @param {string} mode - モード
+     * @returns {number} インクリメント後の累計正答数
+     */
+    incrementCorrectCount(mode) {
+        const key = this.getCorrectCountKey(mode);
+        const currentCount = this.getCorrectCount(mode);
+        const newCount = currentCount + 1;
+        localStorage.setItem(key, newCount.toString());
+        return newCount;
+    }
 }
 
 /**
