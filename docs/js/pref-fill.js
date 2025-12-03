@@ -57,6 +57,9 @@ class PrefFillDrill extends DrillBase {
             'おきなわ'
         ];
 
+        // 重複出題防止用
+        this.lastPref = null;
+
         // 漢字→ひらがなのマッピング
         this.kanjiToHiragana = {
             '北海道': 'ほっかいどう',
@@ -215,12 +218,13 @@ class PrefFillDrill extends DrillBase {
         const maxRetries = 100;
 
         for (let retry = 0; retry < maxRetries; retry++) {
-            // ランダムに都道府県を選択
-            const pref = DrillUtils.getRandomElement(this.prefectures);
+            // ランダムに都道府県を選択（前回と同じものは除外）
+            const pref = DrillUtils.getRandomElementExcluding(this.prefectures, this.lastPref);
 
             const questionStr = this.generateQuestionString(pref);
 
             if (questionStr !== null) {
+                this.lastPref = pref;
                 return {
                     question: questionStr,
                     answer: pref
