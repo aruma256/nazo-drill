@@ -60,6 +60,39 @@ class PrefectureFillDrill extends DrillBase {
         // 重複出題防止用
         this.lastPrefecture = null;
 
+        // 1県確定の文字: その文字を含む都道府県は1つだけ
+        // 「ざこほどのてにねずめろん」
+        this.singlePrefectureChars = {
+            'ざ': ['みやざき'],       // 宮崎
+            'こ': ['こうち'],         // 高知
+            'ほ': ['ほっかいどう'],   // 北海道
+            'ど': ['ほっかいどう'],   // 北海道
+            'の': ['ながの'],         // 長野
+            'て': ['いわて'],         // 岩手
+            'に': ['にいがた'],       // 新潟
+            'ね': ['しまね'],         // 島根
+            'ず': ['しずおか'],       // 静岡
+            'め': ['えひめ'],         // 愛媛
+            'ろ': ['ひろしま'],       // 広島
+            'ん': ['ぐんま']          // 群馬
+        };
+
+        // 2県確定の文字: その文字を含む都道府県は2つだけ
+        // 「えっぐもばごりら」
+        this.doublePrefectureChars = {
+            'え': ['みえ', 'えひめ'],           // 三重、愛媛
+            'っ': ['ほっかいどう', 'とっとり'], // 北海道、鳥取
+            'ぐ': ['ぐんま', 'やまぐち'],       // 群馬、山口
+            'も': ['あおもり', 'くまもと'],     // 青森、熊本
+            'ば': ['いばらき', 'ちば'],         // 茨城、千葉
+            'ご': ['ひょうご', 'かごしま'],     // 兵庫、鹿児島
+            'り': ['あおもり', 'とっとり'],     // 青森、鳥取
+            'ら': ['いばらき', 'なら']          // 茨城、奈良
+        };
+
+        // 重複出題防止用（1県/2県確定モード用）
+        this.lastChar = null;
+
         // 漢字→ひらがなのマッピング
         this.kanjiToHiragana = {
             '北海道': 'ほっかいどう',
@@ -215,6 +248,20 @@ class PrefectureFillDrill extends DrillBase {
      * @returns {Object} { question: string, answer: string }
      */
     generateQuestion() {
+        if (this.mode === 'one-prefecture') {
+            return this.generateOnePrefectureQuestion();
+        } else if (this.mode === 'two-prefectures') {
+            return this.generateTwoPrefecturesQuestion();
+        } else {
+            return this.generateNormalQuestion();
+        }
+    }
+
+    /**
+     * 通常モードの問題を生成する
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateNormalQuestion() {
         const maxRetries = 100;
 
         for (let retry = 0; retry < maxRetries; retry++) {
@@ -237,6 +284,77 @@ class PrefectureFillDrill extends DrillBase {
             question: '◯うきょう',
             answer: 'とうきょう'
         };
+    }
+
+    /**
+     * 1県確定特訓モードの問題を生成する
+     * 「ざ を含む都道府県」→「みやざき」のように出題
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateOnePrefectureQuestion() {
+        const chars = Object.keys(this.singlePrefectureChars);
+        const char = DrillUtils.getRandomElementExcluding(chars, this.lastChar);
+        this.lastChar = char;
+
+        const prefectures = this.singlePrefectureChars[char];
+
+        return {
+            question: `「${char}」を含む都道府県`,
+            answer: prefectures[0]
+        };
+    }
+
+    /**
+     * 2県確定特訓モードの問題を生成する
+     * 「え を含む都道府県」→「みえ えひめ」のように出題
+     * @returns {Object} { question: string, answer: string }
+     */
+    generateTwoPrefecturesQuestion() {
+        const chars = Object.keys(this.doublePrefectureChars);
+        const char = DrillUtils.getRandomElementExcluding(chars, this.lastChar);
+        this.lastChar = char;
+
+        const prefectures = this.doublePrefectureChars[char];
+        // 回答は両方の都道府県をスペースで区切って結合
+        const answer = prefectures.slice().sort().join(' ');
+
+        return {
+            question: `「${char}」を含む都道府県`,
+            answer: answer
+        };
+    }
+
+    /**
+     * 回答をチェックする（2県確定モードは順序不問）
+     * @param {string} userAnswer - ユーザーの回答
+     * @returns {boolean} 正解ならtrue
+     */
+    checkAnswer(userAnswer) {
+        if (!this.currentQuestion) {
+            throw new Error('No question has been presented');
+        }
+
+        let isCorrect;
+        if (this.mode === 'two-prefectures') {
+            // 2県確定モード: 順序不問でチェック
+            const normalized = this.normalizeAnswer(userAnswer);
+            // スペース、カンマ、読点、全角スペースで分割
+            const userParts = normalized.split(/[\s,、　]+/).filter(s => s).sort();
+            const answerParts = this.currentQuestion.answer.split(' ').sort();
+
+            isCorrect = userParts.length === answerParts.length &&
+                       userParts.every((part, i) => part === answerParts[i]);
+        } else {
+            // 通常モード/1県確定モード
+            isCorrect = this.normalizeAnswer(userAnswer) ===
+                       this.normalizeAnswer(this.currentQuestion.answer);
+        }
+
+        if (isCorrect) {
+            this.score++;
+        }
+
+        return isCorrect;
     }
 }
 
