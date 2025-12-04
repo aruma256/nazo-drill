@@ -310,8 +310,8 @@
         .gojuon-cell.marked {
             background-color: #fef3c7;
         }
-        /* 「は」列の左右の線を太く */
-        .gojuon-cell[data-col="5"] {
+        /* 「は」列の左右の線を太く（た〜も特訓モード時のみ） */
+        .ta-mo-mode .gojuon-cell[data-col="5"] {
             border-left: 2px solid #374151;
             border-right: 2px solid #374151;
         }
@@ -378,6 +378,19 @@
                 updateGojuonTable(question);
             },
             getHintContent: (question, answer) => answer
+        });
+
+        // モード選択時にta-mo-modeクラスを切り替え
+        document.querySelectorAll('[data-mode]').forEach(button => {
+            button.addEventListener('click', () => {
+                const mode = button.dataset.mode;
+                const drillScreen = document.getElementById('drill-screen');
+                if (mode === 'ta-mo') {
+                    drillScreen.classList.add('ta-mo-mode');
+                } else {
+                    drillScreen.classList.remove('ta-mo-mode');
+                }
+            });
         });
     </script>
 </body>
