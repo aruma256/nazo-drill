@@ -299,8 +299,9 @@ class PrefectureFillDrill extends DrillBase {
         const prefectures = this.singlePrefectureChars[char];
 
         return {
-            question: `「${char}」を含む都道府県`,
-            answer: prefectures[0]
+            question: `「${char}」を含む`,
+            answer: prefectures[0],
+            subtext: '都道府県',
         };
     }
 
@@ -319,8 +320,9 @@ class PrefectureFillDrill extends DrillBase {
         const answer = prefectures.slice().sort().join(' ');
 
         return {
-            question: `「${char}」を含む都道府県`,
-            answer: answer
+            question: `「${char}」を含む`,
+            answer: answer,
+            subtext: '都道府県',
         };
     }
 

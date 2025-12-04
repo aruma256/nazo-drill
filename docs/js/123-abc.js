@@ -49,7 +49,8 @@ class NumberToAlphaDrill extends DrillBase {
 
         return {
             question: number.toString(),
-            answer: answer
+            answer: answer,
+            subtext: '/26',
         };
     }
 
@@ -65,7 +66,8 @@ class NumberToAlphaDrill extends DrillBase {
 
         return {
             question: number.toString(),
-            answer: answer
+            answer: answer,
+            subtext: '/26',
         };
     }
 
@@ -87,7 +89,8 @@ class NumberToAlphaDrill extends DrillBase {
 
         return {
             question: numbers.join(', '),
-            answer: word
+            answer: word,
+            subtext: '/26',
         };
     }
 }

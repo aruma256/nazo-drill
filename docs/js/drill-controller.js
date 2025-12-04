@@ -23,6 +23,7 @@ class DrillController {
             startScreen: document.getElementById('start-screen'),
             drillScreen: document.getElementById('drill-screen'),
             questionDisplay: document.getElementById('question-display'),
+            questionSubtext: document.getElementById('question-subtext'),
             answerInput: document.getElementById('answer-input'),
             submitButton: document.getElementById('submit-button'),
             nextButton: document.getElementById('next-button'),
@@ -216,6 +217,16 @@ class DrillController {
             this.options.onQuestionDisplay(question, this.elements.questionDisplay);
         } else {
             this.elements.questionDisplay.textContent = question.question;
+        }
+
+        // subtext表示（オプション）
+        if (this.elements.questionSubtext) {
+            if (question.subtext) {
+                this.elements.questionSubtext.textContent = question.subtext;
+                this.elements.questionSubtext.classList.remove('hidden');
+            } else {
+                this.elements.questionSubtext.classList.add('hidden');
+            }
         }
 
         this.elements.answerInput.value = '';
