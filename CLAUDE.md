@@ -21,10 +21,12 @@
 3. **アルファベットシフト**
    - 「A+1 → B」
 
+4. **都道府県名の穴埋め**
+   - 「と◯◯ま → 徳島」のように穴埋め
+
 ### その他の変換（ファーストリリースでは対象外）
 
 - 数字to干支（1→子、2→丑、3→寅 …）
-- 都道府県名の穴埋め（と◯◯ま → 徳島）
 - モールス信号toアルファベット（"-.."→D）
 
 ## ドリルの内部名と命名規則
@@ -43,6 +45,7 @@
 | 五十音表の文字拾い | `50on-pick` | `/drill/50on-pick.html` | `GojuonPickDrill` |
 | 数字toアルファベット | `123-abc` | `/drill/123-abc.html` | `NumberToAlphaDrill` |
 | アルファベットシフト | `abc-shift` | `/drill/abc-shift.html` | `AlphaShiftDrill` |
+| 都道府県名の穴埋め | `prefecture-fill` | `/drill/prefecture-fill.html` | `PrefectureFillDrill` |
 
 ### 使用例
 
