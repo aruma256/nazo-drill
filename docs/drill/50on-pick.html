@@ -6,43 +6,217 @@
     <title>五十音表の文字拾い - ナゾドリル</title>
     <meta name="description" content="五十音表のマークされたマスから文字を読み取るトレーニング">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --chalkboard: #2a3d2e;
+            --chalkboard-light: #3a5240;
+            --wood-frame: #5c3d2e;
+            --wood-light: #7a5240;
+            --chalk-white: #f0ebe3;
+            --chalk-yellow: #fff8dc;
+            --red-pen: #e85a5a;
+            --blue-pen: #6ba3d6;
+        }
+
+        * {
+            font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic Pro', 'BIZ UDGothic', sans-serif;
+        }
+
+        body {
+            background-color: var(--chalkboard);
+            position: relative;
+        }
+
+        /* 黒板のノイズテクスチャ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .chalk-text {
+            color: var(--chalk-white);
+            text-shadow: 0 0 1px rgba(240, 235, 227, 0.5), 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .chalk-yellow {
+            color: var(--chalk-yellow);
+            text-shadow: 0 0 1px rgba(255, 248, 220, 0.5), 1px 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .red-accent { color: var(--red-pen); }
+        .blue-link { color: var(--blue-pen); }
+        .blue-link:hover { opacity: 0.8; }
+
+        /* 木枠風パネル */
+        .wood-panel {
+            background: linear-gradient(145deg, var(--chalkboard-light), var(--chalkboard));
+            border: 4px solid var(--wood-frame);
+            border-radius: 4px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* チョーク風ボタン */
+        .chalk-btn {
+            background: transparent;
+            border: 2px dashed var(--chalk-white);
+            color: var(--chalk-white);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .chalk-btn:hover {
+            background: rgba(240, 235, 227, 0.1);
+            border-style: solid;
+        }
+
+        /* 送信ボタン */
+        .submit-btn {
+            background: var(--blue-pen);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        /* 次へボタン */
+        .next-btn {
+            background: var(--red-pen);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .next-btn:hover { opacity: 0.9; }
+
+        /* 入力フィールド */
+        .chalk-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(240, 235, 227, 0.4);
+            color: var(--chalk-yellow);
+            border-radius: 8px;
+        }
+        .chalk-input:focus {
+            outline: none;
+            border-color: var(--chalk-yellow);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .chalk-input::placeholder {
+            color: rgba(240, 235, 227, 0.4);
+        }
+
+        /* 五十音表 */
+        .gojuon-cell {
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid rgba(240, 235, 227, 0.3);
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--chalk-yellow);
+            background-color: transparent;
+        }
+        .gojuon-cell.empty-cell {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .gojuon-cell.marked {
+            background-color: rgba(232, 90, 90, 0.3);
+            border-color: var(--red-pen);
+        }
+        /* 「は」列の左右の線を太く */
+        .gojuon-cell[data-col="5"] {
+            border-left: 2px solid rgba(240, 235, 227, 0.5);
+            border-right: 2px solid rgba(240, 235, 227, 0.5);
+        }
+        @media (min-width: 640px) {
+            .gojuon-cell {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* 例用の小さな五十音表 */
+        .example-cell {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid rgba(240, 235, 227, 0.3);
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: var(--chalk-yellow);
+            background-color: transparent;
+        }
+        .example-cell.example-empty {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .example-cell.example-marked {
+            background-color: rgba(232, 90, 90, 0.3);
+            border-color: var(--red-pen);
+        }
+
+        /* フィードバック */
+        .feedback-correct {
+            background: rgba(232, 90, 90, 0.2);
+            border: 2px solid var(--red-pen);
+            color: var(--red-pen);
+        }
+        .feedback-incorrect {
+            background: rgba(107, 163, 214, 0.2);
+            border: 2px solid var(--blue-pen);
+            color: var(--blue-pen);
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <div id="main-container" class="container mx-auto px-4 py-6 max-w-2xl">
+<body class="min-h-screen">
+    <div id="main-container" class="relative z-10 container mx-auto px-4 py-6 max-w-2xl">
         <!-- ヘッダー（ドリル中は非表示） -->
         <header id="header" class="mb-6">
             <div class="flex items-center justify-between mb-4">
-                <a href="../index.html" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                <a href="../index.html" class="blue-link flex items-center">
                     <span class="text-xl mr-2">←</span>
                     <span class="font-medium">トップへ戻る</span>
                 </a>
             </div>
-            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold chalk-yellow mb-2 text-center">
                 五十音表の文字拾い
             </h1>
-            <p class="text-center text-gray-700">
+            <p class="text-center chalk-text opacity-80">
                 数字の順に文字を読み取ろう
             </p>
         </header>
 
         <!-- スタート画面 -->
         <div id="start-screen">
-            <!-- ルール説明（影なしフラットデザイン） -->
+            <!-- ルール説明 -->
             <section class="mb-8">
-                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
-                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                <h2 class="text-lg font-bold chalk-yellow mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-amber-400 rounded mr-2"></span>
                     ルール
                 </h2>
-                <div class="text-gray-700 space-y-2 pl-3">
+                <div class="chalk-text opacity-90 space-y-2 pl-3">
                     <p>五十音表の中に数字が書かれたマスがあります。</p>
-                    <p>数字を<span class="font-bold text-indigo-600">1, 2, 3...</span>の順に拾い、そのマスに対応するひらがなを読み取ります。</p>
-                    <div class="bg-white/50 rounded-lg p-3 mt-3">
-                        <p class="text-sm mb-3 text-center text-gray-500">例：</p>
+                    <p>数字を<span class="font-bold chalk-yellow">1, 2, 3...</span>の順に拾い、そのマスに対応するひらがなを読み取ります。</p>
+                    <div class="wood-panel p-4 mt-3">
+                        <p class="text-sm mb-3 text-center chalk-text opacity-70">例：</p>
                         <!-- 例用の五十音表 -->
                         <div class="flex justify-center mb-3">
-                            <table class="border-collapse border border-gray-400">
+                            <table class="border-collapse">
                                 <tbody>
-                                    <!-- あ段 -->
                                     <tr>
                                         <td class="example-cell"></td>
                                         <td class="example-cell"></td>
@@ -56,7 +230,6 @@
                                         <td class="example-cell"></td>
                                         <td class="example-cell"></td>
                                     </tr>
-                                    <!-- い段 -->
                                     <tr>
                                         <td class="example-cell example-empty"></td>
                                         <td class="example-cell example-empty"></td>
@@ -70,7 +243,6 @@
                                         <td class="example-cell"></td>
                                         <td class="example-cell"></td>
                                     </tr>
-                                    <!-- う段 -->
                                     <tr>
                                         <td class="example-cell example-empty"></td>
                                         <td class="example-cell example-empty"></td>
@@ -84,7 +256,6 @@
                                         <td class="example-cell example-marked">1</td>
                                         <td class="example-cell"></td>
                                     </tr>
-                                    <!-- え段 -->
                                     <tr>
                                         <td class="example-cell example-empty"></td>
                                         <td class="example-cell example-empty"></td>
@@ -98,7 +269,6 @@
                                         <td class="example-cell"></td>
                                         <td class="example-cell"></td>
                                     </tr>
-                                    <!-- お段 -->
                                     <tr>
                                         <td class="example-cell example-empty"></td>
                                         <td class="example-cell"></td>
@@ -115,56 +285,55 @@
                                 </tbody>
                             </table>
                         </div>
-                        <p class="text-sm text-center mb-1 text-gray-600">1→「く」、2→「る」、3→「ま」</p>
-                        <p class="text-center text-xl font-bold text-green-600">答え：くるま</p>
+                        <p class="text-sm text-center mb-1 chalk-text opacity-80">1→「く」、2→「る」、3→「ま」</p>
+                        <p class="text-center text-xl font-bold red-accent">答え：くるま</p>
                     </div>
                 </div>
             </section>
 
-            <!-- モード選択（ボタンをカードスタイルに） -->
+            <!-- モード選択 -->
             <section class="mb-6">
-                <h2 class="text-lg font-bold text-indigo-900 mb-3 flex items-center">
-                    <span class="w-1 h-5 bg-indigo-500 rounded mr-2"></span>
+                <h2 class="text-lg font-bold chalk-yellow mb-3 flex items-center">
+                    <span class="w-1 h-5 bg-amber-400 rounded mr-2"></span>
                     モードを選択
                 </h2>
                 <div class="space-y-3">
                     <button
                         data-mode="ta-mo"
-                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        class="w-full py-4 px-6 chalk-btn font-bold text-lg">
                         「た」〜「も」特訓モード
                     </button>
                     <button
                         data-mode="single"
-                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        class="w-full py-4 px-6 chalk-btn font-bold text-lg">
                         1文字モード
                     </button>
                     <button
                         data-mode="word"
-                        class="w-full py-4 px-6 bg-white hover:bg-indigo-50 text-indigo-700 font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-lg border-2 border-transparent hover:border-indigo-400">
+                        class="w-full py-4 px-6 chalk-btn font-bold text-lg">
                         単語モード
                     </button>
                 </div>
             </section>
         </div>
 
-        <!-- ドリル画面（スマホ最適化：スクロール不要レイアウト） -->
+        <!-- ドリル画面 -->
         <div id="drill-screen" class="hidden">
-            <!-- スマホ用ミニヘッダー（戻るボタンのみ） -->
-            <div class="flex items-center justify-between mb-2">
-                <button id="back-to-start" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
+            <!-- ミニヘッダー -->
+            <div class="flex items-center justify-between mb-3">
+                <button id="back-to-start" class="blue-link flex items-center text-sm">
                     <span class="mr-1">←</span>
                     <span>やめる</span>
                 </button>
-                <span class="text-sm text-gray-500">文字拾い</span>
+                <span class="text-sm chalk-text opacity-70">文字拾い</span>
             </div>
 
-            <!-- 問題エリア（影なしフラットデザイン） -->
-            <div class="bg-white/70 rounded-lg p-4">
-                <!-- 五十音表（問題表示）11列: ん,わ,ら,や,ま,は,な,た,さ,か,あ -->
+            <!-- 問題エリア -->
+            <div class="wood-panel p-4">
+                <!-- 五十音表 -->
                 <div class="mb-4 flex justify-center" id="question-display">
-                    <table class="border-collapse border border-gray-400" id="gojuon-table">
+                    <table class="border-collapse" id="gojuon-table">
                         <tbody>
-                            <!-- あ列（右端があ、左端がん） -->
                             <tr>
                                 <td class="gojuon-cell" data-row="0" data-col="0"></td>
                                 <td class="gojuon-cell" data-row="0" data-col="1"></td>
@@ -178,7 +347,6 @@
                                 <td class="gojuon-cell" data-row="0" data-col="9"></td>
                                 <td class="gojuon-cell" data-row="0" data-col="10"></td>
                             </tr>
-                            <!-- い列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="1" data-col="0"></td>
                                 <td class="gojuon-cell empty-cell" data-row="1" data-col="1"></td>
@@ -192,7 +360,6 @@
                                 <td class="gojuon-cell" data-row="1" data-col="9"></td>
                                 <td class="gojuon-cell" data-row="1" data-col="10"></td>
                             </tr>
-                            <!-- う列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="2" data-col="0"></td>
                                 <td class="gojuon-cell empty-cell" data-row="2" data-col="1"></td>
@@ -206,7 +373,6 @@
                                 <td class="gojuon-cell" data-row="2" data-col="9"></td>
                                 <td class="gojuon-cell" data-row="2" data-col="10"></td>
                             </tr>
-                            <!-- え列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="3" data-col="0"></td>
                                 <td class="gojuon-cell empty-cell" data-row="3" data-col="1"></td>
@@ -220,7 +386,6 @@
                                 <td class="gojuon-cell" data-row="3" data-col="9"></td>
                                 <td class="gojuon-cell" data-row="3" data-col="10"></td>
                             </tr>
-                            <!-- お列 -->
                             <tr>
                                 <td class="gojuon-cell empty-cell" data-row="4" data-col="0"></td>
                                 <td class="gojuon-cell" data-row="4" data-col="1"></td>
@@ -238,42 +403,40 @@
                     </table>
                 </div>
 
-                <!-- 回答入力＆ボタンエリア -->
+                <!-- 回答入力 -->
                 <div class="mb-2">
-                    <label for="answer-input" class="sr-only">
-                        あなたの答え:
-                    </label>
+                    <label for="answer-input" class="sr-only">あなたの答え:</label>
                     <div class="flex gap-2 items-stretch">
                         <input
                             type="text"
                             id="answer-input"
-                            class="flex-1 min-w-0 text-center text-2xl font-bold p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                            class="flex-1 min-w-0 text-center text-2xl font-bold p-3 chalk-input"
                             autocomplete="off"
                         >
                         <button
                             id="submit-button"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap min-w-[80px]">
+                            class="submit-btn font-bold py-3 px-5 whitespace-nowrap min-w-[80px]">
                             <span class="text-lg">➤</span>
                         </button>
                         <button
                             id="next-button"
-                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg transition-colors duration-200 hidden whitespace-nowrap min-w-[80px]">
+                            class="next-btn font-bold py-3 px-5 hidden whitespace-nowrap min-w-[80px]">
                             <span class="text-lg">→</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- フィードバックエリア（インライン表示） -->
+                <!-- フィードバック -->
                 <div id="feedback" class="hidden rounded-lg p-2 text-center font-bold"></div>
             </div>
 
             <!-- ヒント -->
-            <div id="hint" class="hidden bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+            <div id="hint" class="hidden wood-panel p-4 mt-4">
                 <div class="flex">
                     <div class="text-2xl mr-3">💡</div>
                     <div>
-                        <p class="font-bold text-blue-800 mb-1">ヒント</p>
-                        <p class="text-sm text-blue-700">
+                        <p class="font-bold chalk-yellow mb-1">ヒント</p>
+                        <p class="text-sm chalk-text opacity-80">
                             数字を1, 2, 3...の順に読み取り、<br>
                             そのマスのひらがなをつなげましょう
                         </p>
@@ -285,61 +448,13 @@
 
     <!-- フィードバックモーダル -->
     <div id="feedback-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/20"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-sm w-full text-center">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative wood-panel p-8 mx-4 max-w-sm w-full text-center">
             <div id="modal-message" class="text-3xl font-bold mb-4"></div>
-            <div id="modal-hint" class="hidden text-xl text-indigo-900 mb-4"></div>
-            <div id="tap-to-continue" class="text-sm text-gray-400 mt-6">タップして次へ</div>
+            <div id="modal-hint" class="hidden text-xl chalk-yellow mb-4"></div>
+            <div id="tap-to-continue" class="text-sm chalk-text opacity-60 mt-6">タップして次へ</div>
         </div>
     </div>
-
-    <style>
-        .gojuon-cell {
-            width: 2rem;
-            height: 2rem;
-            border: 1px solid #9ca3af;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #4f46e5;
-            background-color: #fff;
-        }
-        .gojuon-cell.empty-cell {
-            background-color: oklch(26.9% 0 0);
-        }
-        .gojuon-cell.marked {
-            background-color: #fef3c7;
-        }
-        /* 「は」列の左右の線を太く */
-        .gojuon-cell[data-col="5"] {
-            border-left: 2px solid #374151;
-            border-right: 2px solid #374151;
-        }
-        @media (min-width: 640px) {
-            .gojuon-cell {
-                width: 2.5rem;
-                height: 2.5rem;
-                font-size: 1.25rem;
-            }
-        }
-        /* 例用の小さな五十音表 */
-        .example-cell {
-            width: 1.25rem;
-            height: 1.25rem;
-            border: 1px solid #9ca3af;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #4f46e5;
-            background-color: #fff;
-        }
-        .example-cell.example-empty {
-            background-color: oklch(26.9% 0 0);
-        }
-        .example-cell.example-marked {
-            background-color: #fef3c7;
-        }
-    </style>
 
     <!-- スクリプト -->
     <script src="../js/common.js"></script>
@@ -352,7 +467,7 @@
             const markedCells = JSON.parse(question.question);
             const cells = document.querySelectorAll('.gojuon-cell');
 
-            // すべてのセルをリセット（空欄にする）
+            // すべてのセルをリセット
             cells.forEach(cell => {
                 cell.classList.remove('marked');
                 cell.textContent = '';
