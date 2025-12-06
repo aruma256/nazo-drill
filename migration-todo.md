@@ -1,7 +1,7 @@
 # React + TypeScript移行 TODOリスト
 
 ## 開発環境セットアップ
-- [ ] devcontainer環境を作る（Node.js + 必要な拡張機能）
+- [x] devcontainer環境を作る（Node.js + 必要な拡張機能）
 - [ ] Vite + React + TypeScriptプロジェクトを初期化する
 - [ ] Tailwind CSS v4を設定する
 - [ ] React Router（HashRouter）を設定する
