@@ -18,9 +18,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"anthropic.claude-code",
+				"bradlc.vscode-tailwindcss",
 				"dbaeumer.vscode-eslint",
-				"prettier.prettier-vscode",
-				"bradlc.vscode-tailwindcss"
+				"prettier.prettier-vscode"
 			]
 		}
 	}
