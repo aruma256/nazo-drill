@@ -8,6 +8,10 @@
 
 - **モバイルファースト**
 
+## 現在の状況
+
+React + TypeScript への移行作業中です。詳細は `migration-todo.md` を参照してください。
+
 ## 対象となる変換パターン
 
 ### 定番の変換（ファーストリリース対象）
@@ -88,6 +92,19 @@ const drillConfig = {
 - テーマごとにランク（D/C/B/A/S）で実力を表現する機能
 
 ## 実装時の注意点
+
+### コードスタイル
+
+実装前に以下のルールを確認してください。
+
+```json
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all"
+}
+```
 
 ### 動作確認
 
