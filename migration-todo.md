@@ -7,6 +7,7 @@
 - [x] React Router（HashRouter）を設定する
 - [x] Vitest + Testing Libraryを設定する
 - [x] ESLint / Prettierを設定する
+- [x] GitHub ActionsでCI（lint/build/test）を自動化する
 
 ## 共通部分の実装
 - [ ] 共通Layoutコンポーネントを作成する
