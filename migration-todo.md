@@ -3,10 +3,10 @@
 ## 開発環境セットアップ
 - [x] devcontainer環境を作る（Node.js + 必要な拡張機能）
 - [x] Vite + React + TypeScriptプロジェクトを初期化する
-- [ ] Tailwind CSS v4を設定する
-- [ ] React Router（HashRouter）を設定する
-- [ ] Vitest + Testing Libraryを設定する
-- [ ] ESLint / Prettierを設定する
+- [x] Tailwind CSS v4を設定する
+- [x] React Router（HashRouter）を設定する
+- [x] Vitest + Testing Libraryを設定する
+- [x] ESLint / Prettierを設定する
 
 ## 共通部分の実装
 - [ ] 共通Layoutコンポーネントを作成する
