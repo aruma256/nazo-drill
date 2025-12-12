@@ -11,8 +11,8 @@
 
 ## 共通部分の実装
 - [x] `common.js`のユーティリティをTypeScriptに移行する（基盤となるため最初に実施）
-- [ ] 共通Layoutコンポーネントを作成する
-- [ ] ドリルページ用のDrillHeaderコンポーネントを作成する
+- [x] 共通Layoutコンポーネントを作成する
+- [x] ドリルページ用のDrillHeaderコンポーネントを作成する
 - [ ] localStorage状態管理とドリルロジックをカスタムフック化する（Context + useDrillフック）
 
 ## 各ドリルの移行
