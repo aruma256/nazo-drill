@@ -13,7 +13,7 @@
 - [x] `common.js`のユーティリティをTypeScriptに移行する（基盤となるため最初に実施）
 - [x] 共通Layoutコンポーネントを作成する
 - [x] ドリルページ用のDrillHeaderコンポーネントを作成する
-- [ ] localStorage状態管理とドリルロジックをカスタムフック化する（Context + useDrillフック）
+- [x] localStorage状態管理とドリルロジックをカスタムフック化する（useDrill + useDrillStorageフック）
 
 ## 各ドリルの移行
 - [ ] トップページ（ドリル選択画面）を移行する
