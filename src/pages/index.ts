@@ -1,3 +1,4 @@
 export { HomePage } from './HomePage'
 export { GojuonPickPage } from './GojuonPickPage'
 export { NumberToAlphaPage } from './NumberToAlphaPage'
+export { AlphaShiftPage } from './AlphaShiftPage'
