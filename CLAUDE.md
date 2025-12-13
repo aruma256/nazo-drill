@@ -121,7 +121,7 @@ file:///home/aruma/git/aruma256/nazo-drill/docs/index.html
 ```
 （変更点よりも変更目的を端的に表現する日本語の1行）
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 …（略）
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
+Co-Authored-By: …（略）
 ```
