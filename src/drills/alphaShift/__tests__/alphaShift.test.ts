@@ -54,7 +54,8 @@ describe('generateAlphaShiftQuestion', () => {
     let hasNoRepeat = true
 
     for (let i = 0; i < 100; i++) {
-      const { question, newLastQuestion } = generateAlphaShiftQuestion(lastQuestion)
+      const { question, newLastQuestion } =
+        generateAlphaShiftQuestion(lastQuestion)
       if (lastQuestion !== null && question.question === lastQuestion) {
         hasNoRepeat = false
         break

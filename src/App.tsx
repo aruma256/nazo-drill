@@ -4,6 +4,7 @@ import {
   GojuonPickPage,
   NumberToAlphaPage,
   AlphaShiftPage,
+  PrefectureFillPage,
 } from './pages'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/drill/50on-pick" element={<GojuonPickPage />} />
         <Route path="/drill/123-abc" element={<NumberToAlphaPage />} />
         <Route path="/drill/abc-shift" element={<AlphaShiftPage />} />
+        <Route path="/drill/prefecture-fill" element={<PrefectureFillPage />} />
       </Routes>
     </HashRouter>
   )
