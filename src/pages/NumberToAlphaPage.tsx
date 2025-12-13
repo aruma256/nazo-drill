@@ -343,10 +343,10 @@ function DrillScreen({
             }`}
           >
             {feedback.type === 'correct' ? (
-              '正解！'
+              '⭕ 正解！'
             ) : (
               <>
-                不正解… 答え：
+                ❌ 答え：
                 <span className="text-indigo-900">
                   {feedback.correctAnswer}
                 </span>
