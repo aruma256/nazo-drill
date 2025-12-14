@@ -1,7 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Layout, DrillHeader, FeedbackModal, ModeButton } from '../components'
 import { useDrill, useDrillStorage } from '../hooks'
-import { generateAlphaShiftQuestion } from '../drills/alphaShift'
+import {
+  generateAlphaShiftQuestion,
+  type AlphaShiftMode,
+} from '../drills/alphaShift'
 
 const DRILL_NAME = 'abc-shift'
 
@@ -10,7 +13,11 @@ type Screen = 'start' | 'drill'
 /**
  * スタート画面
  */
-function StartScreen({ onStartDrill }: { onStartDrill: () => void }) {
+function StartScreen({
+  onStartDrill,
+}: {
+  onStartDrill: (mode: AlphaShiftMode) => void
+}) {
   return (
     <>
       {/* ルール説明 */}
@@ -36,7 +43,7 @@ function StartScreen({ onStartDrill }: { onStartDrill: () => void }) {
             </p>
           </div>
           <p className="mt-2 text-sm text-gray-500">
-            シフトは-5〜+5の範囲で、循環する問題は出題されません
+            循環する問題（Z+1など）は出題されません
           </p>
         </div>
       </section>
@@ -49,24 +56,16 @@ function StartScreen({ onStartDrill }: { onStartDrill: () => void }) {
         </h2>
         <div className="space-y-3">
           <ModeButton
-            label="初級"
-            mode="beginner"
+            label="+1～+3 特訓"
+            mode="plus-training"
             drillName={DRILL_NAME}
-            onClick={onStartDrill}
+            onClick={() => onStartDrill('plus-training')}
           />
           <ModeButton
-            label="中級（準備中）"
-            mode="intermediate"
+            label="-1～-3 特訓"
+            mode="minus-training"
             drillName={DRILL_NAME}
-            onClick={() => {}}
-            disabled
-          />
-          <ModeButton
-            label="上級（準備中）"
-            mode="advanced"
-            drillName={DRILL_NAME}
-            onClick={() => {}}
-            disabled
+            onClick={() => onStartDrill('minus-training')}
           />
         </div>
       </section>
@@ -77,7 +76,13 @@ function StartScreen({ onStartDrill }: { onStartDrill: () => void }) {
 /**
  * ドリル画面
  */
-function DrillScreen({ onBack }: { onBack: () => void }) {
+function DrillScreen({
+  onBack,
+  mode,
+}: {
+  onBack: () => void
+  mode: AlphaShiftMode
+}) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<{
     type: 'correct' | 'incorrect'
@@ -91,10 +96,10 @@ function DrillScreen({ onBack }: { onBack: () => void }) {
 
   // 問題生成関数
   const generateQuestion = useCallback(() => {
-    const result = generateAlphaShiftQuestion(lastQuestionRef.current)
+    const result = generateAlphaShiftQuestion(lastQuestionRef.current, mode)
     lastQuestionRef.current = result.newLastQuestion
     return result.question
-  }, [])
+  }, [mode])
 
   const { currentQuestion, presentQuestion, checkAnswer } =
     useDrill(generateQuestion)
@@ -116,7 +121,7 @@ function DrillScreen({ onBack }: { onBack: () => void }) {
 
     const isCorrect = checkAnswer(userAnswer)
     if (isCorrect) {
-      incrementCorrectCount('beginner')
+      incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({
@@ -221,8 +226,11 @@ function DrillScreen({ onBack }: { onBack: () => void }) {
  */
 export function AlphaShiftPage() {
   const [screen, setScreen] = useState<Screen>('start')
+  const [currentMode, setCurrentMode] =
+    useState<AlphaShiftMode>('plus-training')
 
-  const handleStartDrill = () => {
+  const handleStartDrill = (mode: AlphaShiftMode) => {
+    setCurrentMode(mode)
     setScreen('drill')
   }
 
@@ -241,7 +249,9 @@ export function AlphaShiftPage() {
           <StartScreen onStartDrill={handleStartDrill} />
         </>
       )}
-      {screen === 'drill' && <DrillScreen onBack={handleBackToStart} />}
+      {screen === 'drill' && (
+        <DrillScreen onBack={handleBackToStart} mode={currentMode} />
+      )}
     </Layout>
   )
 }

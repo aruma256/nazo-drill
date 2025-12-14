@@ -4,31 +4,56 @@ import type { Question } from '../../hooks/useDrill'
 /** AのASCIIコード */
 const ASCII_CODE_A = 65
 
+/** アルファベットシフトのモード */
+export type AlphaShiftMode = 'plus-training' | 'minus-training'
+
+/**
+ * モードごとのシフト範囲を取得
+ */
+function getShiftRange(mode: AlphaShiftMode): { min: number; max: number } {
+  switch (mode) {
+    case 'plus-training':
+      return { min: 1, max: 3 }
+    case 'minus-training':
+      return { min: -3, max: -1 }
+  }
+}
+
 /**
  * アルファベットシフト問題を生成
  * - ベースとなるアルファベット（A〜Z）をランダムに選択
- * - シフト量は-5〜+5の範囲（0を除く）
+ * - シフト量はモードによって決まる
  * - 結果がA-Zの範囲に収まるシフト量のみを許可
  *
  * @param lastQuestion - 前回の問題文（連続同一問題を防ぐ）
+ * @param mode - ドリルモード
  * @returns 問題オブジェクトと新しいlastQuestion
  */
-export function generateAlphaShiftQuestion(lastQuestion: string | null): {
+export function generateAlphaShiftQuestion(
+  lastQuestion: string | null,
+  mode: AlphaShiftMode,
+): {
   question: Question
   newLastQuestion: string
 } {
   let questionText: string
   let answer: string
 
+  const { min, max } = getShiftRange(mode)
+
   do {
-    // A〜Zのランダムなアルファベットを生成（0-25）
-    const baseCode = getRandomInt(0, 25)
+    // モードに応じて有効なベースアルファベットの範囲を計算
+    // plus-training (+1〜+3): A(0) ～ W(22) まで有効（X,Y,Zは+1でも範囲外になる可能性あり）
+    // minus-training (-1〜-3): D(3) ～ Z(25) まで有効（A,B,Cは-1でも範囲外になる可能性あり）
+    const minBaseCode = mode === 'minus-training' ? Math.abs(min) : 0
+    const maxBaseCode = mode === 'plus-training' ? 25 - max : 25
+
+    const baseCode = getRandomInt(minBaseCode, maxBaseCode)
     const baseChar = String.fromCharCode(ASCII_CODE_A + baseCode)
 
     // このアルファベットに対して有効なシフト量の候補を計算
-    // -5〜+5の範囲で、0を除き、かつ結果がA-Z範囲内（0-25）に収まるもの
     const validShifts: number[] = []
-    for (let shift = -5; shift <= 5; shift++) {
+    for (let shift = min; shift <= max; shift++) {
       if (shift === 0) continue
       const shiftedCode = baseCode + shift
       if (shiftedCode >= 0 && shiftedCode <= 25) {
