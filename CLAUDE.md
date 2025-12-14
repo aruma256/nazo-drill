@@ -8,13 +8,30 @@
 
 - **モバイルファースト**
 
-## 現在の状況
+## 技術スタック
 
-React + TypeScript への移行作業中です。詳細は `migration-todo.md` を参照してください。
+- **フレームワーク**: React + TypeScript
+- **ビルドツール**: Vite
+- **スタイリング**: Tailwind CSS v4
+- **ルーティング**: React Router（HashRouter）
+- **テスト**: Vitest + Testing Library
+- **デプロイ環境**: GitHub Pages
+- **カスタムドメイン**: nazo-drill.aruma256.dev
+
+## ディレクトリ構成
+
+- `src/` - ソースコード
+  - `components/` - 共通コンポーネント
+  - `drills/` - 各ドリルのロジックとコンポーネント
+  - `hooks/` - カスタムフック
+  - `pages/` - ページコンポーネント
+  - `utils/` - ユーティリティ関数
+- `dist/` - ビルド成果物（GitHub Pages公開元）
+- `legacy-docs/` - 移行前の旧実装（参考用）
 
 ## 対象となる変換パターン
 
-### 定番の変換（ファーストリリース対象）
+### 実装済み
 
 1. **五十音表の文字拾い**
    - 五十音表のうち、マークがあるマスを読む
@@ -28,7 +45,7 @@ React + TypeScript への移行作業中です。詳細は `migration-todo.md` �
 4. **都道府県名の穴埋め**
    - 「と◯◯ま → 徳島」のように穴埋め
 
-### その他の変換（ファーストリリースでは対象外）
+### 未実装
 
 - 数字to干支（1→子、2→丑、3→寅 …）
 - モールス信号toアルファベット（"-.."→D）
@@ -44,34 +61,12 @@ React + TypeScript への移行作業中です。詳細は `migration-todo.md` �
 
 ### ドリル一覧
 
-| ドリル名 | 内部名 | URL | クラス名 |
-|---------|--------|-----|----------|
-| 五十音表の文字拾い | `50on-pick` | `/drill/50on-pick.html` | `GojuonPickDrill` |
-| 数字toアルファベット | `123-abc` | `/drill/123-abc.html` | `NumberToAlphaDrill` |
-| アルファベットシフト | `abc-shift` | `/drill/abc-shift.html` | `AlphaShiftDrill` |
-| 都道府県名の穴埋め | `prefecture-fill` | `/drill/prefecture-fill.html` | `PrefectureFillDrill` |
-
-### 使用例
-
-```javascript
-// localStorageのキー
-localStorage.setItem('50on-pick-rank', 'A');
-
-// データ構造
-const drillConfig = {
-  '50on-pick': { name: '五十音表の文字拾い', class: GojuonPickDrill }
-};
-```
-
-## 技術スタック
-
-- **フロントエンド**: Tailwind CSS
-- **デプロイ環境**: GitHub Pages
-- **カスタムドメイン**: nazo-drill.aruma256.dev
-
-## ディレクトリ構成
-
-- `docs/` - GitHub Pages の公開元（サイト本体のソースコード）
+| ドリル名 | 内部名 | URL |
+|---------|--------|-----|
+| 五十音表の文字拾い | `50on-pick` | `/#/drill/50on-pick` |
+| 数字toアルファベット | `123-abc` | `/#/drill/123-abc` |
+| アルファベットシフト | `abc-shift` | `/#/drill/abc-shift` |
+| 都道府県名の穴埋め | `prefecture-fill` | `/#/drill/prefecture-fill` |
 
 ## 実装済み機能
 
@@ -79,7 +74,7 @@ const drillConfig = {
 
 - 問題の自動生成
 - 問題の出題（連続同一問題の防止付き）
-- 正誤判定
+- 正誤判定（モーダル表示）
 
 ### 進捗管理機能
 
@@ -95,8 +90,6 @@ const drillConfig = {
 
 ### コードスタイル
 
-実装前に以下のルールを確認してください。
-
 ```json
 {
   "semi": false,
@@ -106,13 +99,15 @@ const drillConfig = {
 }
 ```
 
+### 開発サーバー
+
+```bash
+npm run dev
+```
+
 ### 動作確認
 
-Chrome DevTools MCPで`file://`を使いローカルのHTMLファイルを直接開いて確認する。
-
-```
-file:///home/aruma/git/aruma256/nazo-drill/docs/index.html
-```
+Chrome DevTools MCPで開発サーバーのURLを開いて確認する。
 
 ### コミット
 
