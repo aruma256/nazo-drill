@@ -1,0 +1,53 @@
+name: Daily Refactoring
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 毎日 UTC 0:00 (日本時間 9:00)
+  workflow_dispatch: # 手動実行オプション
+
+jobs:
+  refactoring:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            リポジトリ: ${{ github.repository }}
+
+            以下の手順で、コードベースの小さなリファクタリングを1つ実行してください：
+
+            1. src/ ディレクトリ内のコードを確認し、以下のようなリファクタリングポイントを探す：
+               - 重複しているコード
+               - 読みやすさを改善できる箇所
+               - 型定義の改善
+               - 不要なコードや未使用のインポート
+               - コンポーネントの分割や整理
+               - 命名の改善
+
+            2. 見つけたリファクタリングポイントを1つだけ選び、修正を実施する
+
+            3. 変更内容を日本語のコミットメッセージでコミットする
+
+            4. 新しいブランチ（refactor/YYYY-MM-DD-簡潔な説明）にプッシュする
+
+            5. プルリクエストを作成する（タイトルと本文は日本語で）
+
+            注意事項：
+            - 機能的な変更は行わず、リファクタリングのみ実施すること
+            - テストが壊れないことを確認すること（npm test）
+            - 1回の実行で1つの小さな改善のみ行うこと
+
+          claude_args: |
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(npm:*),Bash(git:*),Bash(gh pr:*)"
