@@ -267,6 +267,7 @@ function DrillScreen({
         type={feedback?.type ?? 'correct'}
         correctAnswer={feedback?.correctAnswer}
         onNext={handleNext}
+        delayOnIncorrect={3000}
       />
     </>
   )

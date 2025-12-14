@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 
 type FeedbackModalProps = {
   isOpen: boolean
@@ -6,6 +6,40 @@ type FeedbackModalProps = {
   correctAnswer?: string
   hintContent?: string
   onNext: () => void
+  delayOnIncorrect?: number
+}
+
+function ProgressBar({ durationMs }: { durationMs: number }) {
+  const [progress, setProgress] = useState(100)
+
+  useEffect(() => {
+    const startTime = Date.now()
+    let rafId: number
+
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime
+      const remaining = Math.max(0, 100 - (elapsed / durationMs) * 100)
+      setProgress(remaining)
+      if (elapsed < durationMs) {
+        rafId = requestAnimationFrame(updateProgress)
+      }
+    }
+
+    rafId = requestAnimationFrame(updateProgress)
+    return () => cancelAnimationFrame(rafId)
+  }, [durationMs])
+
+  return (
+    <div
+      data-testid="progress-bar"
+      className="mt-4 h-2 w-full rounded-full bg-gray-200"
+    >
+      <div
+        className="h-2 rounded-full bg-red-500"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  )
 }
 
 export function FeedbackModal({
@@ -14,10 +48,38 @@ export function FeedbackModal({
   correctAnswer,
   hintContent,
   onNext,
+  delayOnIncorrect,
 }: FeedbackModalProps) {
+  // 待機が必要な条件
+  const needsWaiting = type === 'incorrect' && !!delayOnIncorrect
+  // 待機完了フラグ
+  const [waitComplete, setWaitComplete] = useState(false)
+
+  // モーダルが閉じたときにwaitCompleteをリセット（クリーンアップ時）
+  useEffect(() => {
+    if (!isOpen) return
+    return () => {
+      setWaitComplete(false)
+    }
+  }, [isOpen])
+
+  // 待機タイマー
+  useEffect(() => {
+    if (!isOpen || !needsWaiting || waitComplete) return
+
+    const timer = setTimeout(() => {
+      setWaitComplete(true)
+    }, delayOnIncorrect!)
+
+    return () => clearTimeout(timer)
+  }, [isOpen, needsWaiting, waitComplete, delayOnIncorrect])
+
+  const isWaiting = isOpen && needsWaiting && !waitComplete
+
   const handleClose = useCallback(() => {
+    if (isWaiting) return
     onNext()
-  }, [onNext])
+  }, [onNext, isWaiting])
 
   // キーボードイベントのハンドリング
   // Enterキーでsubmitした際に同じイベントがモーダルに伝播しないよう、
@@ -75,8 +137,12 @@ export function FeedbackModal({
           </div>
         )}
 
-        {/* タップして次へ */}
-        <div className="mt-6 text-sm text-gray-400">タップして次へ</div>
+        {/* タップして次へ / プログレスバー */}
+        {isWaiting ? (
+          <ProgressBar durationMs={delayOnIncorrect!} />
+        ) : (
+          <div className="mt-6 text-sm text-gray-400">タップして次へ</div>
+        )}
       </div>
     </div>
   )

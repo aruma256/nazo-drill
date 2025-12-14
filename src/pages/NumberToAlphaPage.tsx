@@ -345,6 +345,7 @@ function DrillScreen({
             : undefined
         }
         onNext={handleNext}
+        delayOnIncorrect={3000}
       />
     </>
   )

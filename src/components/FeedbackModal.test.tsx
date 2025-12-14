@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { FeedbackModal } from './FeedbackModal'
 
@@ -120,6 +120,163 @@ describe('FeedbackModal', () => {
     it('isOpen=trueの場合、モーダルが表示される', () => {
       render(<FeedbackModal isOpen={true} type="correct" onNext={vi.fn()} />)
       expect(screen.getByTestId('feedback-modal')).toBeInTheDocument()
+    })
+  })
+
+  describe('不正解時の待機機能（delayOnIncorrect）', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    describe('delayOnIncorrectが指定されている場合', () => {
+      it('不正解時、待機中は「タップして次へ」が非表示', () => {
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={vi.fn()}
+          />,
+        )
+        expect(screen.queryByText('タップして次へ')).not.toBeInTheDocument()
+      })
+
+      it('不正解時、プログレスバーが表示される', () => {
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={vi.fn()}
+          />,
+        )
+        expect(screen.getByTestId('progress-bar')).toBeInTheDocument()
+      })
+
+      it('待機中はクリックしてもonNextが呼ばれない', () => {
+        const onNext = vi.fn()
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={onNext}
+          />,
+        )
+        fireEvent.click(screen.getByTestId('feedback-modal'))
+        expect(onNext).not.toHaveBeenCalled()
+      })
+
+      it('待機中はEnterキーを押してもonNextが呼ばれない', async () => {
+        const onNext = vi.fn()
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={onNext}
+          />,
+        )
+        // requestAnimationFrameコールバックが実行されるのを待つ
+        await act(async () => {
+          vi.advanceTimersByTime(16) // 1フレーム分
+        })
+        fireEvent.keyDown(document, { key: 'Enter' })
+        expect(onNext).not.toHaveBeenCalled()
+      })
+
+      it('待機時間経過後、クリックでonNextが呼ばれる', async () => {
+        const onNext = vi.fn()
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={onNext}
+          />,
+        )
+
+        // 3秒経過
+        await act(async () => {
+          vi.advanceTimersByTime(3000)
+        })
+
+        // 経過後は呼ばれる
+        fireEvent.click(screen.getByTestId('feedback-modal'))
+        expect(onNext).toHaveBeenCalledTimes(1)
+      })
+
+      it('待機時間経過後、「タップして次へ」が再表示される', async () => {
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            delayOnIncorrect={3000}
+            onNext={vi.fn()}
+          />,
+        )
+
+        // 待機中は非表示
+        expect(screen.queryByText('タップして次へ')).not.toBeInTheDocument()
+
+        // 3秒経過
+        await act(async () => {
+          vi.advanceTimersByTime(3000)
+        })
+
+        // 経過後は表示
+        expect(screen.getByText('タップして次へ')).toBeInTheDocument()
+      })
+
+      it('正解時は待機せず即座にonNextが呼べる', () => {
+        const onNext = vi.fn()
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="correct"
+            delayOnIncorrect={3000}
+            onNext={onNext}
+          />,
+        )
+
+        // 正解時は「タップして次へ」がすぐに表示される
+        expect(screen.getByText('タップして次へ')).toBeInTheDocument()
+
+        // クリックで即座に呼ばれる
+        fireEvent.click(screen.getByTestId('feedback-modal'))
+        expect(onNext).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    describe('delayOnIncorrectが未指定の場合（後方互換性）', () => {
+      it('不正解時も即座にonNextが呼べる', () => {
+        const onNext = vi.fn()
+        render(
+          <FeedbackModal
+            isOpen={true}
+            type="incorrect"
+            correctAnswer="A"
+            onNext={onNext}
+          />,
+        )
+
+        // 「タップして次へ」が表示されている
+        expect(screen.getByText('タップして次へ')).toBeInTheDocument()
+
+        // クリックで即座に呼ばれる
+        fireEvent.click(screen.getByTestId('feedback-modal'))
+        expect(onNext).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })
