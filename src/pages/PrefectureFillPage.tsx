@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Layout, DrillHeader } from '../components'
+import { Layout, DrillHeader, FeedbackModal } from '../components'
 import { useDrill } from '../hooks'
 import type { Question } from '../hooks/useDrill'
 import {
@@ -259,29 +259,15 @@ function DrillScreen({
             )}
           </div>
         </div>
-
-        {/* フィードバック */}
-        {feedback && (
-          <div
-            className={`rounded-lg p-2 text-center font-bold ${
-              feedback.type === 'correct'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            }`}
-          >
-            {feedback.type === 'correct' ? (
-              '⭕ 正解！'
-            ) : (
-              <>
-                ❌ 答え：
-                <span className="text-indigo-900">
-                  {feedback.correctAnswer}
-                </span>
-              </>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* フィードバックモーダル */}
+      <FeedbackModal
+        isOpen={!!feedback}
+        type={feedback?.type ?? 'correct'}
+        correctAnswer={feedback?.correctAnswer}
+        onNext={handleNext}
+      />
     </>
   )
 }
