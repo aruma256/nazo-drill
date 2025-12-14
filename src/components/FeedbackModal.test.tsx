@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { FeedbackModal } from './FeedbackModal'
 
 describe('FeedbackModal', () => {
@@ -79,23 +79,33 @@ describe('FeedbackModal', () => {
       expect(onNext).toHaveBeenCalledTimes(1)
     })
 
-    it('Enterキーを押すとonNextが呼ばれる', () => {
+    it('Enterキーを押すとonNextが呼ばれる', async () => {
       const onNext = vi.fn()
       render(<FeedbackModal isOpen={true} type="correct" onNext={onNext} />)
+      // requestAnimationFrameコールバックが実行されるのを待つ
+      await act(async () => {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
       fireEvent.keyDown(document, { key: 'Enter' })
       expect(onNext).toHaveBeenCalledTimes(1)
     })
 
-    it('Spaceキーを押すとonNextが呼ばれる', () => {
+    it('Spaceキーを押すとonNextが呼ばれる', async () => {
       const onNext = vi.fn()
       render(<FeedbackModal isOpen={true} type="correct" onNext={onNext} />)
+      await act(async () => {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
       fireEvent.keyDown(document, { key: ' ' })
       expect(onNext).toHaveBeenCalledTimes(1)
     })
 
-    it('Escapeキーを押すとonNextが呼ばれる', () => {
+    it('Escapeキーを押すとonNextが呼ばれる', async () => {
       const onNext = vi.fn()
       render(<FeedbackModal isOpen={true} type="correct" onNext={onNext} />)
+      await act(async () => {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
       fireEvent.keyDown(document, { key: 'Escape' })
       expect(onNext).toHaveBeenCalledTimes(1)
     })

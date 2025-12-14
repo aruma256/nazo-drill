@@ -20,6 +20,8 @@ export function FeedbackModal({
   }, [onNext])
 
   // キーボードイベントのハンドリング
+  // Enterキーでsubmitした際に同じイベントがモーダルに伝播しないよう、
+  // 次のフレームでリスナーを登録する
   useEffect(() => {
     if (!isOpen) return
 
@@ -30,8 +32,14 @@ export function FeedbackModal({
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    const frameId = requestAnimationFrame(() => {
+      document.addEventListener('keydown', handleKeyDown)
+    })
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [isOpen, handleClose])
 
   if (!isOpen) return null
