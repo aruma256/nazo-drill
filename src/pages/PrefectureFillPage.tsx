@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Layout, DrillHeader, FeedbackModal } from '../components'
-import { useDrill } from '../hooks'
+import { Layout, DrillHeader, FeedbackModal, ModeButton } from '../components'
+import { useDrill, useDrillStorage } from '../hooks'
 import type { Question } from '../hooks/useDrill'
 import {
   generateNormalQuestion,
@@ -9,6 +9,8 @@ import {
   normalizeAnswer,
   checkTwoPrefecturesAnswer,
 } from '../drills/prefectureFill'
+
+const DRILL_NAME = 'prefecture-fill'
 
 type Screen = 'start' | 'drill'
 type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures'
@@ -50,24 +52,24 @@ function StartScreen({
           モードを選択
         </h2>
         <div className="space-y-3">
-          <button
+          <ModeButton
+            label="穴埋めモード"
+            mode="normal"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('normal')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            穴埋めモード
-          </button>
-          <button
+          />
+          <ModeButton
+            label="1県確定特訓"
+            mode="one-prefecture"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('one-prefecture')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            1県確定特訓
-          </button>
-          <button
+          />
+          <ModeButton
+            label="2県確定特訓"
+            mode="two-prefectures"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('two-prefectures')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            2県確定特訓
-          </button>
+          />
         </div>
       </section>
     </>
@@ -90,6 +92,7 @@ function DrillScreen({
     correctAnswer?: string
   } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastNormalRef = useRef<string | null>(null)
@@ -147,6 +150,7 @@ function DrillScreen({
 
     const isCorrect = checkUserAnswer(userAnswer)
     if (isCorrect) {
+      incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({

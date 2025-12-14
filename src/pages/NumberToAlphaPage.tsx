@@ -1,12 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Layout, DrillHeader, FeedbackModal } from '../components'
-import { useDrill } from '../hooks'
+import { Layout, DrillHeader, FeedbackModal, ModeButton } from '../components'
+import { useDrill, useDrillStorage } from '../hooks'
 import {
   type DrillMode,
   generateEjotyQuestion,
   generateSingleQuestion,
   generateWordQuestion,
 } from '../drills/numberToAlpha'
+
+const DRILL_NAME = '123-abc'
 
 type Screen = 'start' | 'drill'
 
@@ -143,24 +145,24 @@ function StartScreen({
           モードを選択
         </h2>
         <div className="space-y-3">
-          <button
+          <ModeButton
+            label={'"EJOTY"特訓モード'}
+            mode="ejoty"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('ejoty')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            "EJOTY"特訓モード
-          </button>
-          <button
+          />
+          <ModeButton
+            label="1文字モード"
+            mode="single"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('single')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            1文字モード
-          </button>
-          <button
+          />
+          <ModeButton
+            label="単語モード"
+            mode="word"
+            drillName={DRILL_NAME}
             onClick={() => onStartDrill('word')}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            単語モード
-          </button>
+          />
         </div>
       </section>
     </>
@@ -183,6 +185,7 @@ function DrillScreen({
     correctAnswer?: string
   } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastNumberRef = useRef<number | null>(null)
@@ -232,6 +235,7 @@ function DrillScreen({
 
     const isCorrect = checkAnswer(userAnswer)
     if (isCorrect) {
+      incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({

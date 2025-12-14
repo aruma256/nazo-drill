@@ -1,7 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Layout, DrillHeader, FeedbackModal } from '../components'
-import { useDrill } from '../hooks'
+import { Layout, DrillHeader, FeedbackModal, ModeButton } from '../components'
+import { useDrill, useDrillStorage } from '../hooks'
 import { generateAlphaShiftQuestion } from '../drills/alphaShift'
+
+const DRILL_NAME = 'abc-shift'
 
 type Screen = 'start' | 'drill'
 
@@ -46,24 +48,26 @@ function StartScreen({ onStartDrill }: { onStartDrill: () => void }) {
           モードを選択
         </h2>
         <div className="space-y-3">
-          <button
+          <ModeButton
+            label="初級"
+            mode="beginner"
+            drillName={DRILL_NAME}
             onClick={onStartDrill}
-            className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-          >
-            初級
-          </button>
-          <button
+          />
+          <ModeButton
+            label="中級（準備中）"
+            mode="intermediate"
+            drillName={DRILL_NAME}
+            onClick={() => {}}
             disabled
-            className="w-full cursor-not-allowed rounded-lg bg-gray-100 px-6 py-4 text-lg font-bold text-gray-400"
-          >
-            中級（準備中）
-          </button>
-          <button
+          />
+          <ModeButton
+            label="上級（準備中）"
+            mode="advanced"
+            drillName={DRILL_NAME}
+            onClick={() => {}}
             disabled
-            className="w-full cursor-not-allowed rounded-lg bg-gray-100 px-6 py-4 text-lg font-bold text-gray-400"
-          >
-            上級（準備中）
-          </button>
+          />
         </div>
       </section>
     </>
@@ -80,6 +84,7 @@ function DrillScreen({ onBack }: { onBack: () => void }) {
     correctAnswer?: string
   } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastQuestionRef = useRef<string | null>(null)
@@ -111,6 +116,7 @@ function DrillScreen({ onBack }: { onBack: () => void }) {
 
     const isCorrect = checkAnswer(userAnswer)
     if (isCorrect) {
+      incrementCorrectCount('beginner')
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({
