@@ -2,7 +2,7 @@ name: Daily Refactoring
 
 on:
   schedule:
-    - cron: "0 0 * * *" # 毎日 UTC 0:00 (日本時間 9:00)
+    - cron: "50 2 * * *" # 毎日 UTC 2:50 (日本時間 11:50)
   workflow_dispatch: # 手動実行オプション
 
 jobs:
