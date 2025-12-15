@@ -5,6 +5,7 @@ import {
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
+  DrillMiniHeader,
 } from '../components'
 import { useDrill, useDrillStorage } from '../hooks'
 import type { Question } from '../hooks/useDrill'
@@ -186,19 +187,10 @@ function DrillScreen({
 
   return (
     <>
-      {/* ミニヘッダー */}
-      <div className="mb-2 flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="flex items-center text-sm text-indigo-600 hover:text-indigo-800"
-        >
-          <span className="mr-1">←</span>
-          <span>やめる</span>
-        </button>
-        <span className="text-sm text-gray-500">
-          都道府県 ({getModeName()})
-        </span>
-      </div>
+      <DrillMiniHeader
+        onBack={onBack}
+        drillLabel={`都道府県 (${getModeName()})`}
+      />
 
       {/* 問題エリア */}
       <div className="rounded-lg bg-white/70 p-4">
