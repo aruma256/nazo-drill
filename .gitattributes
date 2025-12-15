@@ -1,0 +1,2 @@
+# Exclude legacy-docs from GitHub language statistics
+legacy-docs/** linguist-vendored
