@@ -1,5 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Layout, DrillHeader, FeedbackModal, ModeButton } from '../components'
+import {
+  Layout,
+  DrillHeader,
+  FeedbackModal,
+  ModeButton,
+  AnswerInputArea,
+} from '../components'
 import { useDrill, useDrillStorage } from '../hooks'
 import {
   generateAlphaShiftQuestion,
@@ -88,7 +94,6 @@ function DrillScreen({
     type: 'correct' | 'incorrect'
     correctAnswer?: string
   } | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -109,13 +114,6 @@ function DrillScreen({
     presentQuestion()
   }, [presentQuestion])
 
-  // フィードバック後に入力欄にフォーカス
-  useEffect(() => {
-    if (!feedback && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [feedback])
-
   const handleSubmit = () => {
     if (!userAnswer.trim()) return
 
@@ -135,16 +133,6 @@ function DrillScreen({
   const handleNext = () => {
     setFeedback(null)
     presentQuestion()
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (feedback) {
-        handleNext()
-      } else {
-        handleSubmit()
-      }
-    }
   }
 
   return (
@@ -170,43 +158,17 @@ function DrillScreen({
           </div>
         </div>
 
-        {/* 回答入力＆ボタンエリア */}
-        <div className="mb-2">
-          <label htmlFor="answer-input" className="sr-only">
-            あなたの答え:
-          </label>
-          <div className="flex items-stretch gap-2">
-            <input
-              ref={inputRef}
-              type="text"
-              id="answer-input"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value.toUpperCase())}
-              onKeyDown={handleKeyDown}
-              placeholder="答えを入力"
-              maxLength={1}
-              autoComplete="off"
-              disabled={!!feedback}
-              className="min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold uppercase focus:border-indigo-500 focus:outline-none disabled:bg-gray-100"
-            />
-            {!feedback ? (
-              <button
-                onClick={handleSubmit}
-                disabled={!userAnswer.trim()}
-                className="min-w-[80px] whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400"
-              >
-                <span className="text-lg">➤</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleNext}
-                className="min-w-[80px] whitespace-nowrap rounded-lg bg-green-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-green-700"
-              >
-                <span className="text-lg">→</span>
-              </button>
-            )}
-          </div>
-        </div>
+        <AnswerInputArea
+          value={userAnswer}
+          onChange={setUserAnswer}
+          onSubmit={handleSubmit}
+          onNext={handleNext}
+          feedback={feedback}
+          placeholder="答えを入力"
+          maxLength={1}
+          inputTransform={(value) => value.toUpperCase()}
+          className="uppercase"
+        />
       </div>
 
       {/* フィードバックモーダル */}
