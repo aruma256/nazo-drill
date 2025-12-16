@@ -174,7 +174,7 @@ describe('FeedbackModal', () => {
         expect(onNext).not.toHaveBeenCalled()
       })
 
-      it('待機中はEnterキーを押してもonNextが呼ばれない', async () => {
+      it('待機中はEnterキーを押してもonNextが呼ばれない', () => {
         const onNext = vi.fn()
         render(
           <FeedbackModal
@@ -186,14 +186,14 @@ describe('FeedbackModal', () => {
           />,
         )
         // requestAnimationFrameコールバックが実行されるのを待つ
-        await act(async () => {
+        act(() => {
           vi.advanceTimersByTime(16) // 1フレーム分
         })
         fireEvent.keyDown(document, { key: 'Enter' })
         expect(onNext).not.toHaveBeenCalled()
       })
 
-      it('待機時間経過後、クリックでonNextが呼ばれる', async () => {
+      it('待機時間経過後、クリックでonNextが呼ばれる', () => {
         const onNext = vi.fn()
         render(
           <FeedbackModal
@@ -206,7 +206,7 @@ describe('FeedbackModal', () => {
         )
 
         // 3秒経過
-        await act(async () => {
+        act(() => {
           vi.advanceTimersByTime(3000)
         })
 
@@ -215,7 +215,7 @@ describe('FeedbackModal', () => {
         expect(onNext).toHaveBeenCalledTimes(1)
       })
 
-      it('待機時間経過後、「タップして次へ」が再表示される', async () => {
+      it('待機時間経過後、「タップして次へ」が再表示される', () => {
         render(
           <FeedbackModal
             isOpen={true}
@@ -230,7 +230,7 @@ describe('FeedbackModal', () => {
         expect(screen.queryByText('タップして次へ')).not.toBeInTheDocument()
 
         // 3秒経過
-        await act(async () => {
+        act(() => {
           vi.advanceTimersByTime(3000)
         })
 
