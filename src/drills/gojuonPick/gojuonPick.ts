@@ -112,12 +112,14 @@ function generateSingleCharQuestionFromList(
   charList: readonly string[],
   lastCol: number | null,
 ): { question: Question; newLastCol: number } {
-  const char = getRandomElementExcluding(
-    charList,
-    lastCol,
-    (c) => charToPosition.get(c)!.col,
-  )
-  const position = charToPosition.get(char)!
+  const char = getRandomElementExcluding(charList, lastCol, (c) => {
+    const pos = charToPosition.get(c)
+    if (!pos) throw new Error(`Character "${c}" not found in position map`)
+    return pos.col
+  })
+  const position = charToPosition.get(char)
+  if (!position)
+    throw new Error(`Character "${char}" not found in position map`)
   const markedCells: MarkedCell[] = [
     {
       row: position.row,

@@ -168,7 +168,7 @@ describe('GOJUON_PICK_WORDS', () => {
 
   it('should not contain duplicate characters within a word', () => {
     for (const word of GOJUON_PICK_WORDS) {
-      const chars = [...word]
+      const chars = Array.from(word)
       const uniqueChars = new Set(chars)
       expect(uniqueChars.size).toBe(chars.length)
     }

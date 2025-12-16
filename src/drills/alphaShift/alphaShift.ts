@@ -68,7 +68,7 @@ export function generateAlphaShiftQuestion(
 
     // 問題文を生成
     const sign = shift > 0 ? '+' : ''
-    questionText = `${baseChar}${sign}${shift}`
+    questionText = `${baseChar}${sign}${String(shift)}`
   } while (questionText === lastQuestion)
 
   return {
