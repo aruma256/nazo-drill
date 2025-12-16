@@ -36,5 +36,11 @@ export default defineConfig([
       'prettier/prettier': 'error',
     },
   },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
   eslintConfigPrettier,
 ])
