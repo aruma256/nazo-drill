@@ -66,13 +66,17 @@ function StartScreen({
             label="+1～+3 特訓"
             mode="plus-training"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('plus-training')}
+            onClick={() => {
+              onStartDrill('plus-training')
+            }}
           />
           <ModeButton
             label="-1～-3 特訓"
             mode="minus-training"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('minus-training')}
+            onClick={() => {
+              onStartDrill('minus-training')
+            }}
           />
         </div>
       </section>

@@ -176,19 +176,25 @@ function StartScreen({
             label="「た」〜「も」特訓モード"
             mode="ta-mo"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('ta-mo')}
+            onClick={() => {
+              onStartDrill('ta-mo')
+            }}
           />
           <ModeButton
             label="1文字モード"
             mode="single"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('single')}
+            onClick={() => {
+              onStartDrill('single')
+            }}
           />
           <ModeButton
             label="単語モード"
             mode="word"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('word')}
+            onClick={() => {
+              onStartDrill('word')
+            }}
           />
         </div>
       </section>

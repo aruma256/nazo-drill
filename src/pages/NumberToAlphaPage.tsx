@@ -156,19 +156,25 @@ function StartScreen({
             label={'"EJOTY"特訓モード'}
             mode="ejoty"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('ejoty')}
+            onClick={() => {
+              onStartDrill('ejoty')
+            }}
           />
           <ModeButton
             label="1文字モード"
             mode="single"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('single')}
+            onClick={() => {
+              onStartDrill('single')
+            }}
           />
           <ModeButton
             label="単語モード"
             mode="word"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('word')}
+            onClick={() => {
+              onStartDrill('word')
+            }}
           />
         </div>
       </section>

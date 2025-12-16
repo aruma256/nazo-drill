@@ -53,13 +53,10 @@ export function useDrillStorage(drillName: string) {
    */
   const getAllCorrectCounts = useCallback(
     (modes: string[]): Record<string, number> => {
-      return modes.reduce(
-        (acc, mode) => {
-          acc[mode] = getCorrectCount(mode)
-          return acc
-        },
-        {} as Record<string, number>,
-      )
+      return modes.reduce<Record<string, number>>((acc, mode) => {
+        acc[mode] = getCorrectCount(mode)
+        return acc
+      }, {})
     },
     [getCorrectCount],
   )

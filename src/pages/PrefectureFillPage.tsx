@@ -63,19 +63,25 @@ function StartScreen({
             label="穴埋めモード"
             mode="normal"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('normal')}
+            onClick={() => {
+              onStartDrill('normal')
+            }}
           />
           <ModeButton
             label="1県確定特訓"
             mode="one-prefecture"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('one-prefecture')}
+            onClick={() => {
+              onStartDrill('one-prefecture')
+            }}
           />
           <ModeButton
             label="2県確定特訓"
             mode="two-prefectures"
             drillName={DRILL_NAME}
-            onClick={() => onStartDrill('two-prefectures')}
+            onClick={() => {
+              onStartDrill('two-prefectures')
+            }}
           />
         </div>
       </section>

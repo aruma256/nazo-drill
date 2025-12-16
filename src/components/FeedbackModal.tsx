@@ -26,7 +26,9 @@ function ProgressBar({ durationMs }: { durationMs: number }) {
     }
 
     rafId = requestAnimationFrame(updateProgress)
-    return () => cancelAnimationFrame(rafId)
+    return () => {
+      cancelAnimationFrame(rafId)
+    }
   }, [durationMs])
 
   return (
@@ -71,7 +73,9 @@ export function FeedbackModal({
       setWaitComplete(true)
     }, delayOnIncorrect)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [isOpen, needsWaiting, waitComplete, delayOnIncorrect])
 
   const isWaiting = isOpen && needsWaiting && !waitComplete
