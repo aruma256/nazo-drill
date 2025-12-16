@@ -69,7 +69,7 @@ export function FeedbackModal({
 
     const timer = setTimeout(() => {
       setWaitComplete(true)
-    }, delayOnIncorrect!)
+    }, delayOnIncorrect)
 
     return () => clearTimeout(timer)
   }, [isOpen, needsWaiting, waitComplete, delayOnIncorrect])
@@ -139,7 +139,7 @@ export function FeedbackModal({
 
         {/* タップして次へ / プログレスバー */}
         {isWaiting ? (
-          <ProgressBar durationMs={delayOnIncorrect!} />
+          <ProgressBar durationMs={delayOnIncorrect} />
         ) : (
           <div className="mt-6 text-sm text-gray-400">タップして次へ</div>
         )}
