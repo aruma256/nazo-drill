@@ -7,7 +7,7 @@ import {
   AnswerInputArea,
   DrillMiniHeader,
 } from '../components'
-import { useDrill, useDrillStorage } from '../hooks'
+import { useDrill, useDrillStorage, type Feedback } from '../hooks'
 import {
   generateAlphaShiftQuestion,
   type AlphaShiftMode,
@@ -95,10 +95,7 @@ function DrillScreen({
   mode: AlphaShiftMode
 }) {
   const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<{
-    type: 'correct' | 'incorrect'
-    correctAnswer?: string
-  } | null>(null)
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef

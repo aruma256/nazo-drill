@@ -24,6 +24,16 @@ export interface ScoreStats {
   percentage: number
 }
 
+/**
+ * フィードバック情報
+ */
+export interface Feedback {
+  /** フィードバックの種類 */
+  type: 'correct' | 'incorrect'
+  /** 正解の答え（不正解の場合に表示） */
+  correctAnswer?: string
+}
+
 /** 問題生成関数の型 */
 export type QuestionGenerator = () => Question
 

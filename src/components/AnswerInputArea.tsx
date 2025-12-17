@@ -5,13 +5,14 @@
  */
 
 import { useRef, useEffect } from 'react'
+import type { Feedback } from '../hooks/useDrill'
 
 interface AnswerInputAreaProps {
   value: string
   onChange: (value: string) => void
   onSubmit: () => void
   onNext: () => void
-  feedback: { type: 'correct' | 'incorrect'; correctAnswer?: string } | null
+  feedback: Feedback | null
   placeholder?: string
   maxLength?: number
   autoComplete?: string
