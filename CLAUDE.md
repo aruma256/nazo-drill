@@ -102,7 +102,7 @@
 ### 開発サーバー
 
 ```bash
-npm run dev
+npm run dev -- --host
 ```
 
 ### 動作確認
