@@ -8,8 +8,9 @@ import { NUMBER_TO_ALPHA_WORDS } from './words'
  * - ejoty: EJOTY特訓モード（5の倍数のみ）
  * - single: 1文字モード（1〜26すべて）
  * - word: 単語モード
+ * - challenge: 実力テストモード（30秒制限）
  */
-export type DrillMode = 'ejoty' | 'single' | 'word'
+export type DrillMode = 'ejoty' | 'single' | 'word' | 'challenge'
 
 /** 1〜26の数値配列 */
 const ALL_NUMBERS = Array.from({ length: 26 }, (_, i) => i + 1)
