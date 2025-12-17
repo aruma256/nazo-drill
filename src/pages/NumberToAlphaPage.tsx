@@ -382,7 +382,9 @@ function ChallengeScreen({
       })
     }, 1000)
 
-    return () => clearInterval(timer)
+    return () => {
+      clearInterval(timer)
+    }
   }, [])
 
   // タイムアップ時の処理
@@ -442,7 +444,9 @@ function ChallengeScreen({
           <input
             type="text"
             value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value.toUpperCase())}
+            onChange={(e) => {
+              setUserAnswer(e.target.value.toUpperCase())
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSubmit()

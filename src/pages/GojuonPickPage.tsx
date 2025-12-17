@@ -181,7 +181,11 @@ function DrillScreen({
 
       {/* 問題エリア */}
       <div className="rounded-lg bg-white/70 p-4">
-        <GojuonTable markedCells={markedCells} size="large" isTaMoMode={mode === 'ta-mo'} />
+        <GojuonTable
+          markedCells={markedCells}
+          size="large"
+          isTaMoMode={mode === 'ta-mo'}
+        />
 
         <AnswerInputArea
           value={userAnswer}
