@@ -1,4 +1,10 @@
-import { Layout, DrillCard, DrillExample } from '../components'
+import {
+  Layout,
+  DrillCard,
+  DrillExample,
+  GojuonTable,
+  KURUMA_SAMPLE_MARKS,
+} from '../components'
 
 export function HomePage() {
   return (
@@ -31,7 +37,11 @@ export function HomePage() {
             title="五十音表の文字拾い"
             description="五十音表のマークされたマスから文字を読み取る練習"
           >
-            <GojuonSampleTable />
+            <GojuonTable
+              markedCells={KURUMA_SAMPLE_MARKS}
+              size="small"
+              className="mb-2"
+            />
             <div className="mt-2 text-center text-sm text-gray-500">
               答え：<span className="font-bold text-green-600">くるま</span>
             </div>
@@ -75,48 +85,5 @@ export function HomePage() {
         <p>© 2025 ナゾドリル - Powered by aruma256</p>
       </footer>
     </Layout>
-  )
-}
-
-function GojuonSampleTable() {
-  // 五十音表のサンプル（くるま を表示）
-  // 1=く（3行目右から2番目）, 2=る（3行目中央）, 3=ま（1行目右から6番目）
-  const rows = [
-    ['', '', '', '', '3', '', '', '', '', '', ''],
-    ['x', 'x', '', 'x', '', '', '', '', '', '', ''],
-    ['x', 'x', '2', '', '', '', '', '', '', '1', ''],
-    ['x', 'x', '', 'x', '', '', '', '', '', '', ''],
-    ['x', '', '', '', '', '', '', '', '', '', ''],
-  ]
-
-  return (
-    <div className="mb-2 flex justify-center">
-      <table className="border-collapse border border-gray-400">
-        <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, colIndex) => {
-                const isEmpty = cell === 'x'
-                const isMarked = cell !== '' && cell !== 'x'
-                return (
-                  <td
-                    key={colIndex}
-                    className={`h-4 w-4 border border-gray-400 text-center text-[0.6rem] font-bold text-indigo-600 ${
-                      isEmpty
-                        ? 'bg-neutral-800'
-                        : isMarked
-                          ? 'bg-amber-100'
-                          : 'bg-white'
-                    }`}
-                  >
-                    {isMarked ? cell : ''}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   )
 }

@@ -6,132 +6,21 @@ import {
   ModeButton,
   AnswerInputArea,
   DrillMiniHeader,
+  GojuonTable,
+  KURUMA_SAMPLE_MARKS,
 } from '../components'
 import { useDrill, useDrillStorage } from '../hooks'
 import {
   type DrillMode,
-  type MarkedCell,
-  GOJUON_TABLE,
   generateWordQuestion,
   generateSingleQuestion,
   generateTaMoQuestion,
   parseMarkedCells,
-  isEmptyCell,
 } from '../drills/gojuonPick'
 
 const DRILL_NAME = '50on-pick'
 
 type Screen = 'start' | 'drill'
-
-/**
- * 五十音表コンポーネント
- */
-function GojuonTable({
-  markedCells,
-  isTaMoMode,
-}: {
-  markedCells: MarkedCell[]
-  isTaMoMode: boolean
-}) {
-  // マークされたセルをマップ化（高速検索用）
-  const markedMap = new Map<string, number>()
-  for (const cell of markedCells) {
-    markedMap.set(`${String(cell.row)}-${String(cell.col)}`, cell.number)
-  }
-
-  return (
-    <div className="mb-4 flex justify-center">
-      <table className="border-collapse border border-gray-400">
-        <tbody>
-          {GOJUON_TABLE.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((_, colIndex) => {
-                const isEmpty = isEmptyCell(rowIndex, colIndex)
-                const number = markedMap.get(
-                  `${String(rowIndex)}-${String(colIndex)}`,
-                )
-                const isMarked = number !== undefined
-
-                // た〜も特訓モード時の境界線
-                const borderClass =
-                  isTaMoMode && colIndex === 5
-                    ? 'border-l-2 border-r-2 border-gray-700'
-                    : ''
-
-                return (
-                  <td
-                    key={colIndex}
-                    className={`h-8 w-8 border border-gray-400 text-center text-base font-bold text-indigo-600 sm:h-10 sm:w-10 sm:text-xl ${
-                      isEmpty
-                        ? 'bg-neutral-800'
-                        : isMarked
-                          ? 'bg-amber-100'
-                          : 'bg-white'
-                    } ${borderClass}`}
-                  >
-                    {isMarked ? number : ''}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-/**
- * ルール説明のサンプル五十音表
- */
-function ExampleGojuonTable() {
-  // 「くるま」を表示するサンプル
-  const exampleMarks = [
-    { row: 2, col: 9, number: 1 }, // く
-    { row: 2, col: 2, number: 2 }, // る
-    { row: 0, col: 4, number: 3 }, // ま
-  ]
-
-  const markedMap = new Map<string, number>()
-  for (const cell of exampleMarks) {
-    markedMap.set(`${String(cell.row)}-${String(cell.col)}`, cell.number)
-  }
-
-  return (
-    <div className="flex justify-center">
-      <table className="border-collapse border border-gray-400">
-        <tbody>
-          {GOJUON_TABLE.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((_, colIndex) => {
-                const isEmpty = isEmptyCell(rowIndex, colIndex)
-                const number = markedMap.get(
-                  `${String(rowIndex)}-${String(colIndex)}`,
-                )
-                const isMarked = number !== undefined
-
-                return (
-                  <td
-                    key={colIndex}
-                    className={`h-5 w-5 border border-gray-400 text-center text-xs font-bold text-indigo-600 ${
-                      isEmpty
-                        ? 'bg-neutral-800'
-                        : isMarked
-                          ? 'bg-amber-100'
-                          : 'bg-white'
-                    }`}
-                  >
-                    {isMarked ? number : ''}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
 
 /**
  * スタート画面
@@ -158,7 +47,11 @@ function StartScreen({
           </p>
           <div className="mt-3 rounded-lg bg-white/50 p-3">
             <p className="mb-3 text-center text-sm text-gray-500">例：</p>
-            <ExampleGojuonTable />
+            <GojuonTable
+              markedCells={KURUMA_SAMPLE_MARKS}
+              size="medium"
+              className=""
+            />
             <p className="mb-1 mt-3 text-center text-sm text-gray-600">
               1→「く」、2→「る」、3→「ま」
             </p>
@@ -288,7 +181,7 @@ function DrillScreen({
 
       {/* 問題エリア */}
       <div className="rounded-lg bg-white/70 p-4">
-        <GojuonTable markedCells={markedCells} isTaMoMode={mode === 'ta-mo'} />
+        <GojuonTable markedCells={markedCells} size="large" isTaMoMode={mode === 'ta-mo'} />
 
         <AnswerInputArea
           value={userAnswer}
