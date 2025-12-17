@@ -281,8 +281,8 @@ function DrillScreen({
         {/* EJOTY特訓モード用ヒントメッセージ */}
         {mode === 'ejoty' && <EjotyHint shouldFade={shouldFadeEjotyHint} />}
 
-        {/* アルファベット参照表（1文字・単語モードのみ） */}
-        {mode !== 'ejoty' && <AlphaTable />}
+        {/* アルファベット参照表（1文字モードのみ） */}
+        {mode === 'single' && <AlphaTable />}
 
         <AnswerInputArea
           value={userAnswer}
