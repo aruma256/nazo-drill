@@ -1,4 +1,8 @@
-import { getRandomInt, getRandomElementExcluding } from '../../utils'
+import {
+  getRandomInt,
+  getRandomElementExcluding,
+  katakanaToHiragana,
+} from '../../utils'
 import type { Question } from '../../hooks/useDrill'
 
 /**
@@ -208,15 +212,6 @@ export function generateQuestionString(prefecture: string): string | null {
   }
 
   return replaceWithCircle(prefecture, indices)
-}
-
-/**
- * カタカナをひらがなに変換
- */
-function katakanaToHiragana(str: string): string {
-  return str.replace(/[\u30A1-\u30F6]/g, (match) => {
-    return String.fromCharCode(match.charCodeAt(0) - 0x60)
-  })
 }
 
 /**
