@@ -7,7 +7,7 @@ import {
   AnswerInputArea,
   DrillMiniHeader,
 } from '../components'
-import { useDrill, useDrillStorage } from '../hooks'
+import { useDrill, useDrillStorage, type Feedback } from '../hooks'
 import type { Question } from '../hooks/useDrill'
 import {
   generateNormalQuestion,
@@ -100,10 +100,7 @@ function DrillScreen({
   onBack: () => void
 }) {
   const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<{
-    type: 'correct' | 'incorrect'
-    correctAnswer?: string
-  } | null>(null)
+  const [feedback, setFeedback] = useState<Feedback | null>(null)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
