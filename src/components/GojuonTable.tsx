@@ -1,3 +1,4 @@
+/* eslint-disable react-x/no-array-index-key -- 五十音表は固定配列のためindexをkeyに使用 */
 import {
   GOJUON_TABLE,
   isEmptyCell,
