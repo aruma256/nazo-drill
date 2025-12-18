@@ -39,7 +39,7 @@ export function GojuonTable({
   // マークされたセルをマップ化（高速検索用）
   const markedMap = new Map<string, number>()
   for (const cell of markedCells) {
-    markedMap.set(`${String(cell.row)}-${String(cell.col)}`, cell.number)
+    markedMap.set(`${cell.row}-${cell.col}`, cell.number)
   }
 
   const sizeClasses = SIZE_CLASSES[size]
@@ -52,9 +52,7 @@ export function GojuonTable({
             <tr key={rowIndex}>
               {row.map((_, colIndex) => {
                 const isEmpty = isEmptyCell(rowIndex, colIndex)
-                const number = markedMap.get(
-                  `${String(rowIndex)}-${String(colIndex)}`,
-                )
+                const number = markedMap.get(`${rowIndex}-${colIndex}`)
                 const isMarked = number !== undefined
 
                 // た〜も特訓モード時の境界線

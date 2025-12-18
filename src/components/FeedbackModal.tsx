@@ -38,7 +38,7 @@ function ProgressBar({ durationMs }: { durationMs: number }) {
     >
       <div
         className="h-2 rounded-full bg-red-500"
-        style={{ width: `${String(progress)}%` }}
+        style={{ width: `${progress}%` }}
       />
     </div>
   )
