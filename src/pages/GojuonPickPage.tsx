@@ -7,6 +7,8 @@ import {
   AnswerInputArea,
   DrillMiniHeader,
   GojuonTable,
+  ChallengeTimer,
+  ChallengeResult,
 } from '../components'
 import { useDrill, useDrillStorage, type Feedback } from '../hooks'
 import {
@@ -18,16 +20,19 @@ import {
 } from '../drills/gojuonPick'
 
 const DRILL_NAME = '50on-pick'
+const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill'
+type Screen = 'start' | 'drill' | 'challenge' | 'challengeResult'
 
 /**
  * スタート画面
  */
 function StartScreen({
   onStartDrill,
+  onStartChallenge,
 }: {
   onStartDrill: (mode: DrillMode) => void
+  onStartChallenge: () => void
 }) {
   return (
     <>
@@ -65,11 +70,28 @@ function StartScreen({
         </div>
       </section>
 
-      {/* モード選択 */}
+      {/* 実力テスト */}
+      <section className="mb-6">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+          <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
+          実力テスト
+        </h2>
+        <button
+          onClick={onStartChallenge}
+          className="w-full rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
+        >
+          {CHALLENGE_TIME_LIMIT}秒チャレンジ
+          <span className="mt-1 block text-sm font-normal text-amber-600">
+            単語モードで何問正解できるか挑戦！
+          </span>
+        </button>
+      </section>
+
+      {/* 練習モード選択 */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
           <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
-          モードを選択
+          練習モード
         </h2>
         <div className="space-y-3">
           <ModeButton
@@ -123,7 +145,8 @@ function DrillScreen({
   // 問題生成関数
   const generateQuestion = useCallback(() => {
     switch (mode) {
-      case 'word': {
+      case 'word':
+      case 'challenge': {
         const result = generateWordQuestion(lastWordRef.current)
         lastWordRef.current = result.newLastWord
         return result.question
@@ -211,15 +234,158 @@ function DrillScreen({
 }
 
 /**
+ * チャレンジ画面（実力テストモード）
+ */
+function ChallengeScreen({
+  onTimeUp,
+  onBack,
+}: {
+  onTimeUp: (score: number) => void
+  onBack: () => void
+}) {
+  const [userAnswer, setUserAnswer] = useState('')
+  const [score, setScore] = useState(0)
+  const [remainingTime, setRemainingTime] = useState(CHALLENGE_TIME_LIMIT)
+  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+
+  // 前回の問題を追跡するRef
+  const lastWordRef = useRef<string | null>(null)
+
+  // 問題生成関数（単語モードと同じ）
+  const generateQuestion = useCallback(() => {
+    const result = generateWordQuestion(lastWordRef.current)
+    lastWordRef.current = result.newLastWord
+    return result.question
+  }, [])
+
+  const { currentQuestion, presentQuestion, checkAnswer } =
+    useDrill(generateQuestion)
+
+  // ドリル開始時に最初の問題を出題
+  useEffect(() => {
+    presentQuestion()
+  }, [presentQuestion])
+
+  // カウントダウンタイマー
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
+  // タイムアップ時の処理
+  useEffect(() => {
+    if (remainingTime === 0) {
+      onTimeUp(score)
+    }
+  }, [remainingTime, score, onTimeUp])
+
+  const handleSubmit = () => {
+    if (!userAnswer.trim() || remainingTime === 0) return
+
+    const isCorrect = checkAnswer(userAnswer)
+    if (isCorrect) {
+      setScore((prev) => prev + 1)
+      incrementCorrectCount('challenge')
+      // 正解したら即座に次の問題へ
+      presentQuestion()
+    }
+    setUserAnswer('')
+  }
+
+  // 現在の問題のマークされたセル
+  const markedCells = currentQuestion
+    ? parseMarkedCells(currentQuestion.question)
+    : []
+
+  return (
+    <>
+      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
+
+      {/* 問題エリア */}
+      <div className="rounded-lg bg-white/70 p-4">
+        {/* タイマー */}
+        <ChallengeTimer
+          remainingSeconds={remainingTime}
+          totalSeconds={CHALLENGE_TIME_LIMIT}
+        />
+
+        {/* スコア表示 */}
+        <div className="mb-4 text-center">
+          <span className="text-sm text-gray-500">正解数</span>
+          <span className="ml-2 text-2xl font-bold text-indigo-600">
+            {score}
+          </span>
+        </div>
+
+        {/* 問題表示 */}
+        <GojuonTable markedCells={markedCells} size="large" />
+
+        {/* 回答入力エリア（フィードバックなし、即時次問題） */}
+        <div className="mt-4 space-y-3">
+          <input
+            type="text"
+            value={userAnswer}
+            onChange={(e) => {
+              setUserAnswer(e.target.value)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmit()
+              }
+            }}
+            placeholder="ひらがなで入力"
+            maxLength={10}
+            autoFocus
+            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-center text-xl font-bold focus:border-indigo-400 focus:outline-none"
+          />
+          <button
+            onClick={handleSubmit}
+            className="w-full rounded-lg bg-indigo-600 py-3 font-bold text-white transition-colors hover:bg-indigo-700"
+          >
+            回答
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
+/**
  * 五十音表の文字拾いページ
  */
 export function GojuonPickPage() {
   const [screen, setScreen] = useState<Screen>('start')
   const [mode, setMode] = useState<DrillMode>('word')
+  const [challengeScore, setChallengeScore] = useState(0)
 
   const handleStartDrill = (selectedMode: DrillMode) => {
     setMode(selectedMode)
     setScreen('drill')
+  }
+
+  const handleStartChallenge = () => {
+    setScreen('challenge')
+  }
+
+  const handleChallengeTimeUp = useCallback((score: number) => {
+    setChallengeScore(score)
+    setScreen('challengeResult')
+  }, [])
+
+  const handleRetryChallenge = () => {
+    setChallengeScore(0)
+    setScreen('challenge')
   }
 
   const handleBackToStart = () => {
@@ -234,11 +400,28 @@ export function GojuonPickPage() {
             title="五十音表の文字拾い"
             description="数字の順に文字を読み取ろう"
           />
-          <StartScreen onStartDrill={handleStartDrill} />
+          <StartScreen
+            onStartDrill={handleStartDrill}
+            onStartChallenge={handleStartChallenge}
+          />
         </>
       )}
       {screen === 'drill' && (
         <DrillScreen mode={mode} onBack={handleBackToStart} />
+      )}
+      {screen === 'challenge' && (
+        <ChallengeScreen
+          onTimeUp={handleChallengeTimeUp}
+          onBack={handleBackToStart}
+        />
+      )}
+      {screen === 'challengeResult' && (
+        <ChallengeResult
+          score={challengeScore}
+          timeLimit={CHALLENGE_TIME_LIMIT}
+          onRetry={handleRetryChallenge}
+          onBack={handleBackToStart}
+        />
       )}
     </Layout>
   )

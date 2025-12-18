@@ -103,7 +103,7 @@ const taMoChars = getTaMoChars()
 /**
  * ドリルのモード
  */
-export type DrillMode = 'word' | 'single' | 'ta-mo'
+export type DrillMode = 'word' | 'single' | 'ta-mo' | 'challenge'
 
 /**
  * 1文字モードの問題を生成（共通処理）
