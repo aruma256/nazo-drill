@@ -83,13 +83,3 @@ export function GojuonTable({
     </div>
   )
 }
-
-/**
- * 「くるま」を表示するサンプル用のマーク配列
- * トップページやルール説明で使用
- */
-export const KURUMA_SAMPLE_MARKS: MarkedCell[] = [
-  { row: 2, col: 9, number: 1 }, // く
-  { row: 2, col: 2, number: 2 }, // る
-  { row: 0, col: 4, number: 3 }, // ま
-]

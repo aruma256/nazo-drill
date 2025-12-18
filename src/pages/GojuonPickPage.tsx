@@ -7,7 +7,6 @@ import {
   AnswerInputArea,
   DrillMiniHeader,
   GojuonTable,
-  KURUMA_SAMPLE_MARKS,
 } from '../components'
 import { useDrill, useDrillStorage, type Feedback } from '../hooks'
 import {
@@ -48,7 +47,11 @@ function StartScreen({
           <div className="mt-3 rounded-lg bg-white/50 p-3">
             <p className="mb-3 text-center text-sm text-gray-500">例：</p>
             <GojuonTable
-              markedCells={KURUMA_SAMPLE_MARKS}
+              markedCells={[
+                { row: 2, col: 9, number: 1 }, // く
+                { row: 2, col: 2, number: 2 }, // る
+                { row: 0, col: 4, number: 3 }, // ま
+              ]}
               size="medium"
               className=""
             />

@@ -1,10 +1,4 @@
-import {
-  Layout,
-  DrillCard,
-  DrillExample,
-  GojuonTable,
-  KURUMA_SAMPLE_MARKS,
-} from '../components'
+import { Layout, DrillCard, DrillExample, GojuonTable } from '../components'
 
 export function HomePage() {
   return (
@@ -38,7 +32,11 @@ export function HomePage() {
             description="五十音表のマークされたマスから文字を読み取る練習"
           >
             <GojuonTable
-              markedCells={KURUMA_SAMPLE_MARKS}
+              markedCells={[
+                { row: 2, col: 9, number: 1 }, // く
+                { row: 2, col: 2, number: 2 }, // る
+                { row: 0, col: 4, number: 3 }, // ま
+              ]}
               size="small"
               className="mb-2"
             />
