@@ -150,7 +150,24 @@ function StartScreen({
         </div>
       </section>
 
-      {/* 練習モード */}
+      {/* 実力テスト */}
+      <section className="mb-6">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+          <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
+          実力テスト
+        </h2>
+        <button
+          onClick={onStartChallenge}
+          className="w-full rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
+        >
+          {CHALLENGE_TIME_LIMIT}秒チャレンジ
+          <span className="mt-1 block text-sm font-normal text-amber-600">
+            単語モードで何問正解できるか挑戦！
+          </span>
+        </button>
+      </section>
+
+      {/* モード選択 */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
           <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
@@ -182,23 +199,6 @@ function StartScreen({
             }}
           />
         </div>
-      </section>
-
-      {/* 実力テスト */}
-      <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
-          実力テスト
-        </h2>
-        <button
-          onClick={onStartChallenge}
-          className="w-full rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
-        >
-          {CHALLENGE_TIME_LIMIT}秒チャレンジ
-          <span className="mt-1 block text-sm font-normal text-amber-600">
-            単語モードで何問正解できるか挑戦！
-          </span>
-        </button>
       </section>
     </>
   )
