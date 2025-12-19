@@ -24,9 +24,9 @@ function HistoryTable({ history }: { history: HistoryEntry[] }) {
       <h3 className="mb-3 text-left text-sm font-bold text-gray-600">
         解答履歴
       </h3>
-      <div className="max-h-60 overflow-y-auto rounded-lg border border-gray-200">
+      <div className="rounded-lg border border-gray-200">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-gray-50">
+          <thead className="bg-gray-50">
             <tr>
               <th className="px-2 py-2 text-left text-gray-500">#</th>
               <th className="px-2 py-2 text-left text-gray-500">問題</th>
@@ -83,9 +83,7 @@ export function ChallengeResult({
         <div className="mt-1 text-lg text-gray-600">問正解</div>
       </div>
 
-      {history && history.length > 0 && <HistoryTable history={history} />}
-
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3">
         <button
           onClick={onRetry}
           className="w-full rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-indigo-700"
@@ -99,6 +97,8 @@ export function ChallengeResult({
           モード選択に戻る
         </button>
       </div>
+
+      {history && history.length > 0 && <HistoryTable history={history} />}
     </div>
   )
 }
