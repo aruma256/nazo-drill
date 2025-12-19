@@ -163,7 +163,7 @@ function StartScreen({
         </h2>
         <button
           onClick={onStartChallenge}
-          className="w-full rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
+          className="w-full cursor-pointer rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
         >
           {CHALLENGE_TIME_LIMIT}秒チャレンジ
           <span className="mt-1 block text-sm font-normal text-amber-600">
