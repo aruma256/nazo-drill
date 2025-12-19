@@ -28,10 +28,10 @@ function HistoryTable({ history }: { history: HistoryEntry[] }) {
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-2 py-2 text-left text-gray-500">#</th>
-              <th className="px-2 py-2 text-left text-gray-500">問題</th>
-              <th className="px-2 py-2 text-left text-gray-500">回答</th>
-              <th className="px-2 py-2 text-left text-gray-500">正解</th>
+              <th className="px-2 py-2 text-center text-gray-500">#</th>
+              <th className="px-2 py-2 text-center text-gray-500">問題</th>
+              <th className="px-2 py-2 text-center text-gray-500">回答</th>
+              <th className="px-2 py-2 text-center text-gray-500">正解</th>
               <th className="px-2 py-2 text-center text-gray-500">結果</th>
             </tr>
           </thead>
