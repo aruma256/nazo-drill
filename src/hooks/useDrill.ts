@@ -34,6 +34,18 @@ export interface Feedback {
   correctAnswer?: string
 }
 
+/**
+ * 履歴エントリ（1問分の記録）
+ */
+export interface HistoryEntry {
+  /** 問題オブジェクト */
+  question: Question
+  /** ユーザーの回答 */
+  userAnswer: string
+  /** 正解かどうか */
+  isCorrect: boolean
+}
+
 /** 問題生成関数の型 */
 export type QuestionGenerator = () => Question
 
@@ -55,6 +67,7 @@ export function useDrill(generateQuestion: QuestionGenerator) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
   const [score, setScore] = useState(0)
   const [totalQuestions, setTotalQuestions] = useState(0)
+  const [history, setHistory] = useState<HistoryEntry[]>([])
   const previousQuestionRef = useRef<Question | null>(null)
 
   /**
@@ -96,6 +109,16 @@ export function useDrill(generateQuestion: QuestionGenerator) {
         setScore((prev) => prev + 1)
       }
 
+      // 履歴に記録
+      setHistory((prev) => [
+        ...prev,
+        {
+          question: currentQuestion,
+          userAnswer,
+          isCorrect,
+        },
+      ])
+
       return isCorrect
     },
     [currentQuestion],
@@ -121,15 +144,25 @@ export function useDrill(generateQuestion: QuestionGenerator) {
     setTotalQuestions(0)
     setCurrentQuestion(null)
     previousQuestionRef.current = null
+    setHistory([])
+  }, [])
+
+  /**
+   * 履歴をクリア
+   */
+  const clearHistory = useCallback(() => {
+    setHistory([])
   }, [])
 
   return {
     currentQuestion,
     score,
     totalQuestions,
+    history,
     presentQuestion,
     checkAnswer,
     getScoreStats,
     resetScore,
+    clearHistory,
   }
 }

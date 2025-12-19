@@ -1,3 +1,5 @@
+import type { HistoryEntry } from '../hooks'
+
 interface ChallengeResultProps {
   /** 正答数 */
   score: number
@@ -7,6 +9,58 @@ interface ChallengeResultProps {
   onRetry: () => void
   /** 「戻る」ボタン押下時のコールバック */
   onBack: () => void
+  /** 解答履歴（オプショナル） */
+  history?: HistoryEntry[]
+}
+
+/**
+ * 解答履歴テーブルコンポーネント
+ */
+function HistoryTable({ history }: { history: HistoryEntry[] }) {
+  if (history.length === 0) return null
+
+  return (
+    <div className="mt-6">
+      <h3 className="mb-3 text-left text-sm font-bold text-gray-600">
+        解答履歴
+      </h3>
+      <div className="max-h-60 overflow-y-auto rounded-lg border border-gray-200">
+        <table className="w-full text-sm">
+          <thead className="sticky top-0 bg-gray-50">
+            <tr>
+              <th className="px-2 py-2 text-left text-gray-500">#</th>
+              <th className="px-2 py-2 text-left text-gray-500">問題</th>
+              <th className="px-2 py-2 text-left text-gray-500">回答</th>
+              <th className="px-2 py-2 text-left text-gray-500">正解</th>
+              <th className="px-2 py-2 text-center text-gray-500">結果</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((entry, index) => (
+              <tr
+                key={index}
+                className={entry.isCorrect ? 'bg-green-50' : 'bg-red-50'}
+              >
+                <td className="px-2 py-2 text-gray-400">{index + 1}</td>
+                <td className="px-2 py-2 font-mono">
+                  {entry.question.question}
+                </td>
+                <td className="px-2 py-2 font-mono">{entry.userAnswer || '-'}</td>
+                <td className="px-2 py-2 font-mono">{entry.question.answer}</td>
+                <td className="px-2 py-2 text-center">
+                  {entry.isCorrect ? (
+                    <span className="text-green-600">○</span>
+                  ) : (
+                    <span className="text-red-600">×</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
 }
 
 /**
@@ -17,6 +71,7 @@ export function ChallengeResult({
   timeLimit,
   onRetry,
   onBack,
+  history,
 }: ChallengeResultProps) {
   return (
     <div className="rounded-lg bg-white/70 p-6 text-center">
@@ -28,7 +83,9 @@ export function ChallengeResult({
         <div className="mt-1 text-lg text-gray-600">問正解</div>
       </div>
 
-      <div className="space-y-3">
+      {history && history.length > 0 && <HistoryTable history={history} />}
+
+      <div className="mt-6 space-y-3">
         <button
           onClick={onRetry}
           className="w-full rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-indigo-700"

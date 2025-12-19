@@ -1,6 +1,7 @@
 export { useDrill } from './useDrill'
 export type {
   Feedback,
+  HistoryEntry,
   Question,
   QuestionGenerator,
   ScoreStats,

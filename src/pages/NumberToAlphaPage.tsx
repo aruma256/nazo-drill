@@ -9,7 +9,7 @@ import {
   ChallengeTimer,
   ChallengeResult,
 } from '../components'
-import { useDrill, useDrillStorage, type Feedback } from '../hooks'
+import { useDrill, useDrillStorage, type Feedback, type HistoryEntry } from '../hooks'
 import {
   type DrillMode,
   generateEjotyQuestion,
@@ -341,7 +341,7 @@ function ChallengeScreen({
   onTimeUp,
   onBack,
 }: {
-  onTimeUp: (score: number) => void
+  onTimeUp: (score: number, history: HistoryEntry[]) => void
   onBack: () => void
 }) {
   const [userAnswer, setUserAnswer] = useState('')
@@ -359,7 +359,7 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer } =
+  const { currentQuestion, presentQuestion, checkAnswer, history } =
     useDrill(generateQuestion)
 
   // ドリル開始時に最初の問題を出題
@@ -387,9 +387,9 @@ function ChallengeScreen({
   // タイムアップ時の処理
   useEffect(() => {
     if (remainingTime === 0) {
-      onTimeUp(score)
+      onTimeUp(score, history)
     }
-  }, [remainingTime, score, onTimeUp])
+  }, [remainingTime, score, history, onTimeUp])
 
   const handleSubmit = () => {
     if (!userAnswer.trim() || remainingTime === 0) return
@@ -473,6 +473,7 @@ export function NumberToAlphaPage() {
   const [screen, setScreen] = useState<Screen>('start')
   const [mode, setMode] = useState<DrillMode>('single')
   const [challengeScore, setChallengeScore] = useState(0)
+  const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
 
   const handleStartDrill = (selectedMode: DrillMode) => {
     setMode(selectedMode)
@@ -483,13 +484,15 @@ export function NumberToAlphaPage() {
     setScreen('challenge')
   }
 
-  const handleChallengeTimeUp = useCallback((score: number) => {
+  const handleChallengeTimeUp = useCallback((score: number, history: HistoryEntry[]) => {
     setChallengeScore(score)
+    setChallengeHistory(history)
     setScreen('challengeResult')
   }, [])
 
   const handleRetryChallenge = () => {
     setChallengeScore(0)
+    setChallengeHistory([])
     setScreen('challenge')
   }
 
@@ -524,6 +527,7 @@ export function NumberToAlphaPage() {
         <ChallengeResult
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
+          history={challengeHistory}
           onRetry={handleRetryChallenge}
           onBack={handleBackToStart}
         />
