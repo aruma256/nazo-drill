@@ -398,9 +398,8 @@ function ChallengeScreen({
     if (isCorrect) {
       setScore((prev) => prev + 1)
       incrementCorrectCount('challenge')
-      // 正解したら即座に次の問題へ
-      presentQuestion()
     }
+    presentQuestion()
     setUserAnswer('')
   }
 
