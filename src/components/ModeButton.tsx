@@ -42,7 +42,7 @@ export function ModeButton({
   return (
     <button
       onClick={onClick}
-      className="w-full rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
+      className="w-full cursor-pointer rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
     >
       {label}
       <span className="mt-1 block text-sm font-normal text-gray-500">
