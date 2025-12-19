@@ -36,12 +36,12 @@ function HistoryTable({ history }: { history: HistoryEntry[] }) {
             </tr>
           </thead>
           <tbody>
-            {history.map((entry, index) => (
+            {history.map((entry) => (
               <tr
-                key={index}
+                key={entry.id}
                 className={entry.isCorrect ? 'bg-green-50' : 'bg-red-50'}
               >
-                <td className="px-2 py-2 text-gray-400">{index + 1}</td>
+                <td className="px-2 py-2 text-gray-400">{entry.id}</td>
                 <td className="px-2 py-2 font-mono">
                   {entry.question.question}
                 </td>

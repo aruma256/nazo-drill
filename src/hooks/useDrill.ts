@@ -38,6 +38,8 @@ export interface Feedback {
  * 履歴エントリ（1問分の記録）
  */
 export interface HistoryEntry {
+  /** 一意の識別子 */
+  id: number
   /** 問題オブジェクト */
   question: Question
   /** ユーザーの回答 */
@@ -113,6 +115,7 @@ export function useDrill(generateQuestion: QuestionGenerator) {
       setHistory((prev) => [
         ...prev,
         {
+          id: prev.length + 1,
           question: currentQuestion,
           userAnswer,
           isCorrect,
