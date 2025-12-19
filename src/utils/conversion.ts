@@ -3,7 +3,7 @@
  */
 
 /** 'A'のASCIIコード */
-const ASCII_CODE_A = 65
+export const ASCII_CODE_A = 65
 
 /**
  * 数字をアルファベットに変換する（1→A, 2→B, ...）

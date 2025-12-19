@@ -1,8 +1,6 @@
 import { getRandomInt, getRandomElement } from '../../utils'
 import type { Question } from '../../hooks/useDrill'
-
-/** AのASCIIコード */
-const ASCII_CODE_A = 65
+import { ASCII_CODE_A } from '../../utils/conversion'
 
 /** アルファベットシフトのモード */
 export type AlphaShiftMode = 'plus-training' | 'minus-training'
