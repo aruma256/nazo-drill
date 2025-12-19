@@ -9,7 +9,12 @@ import {
   ChallengeTimer,
   ChallengeResult,
 } from '../components'
-import { useDrill, useDrillStorage, type Feedback, type HistoryEntry } from '../hooks'
+import {
+  useDrill,
+  useDrillStorage,
+  type Feedback,
+  type HistoryEntry,
+} from '../hooks'
 import {
   type DrillMode,
   generateEjotyQuestion,
@@ -483,11 +488,14 @@ export function NumberToAlphaPage() {
     setScreen('challenge')
   }
 
-  const handleChallengeTimeUp = useCallback((score: number, history: HistoryEntry[]) => {
-    setChallengeScore(score)
-    setChallengeHistory(history)
-    setScreen('challengeResult')
-  }, [])
+  const handleChallengeTimeUp = useCallback(
+    (score: number, history: HistoryEntry[]) => {
+      setChallengeScore(score)
+      setChallengeHistory(history)
+      setScreen('challengeResult')
+    },
+    [],
+  )
 
   const handleRetryChallenge = () => {
     setChallengeScore(0)

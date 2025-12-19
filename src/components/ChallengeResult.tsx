@@ -45,7 +45,9 @@ function HistoryTable({ history }: { history: HistoryEntry[] }) {
                 <td className="px-2 py-2 font-mono">
                   {entry.question.question}
                 </td>
-                <td className="px-2 py-2 font-mono">{entry.userAnswer || '-'}</td>
+                <td className="px-2 py-2 font-mono">
+                  {entry.userAnswer || '-'}
+                </td>
                 <td className="px-2 py-2 font-mono">{entry.question.answer}</td>
                 <td className="px-2 py-2 text-center">
                   {entry.isCorrect ? (
