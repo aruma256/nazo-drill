@@ -16,6 +16,7 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       reactX.configs['recommended-typescript'],
