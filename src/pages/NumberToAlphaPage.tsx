@@ -609,30 +609,16 @@ function ChallengeScreen({
         </div>
 
         {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-        <div className="space-y-3">
-          <input
-            type="text"
-            value={userAnswer}
-            onChange={(e) => {
-              setUserAnswer(e.target.value.toUpperCase())
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSubmit()
-              }
-            }}
-            placeholder="答えを入力"
-            maxLength={10}
-            autoFocus
-            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-center text-xl font-bold uppercase focus:border-indigo-400 focus:outline-none"
-          />
-          <button
-            onClick={handleSubmit}
-            className="w-full rounded-lg bg-indigo-600 py-3 font-bold text-white transition-colors hover:bg-indigo-700"
-          >
-            回答
-          </button>
-        </div>
+        <AnswerInputArea
+          value={userAnswer}
+          onChange={setUserAnswer}
+          onSubmit={handleSubmit}
+          placeholder="答えを入力"
+          maxLength={10}
+          inputTransform={(value) => value.toUpperCase()}
+          className="uppercase"
+          instantMode
+        />
       </div>
     </>
   )

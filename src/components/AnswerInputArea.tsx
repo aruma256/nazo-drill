@@ -11,14 +11,16 @@ interface AnswerInputAreaProps {
   value: string
   onChange: (value: string) => void
   onSubmit: () => void
-  onNext: () => void
-  feedback: Feedback | null
+  onNext?: () => void
+  feedback?: Feedback | null
   placeholder?: string
   maxLength?: number
   autoComplete?: string
   disabled?: boolean
   className?: string
   inputTransform?: (value: string) => string
+  /** 即時モード: フィードバックなしで常に送信ボタンのみ表示（実力テスト用） */
+  instantMode?: boolean
 }
 
 /**
@@ -36,19 +38,20 @@ export function AnswerInputArea({
   disabled = false,
   className = '',
   inputTransform,
+  instantMode = false,
 }: AnswerInputAreaProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // フィードバック後に入力欄にフォーカス
+  // フィードバック後に入力欄にフォーカス（instantModeでは常にフォーカス維持）
   useEffect(() => {
-    if (!feedback && inputRef.current) {
-      inputRef.current.focus()
+    if (instantMode || !feedback) {
+      inputRef.current?.focus()
     }
-  }, [feedback])
+  }, [feedback, instantMode])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      if (feedback) {
+      if (!instantMode && feedback && onNext) {
         onNext()
       } else {
         onSubmit()
@@ -79,10 +82,10 @@ export function AnswerInputArea({
           placeholder={placeholder}
           maxLength={maxLength}
           autoComplete={autoComplete}
-          disabled={disabled || !!feedback}
+          disabled={disabled || (!instantMode && !!feedback)}
           className={`min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold focus:border-indigo-500 focus:outline-none disabled:bg-gray-100 ${className}`}
         />
-        {!feedback ? (
+        {instantMode || !feedback ? (
           <button
             onClick={onSubmit}
             disabled={!value.trim()}
