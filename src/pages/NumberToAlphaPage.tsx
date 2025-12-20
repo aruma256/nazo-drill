@@ -25,7 +25,7 @@ import {
 const DRILL_NAME = '123-abc'
 const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill' | 'challenge' | 'challengeResult'
+type Screen = 'start' | 'drill' | 'challenge' | 'challengeResult' | 'note'
 
 /**
  * アルファベット参照表（EJOTYのみ表示）
@@ -116,14 +116,158 @@ function EjotyHint({ shouldFade }: { shouldFade: boolean }) {
 }
 
 /**
+ * 暗記ノート用データ（1〜26の対応表）
+ * memo は語呂合わせなどユーザーが後で入力するためのプレースホルダー
+ */
+const ALPHABET_TABLE: { num: number; alpha: string; memo: string }[] = [
+  { num: 1, alpha: 'A', memo: '' },
+  { num: 2, alpha: 'B', memo: '' },
+  { num: 3, alpha: 'C', memo: '' },
+  { num: 4, alpha: 'D', memo: '' },
+  { num: 5, alpha: 'E', memo: 'EJOTY' },
+  { num: 6, alpha: 'F', memo: '' },
+  { num: 7, alpha: 'G', memo: '' },
+  { num: 8, alpha: 'H', memo: '' },
+  { num: 9, alpha: 'I', memo: '' },
+  { num: 10, alpha: 'J', memo: 'EJOTY' },
+  { num: 11, alpha: 'K', memo: '' },
+  { num: 12, alpha: 'L', memo: '' },
+  { num: 13, alpha: 'M', memo: '' },
+  { num: 14, alpha: 'N', memo: '' },
+  { num: 15, alpha: 'O', memo: 'EJOTY' },
+  { num: 16, alpha: 'P', memo: '' },
+  { num: 17, alpha: 'Q', memo: '' },
+  { num: 18, alpha: 'R', memo: '' },
+  { num: 19, alpha: 'S', memo: '' },
+  { num: 20, alpha: 'T', memo: 'EJOTY' },
+  { num: 21, alpha: 'U', memo: '' },
+  { num: 22, alpha: 'V', memo: '' },
+  { num: 23, alpha: 'W', memo: '' },
+  { num: 24, alpha: 'X', memo: '' },
+  { num: 25, alpha: 'Y', memo: 'EJOTY' },
+  { num: 26, alpha: 'Z', memo: '' },
+]
+
+/**
+ * 暗記ノート画面
+ */
+function NoteScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <>
+      <DrillMiniHeader onBack={onBack} drillLabel="暗記ノート" />
+
+      <div className="space-y-6">
+        {/* 暗記のステップ */}
+        <section className="rounded-lg bg-white/70 p-4">
+          <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+            <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+            覚え方のステップ
+          </h2>
+          <div className="space-y-3 text-gray-700">
+            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
+              <p className="font-bold text-indigo-800">
+                ステップ1: EJOTYを覚える
+              </p>
+              <p className="mt-1 text-sm">
+                まずは5の倍数だけ覚えましょう。
+                <br />
+                <span className="font-mono font-bold text-indigo-600">
+                  E=5, J=10, O=15, T=20, Y=25
+                </span>
+              </p>
+            </div>
+            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
+              <p className="font-bold text-indigo-800">ステップ2: 前後を計算</p>
+              <p className="mt-1 text-sm">
+                EJOTYを基準に、+1や-1で他の文字を導く。
+                <br />
+                例: J=10 なので、K=11, I=9
+              </p>
+            </div>
+            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
+              <p className="font-bold text-indigo-800">
+                ステップ3: よく出る文字を覚える
+              </p>
+              <p className="mt-1 text-sm">
+                使用頻度の高い文字から優先的に暗記していく。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 対応表 */}
+        <section className="rounded-lg bg-white/70 p-4">
+          <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+            <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+            対応表
+          </h2>
+          <div className="overflow-hidden rounded-lg border border-gray-200">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="w-16 px-3 py-2 text-center text-sm font-bold text-gray-600">
+                    数字
+                  </th>
+                  <th className="w-16 px-3 py-2 text-center text-sm font-bold text-gray-600">
+                    ABC
+                  </th>
+                  <th className="px-3 py-2 text-left text-sm font-bold text-gray-600">
+                    覚え方メモ
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {ALPHABET_TABLE.map((row) => {
+                  const isEjoty = [5, 10, 15, 20, 25].includes(row.num)
+                  return (
+                    <tr
+                      key={row.num}
+                      className={`border-t border-gray-100 ${
+                        isEjoty ? 'bg-amber-50' : 'bg-white'
+                      }`}
+                    >
+                      <td
+                        className={`px-3 py-2 text-center font-mono text-lg ${
+                          isEjoty ? 'font-bold text-amber-700' : 'text-gray-700'
+                        }`}
+                      >
+                        {row.num}
+                      </td>
+                      <td
+                        className={`px-3 py-2 text-center font-mono text-lg ${
+                          isEjoty
+                            ? 'font-bold text-amber-700'
+                            : 'text-indigo-600'
+                        }`}
+                      >
+                        {row.alpha}
+                      </td>
+                      <td className="px-3 py-2 text-sm text-gray-500">
+                        {row.memo}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </>
+  )
+}
+
+/**
  * スタート画面
  */
 function StartScreen({
   onStartDrill,
   onStartChallenge,
+  onOpenNote,
 }: {
   onStartDrill: (mode: DrillMode) => void
   onStartChallenge: () => void
+  onOpenNote: () => void
 }) {
   return (
     <>
@@ -204,6 +348,23 @@ function StartScreen({
             }}
           />
         </div>
+      </section>
+
+      {/* 暗記ノート */}
+      <section className="mb-6">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+          <span className="mr-2 h-5 w-1 rounded bg-green-500"></span>
+          暗記ノート
+        </h2>
+        <button
+          onClick={onOpenNote}
+          className="w-full cursor-pointer rounded-lg border-2 border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 text-lg font-bold text-green-700 shadow-md transition-all duration-200 hover:border-green-500 hover:from-green-100 hover:to-emerald-100 hover:shadow-lg"
+        >
+          対応表・覚え方を見る
+          <span className="mt-1 block text-sm font-normal text-green-600">
+            EJOTYの覚え方や語呂合わせなど
+          </span>
+        </button>
       </section>
     </>
   )
@@ -488,6 +649,10 @@ export function NumberToAlphaPage() {
     setScreen('challenge')
   }
 
+  const handleOpenNote = () => {
+    setScreen('note')
+  }
+
   const handleChallengeTimeUp = useCallback(
     (score: number, history: HistoryEntry[]) => {
       setChallengeScore(score)
@@ -518,6 +683,7 @@ export function NumberToAlphaPage() {
           <StartScreen
             onStartDrill={handleStartDrill}
             onStartChallenge={handleStartChallenge}
+            onOpenNote={handleOpenNote}
           />
         </>
       )}
@@ -539,6 +705,7 @@ export function NumberToAlphaPage() {
           onBack={handleBackToStart}
         />
       )}
+      {screen === 'note' && <NoteScreen onBack={handleBackToStart} />}
     </Layout>
   )
 }
