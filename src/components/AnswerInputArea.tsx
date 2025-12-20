@@ -18,6 +18,8 @@ interface AnswerInputAreaProps {
   autoComplete?: string
   disabled?: boolean
   className?: string
+  /** input要素に適用するクラス（uppercase等） */
+  inputClassName?: string
   inputTransform?: (value: string) => string
   /** 即時モード: フィードバックなしで常に送信ボタンのみ表示（実力テスト用） */
   instantMode?: boolean
@@ -37,6 +39,7 @@ export function AnswerInputArea({
   autoComplete = 'off',
   disabled = false,
   className = '',
+  inputClassName = '',
   inputTransform,
   instantMode = false,
 }: AnswerInputAreaProps) {
@@ -83,7 +86,7 @@ export function AnswerInputArea({
           maxLength={maxLength}
           autoComplete={autoComplete}
           disabled={disabled || (!instantMode && !!feedback)}
-          className={`min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold focus:border-indigo-500 focus:outline-none disabled:bg-gray-100 ${className}`}
+          className={`min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold focus:border-indigo-500 focus:outline-none disabled:bg-gray-100 ${inputClassName}`}
         />
         {instantMode || !feedback ? (
           <button

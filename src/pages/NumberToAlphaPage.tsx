@@ -486,7 +486,7 @@ function DrillScreen({
           placeholder="答えを入力"
           maxLength={10}
           inputTransform={(value) => value.toUpperCase()}
-          className="uppercase"
+          inputClassName="uppercase"
         />
       </div>
 
@@ -616,7 +616,7 @@ function ChallengeScreen({
           placeholder="答えを入力"
           maxLength={10}
           inputTransform={(value) => value.toUpperCase()}
-          className="uppercase"
+          inputClassName="uppercase"
           instantMode
         />
       </div>
