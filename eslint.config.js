@@ -45,6 +45,7 @@ export default defineConfig([
     files: ['**/*.test.ts', '**/*.test.tsx'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
     },
   },
   eslintConfigPrettier,
