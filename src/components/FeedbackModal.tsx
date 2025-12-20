@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react'
 
-type FeedbackModalProps = {
+interface FeedbackModalProps {
   isOpen: boolean
   type: 'correct' | 'incorrect'
   correctAnswer?: string

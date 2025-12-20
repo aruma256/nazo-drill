@@ -52,7 +52,7 @@ describe('useDrillStorage', () => {
     it('should return the new count', () => {
       const { result } = renderHook(() => useDrillStorage('test-drill'))
 
-      let newCount: number = 0
+      let newCount = 0
       act(() => {
         newCount = result.current.incrementCorrectCount('beginner')
       })

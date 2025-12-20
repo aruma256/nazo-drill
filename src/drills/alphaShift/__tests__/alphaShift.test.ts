@@ -19,7 +19,7 @@ describe('generateAlphaShiftQuestion', () => {
       for (let i = 0; i < 100; i++) {
         const { question } = generateAlphaShiftQuestion(null, 'plus-training')
 
-        const match = question.question.match(/^([A-Z])\+(\d)$/)
+        const match = /^([A-Z])\+(\d)$/.exec(question.question)
         expect(match).not.toBeNull()
 
         const baseChar = match![1]
@@ -80,7 +80,7 @@ describe('generateAlphaShiftQuestion', () => {
       for (let i = 0; i < 100; i++) {
         const { question } = generateAlphaShiftQuestion(null, 'minus-training')
 
-        const match = question.question.match(/^([A-Z])-(\d)$/)
+        const match = /^([A-Z])-(\d)$/.exec(question.question)
         expect(match).not.toBeNull()
 
         const baseChar = match![1]

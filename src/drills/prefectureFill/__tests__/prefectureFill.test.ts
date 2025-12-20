@@ -103,16 +103,16 @@ describe('prefectureFill', () => {
       expect(result.question.subtext).toBe('都道府県')
 
       // 回答が1県確定の都道府県であることを確認
-      const char = result.question.question.match(/「(.)」/)?.[1]
+      const char = /「(.)」/.exec(result.question.question)?.[1]
       expect(char).toBeDefined()
       expect(SINGLE_PREFECTURE_CHARS[char!]).toContain(result.question.answer)
     })
 
     it('前回と異なる文字を出題する', () => {
       const first = generateOnePrefectureQuestion(null)
-      const firstChar = first.question.question.match(/「(.)」/)?.[1]
+      const firstChar = /「(.)」/.exec(first.question.question)?.[1]
       const second = generateOnePrefectureQuestion(firstChar!)
-      const secondChar = second.question.question.match(/「(.)」/)?.[1]
+      const secondChar = /「(.)」/.exec(second.question.question)?.[1]
       expect(secondChar).not.toBe(firstChar)
     })
   })
