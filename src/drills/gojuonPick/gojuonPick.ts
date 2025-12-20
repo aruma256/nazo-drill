@@ -86,9 +86,9 @@ function getValidChars(): string[] {
  */
 function getTaMoChars(): string[] {
   const chars: string[] = []
-  for (let row = 0; row < GOJUON_TABLE.length; row++) {
+  for (const row of GOJUON_TABLE) {
     for (let col = 4; col <= 7; col++) {
-      const char = GOJUON_TABLE[row][col]
+      const char = row[col]
       if (char) {
         chars.push(char)
       }
