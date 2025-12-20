@@ -9,6 +9,7 @@ import {
   GojuonTable,
   ChallengeTimer,
   ChallengeResult,
+  ChallengeCountdownModal,
 } from '../components'
 import { useDrill, useDrillStorage, type Feedback } from '../hooks'
 import {
@@ -22,7 +23,7 @@ import {
 const DRILL_NAME = '50on-pick'
 const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill' | 'challenge' | 'challengeResult'
+type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
 
 /**
  * スタート画面
@@ -374,6 +375,10 @@ export function GojuonPickPage() {
   }
 
   const handleStartChallenge = () => {
+    setScreen('countdown')
+  }
+
+  const handleCountdownComplete = () => {
     setScreen('challenge')
   }
 
@@ -384,7 +389,7 @@ export function GojuonPickPage() {
 
   const handleRetryChallenge = () => {
     setChallengeScore(0)
-    setScreen('challenge')
+    setScreen('countdown')
   }
 
   const handleBackToStart = () => {
@@ -407,6 +412,9 @@ export function GojuonPickPage() {
       )}
       {screen === 'drill' && (
         <DrillScreen mode={mode} onBack={handleBackToStart} />
+      )}
+      {screen === 'countdown' && (
+        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
       )}
       {screen === 'challenge' && (
         <ChallengeScreen

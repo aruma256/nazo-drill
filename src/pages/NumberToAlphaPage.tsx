@@ -8,6 +8,7 @@ import {
   DrillMiniHeader,
   ChallengeTimer,
   ChallengeResult,
+  ChallengeCountdownModal,
 } from '../components'
 import {
   useDrill,
@@ -25,7 +26,13 @@ import {
 const DRILL_NAME = '123-abc'
 const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill' | 'challenge' | 'challengeResult' | 'note'
+type Screen =
+  | 'start'
+  | 'drill'
+  | 'countdown'
+  | 'challenge'
+  | 'challengeResult'
+  | 'note'
 
 /**
  * アルファベット参照表（EJOTYのみ表示）
@@ -646,6 +653,10 @@ export function NumberToAlphaPage() {
   }
 
   const handleStartChallenge = () => {
+    setScreen('countdown')
+  }
+
+  const handleCountdownComplete = () => {
     setScreen('challenge')
   }
 
@@ -665,7 +676,7 @@ export function NumberToAlphaPage() {
   const handleRetryChallenge = () => {
     setChallengeScore(0)
     setChallengeHistory([])
-    setScreen('challenge')
+    setScreen('countdown')
   }
 
   const handleBackToStart = () => {
@@ -689,6 +700,9 @@ export function NumberToAlphaPage() {
       )}
       {screen === 'drill' && (
         <DrillScreen mode={mode} onBack={handleBackToStart} />
+      )}
+      {screen === 'countdown' && (
+        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
       )}
       {screen === 'challenge' && (
         <ChallengeScreen
