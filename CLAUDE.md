@@ -7,6 +7,27 @@
 ## 設計方針
 
 - **モバイルファースト**
+- **デザインコンセプト**: 小学生向け学習ドリル（さんすうドリル・漢字ドリル等）のポップで親しみやすい雰囲気
+
+## デザインシステム
+
+### テーマカラー
+
+各ドリルは教科カラー（国語=赤、算数=青、理科=緑、社会=橙、英語=紫）に基づいたテーマカラーを持つ。
+
+| ドリル | テーマカラー | CSS変数の値 |
+|--------|------------|-------------|
+| 50on-pick | 赤（国語系） | `#e11d48` |
+| 123-abc | 青（算数系） | `#0284c7` |
+| abc-shift | 紫（英語系） | `#7c3aed` |
+| prefecture-fill | 橙（社会系） | `#ea580c` |
+
+### スタイリング実装
+
+- **CSS Custom Properties**: `src/index.css` で `--drill-primary`, `--drill-primary-light` 等を定義
+- **テーマ切り替え**: `data-drill` 属性（例: `data-drill="50on-pick"`）で色を切り替え
+- **フォント**: Zen Maru Gothic（見出し）、Noto Sans JP（本文）、JetBrains Mono（等幅）
+- **アニメーション**: `float`, `fade-in-up`, `bounce-in`, `confetti-fall` 等を定義済み
 
 ## 技術スタック
 
