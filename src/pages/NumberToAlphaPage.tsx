@@ -665,10 +665,6 @@ export function NumberToAlphaPage() {
     setScreen('countdown')
   }
 
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
-
   return (
     <Layout maxWidth="2xl">
       {screen === 'start' && (
@@ -685,7 +681,12 @@ export function NumberToAlphaPage() {
         </>
       )}
       {screen === 'drill' && (
-        <DrillScreen mode={mode} onBack={handleBackToStart} />
+        <DrillScreen
+          mode={mode}
+          onBack={() => {
+            setScreen('start')
+          }}
+        />
       )}
       {screen === 'countdown' && (
         <ChallengeCountdownModal onComplete={handleCountdownComplete} />
@@ -693,7 +694,9 @@ export function NumberToAlphaPage() {
       {screen === 'challenge' && (
         <ChallengeScreen
           onTimeUp={handleChallengeTimeUp}
-          onBack={handleBackToStart}
+          onBack={() => {
+            setScreen('start')
+          }}
         />
       )}
       {screen === 'challengeResult' && (
@@ -703,10 +706,18 @@ export function NumberToAlphaPage() {
           drillName="数字toアルファベット"
           history={challengeHistory}
           onRetry={handleRetryChallenge}
-          onBack={handleBackToStart}
+          onBack={() => {
+            setScreen('start')
+          }}
         />
       )}
-      {screen === 'note' && <NoteScreen onBack={handleBackToStart} />}
+      {screen === 'note' && (
+        <NoteScreen
+          onBack={() => {
+            setScreen('start')
+          }}
+        />
+      )}
     </Layout>
   )
 }

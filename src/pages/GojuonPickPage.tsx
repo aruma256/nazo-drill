@@ -388,10 +388,6 @@ export function GojuonPickPage() {
     setScreen('countdown')
   }
 
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
-
   // 問題列のカスタム表示（小さい五十音表を表示）
   const renderQuestion = useCallback((question: Question) => {
     const markedCells = parseMarkedCells(question.question)
@@ -413,7 +409,12 @@ export function GojuonPickPage() {
         </>
       )}
       {screen === 'drill' && (
-        <DrillScreen mode={mode} onBack={handleBackToStart} />
+        <DrillScreen
+          mode={mode}
+          onBack={() => {
+            setScreen('start')
+          }}
+        />
       )}
       {screen === 'countdown' && (
         <ChallengeCountdownModal onComplete={handleCountdownComplete} />
@@ -421,7 +422,9 @@ export function GojuonPickPage() {
       {screen === 'challenge' && (
         <ChallengeScreen
           onTimeUp={handleChallengeTimeUp}
-          onBack={handleBackToStart}
+          onBack={() => {
+            setScreen('start')
+          }}
         />
       )}
       {screen === 'challengeResult' && (
@@ -432,7 +435,9 @@ export function GojuonPickPage() {
           history={challengeHistory}
           questionRenderer={renderQuestion}
           onRetry={handleRetryChallenge}
-          onBack={handleBackToStart}
+          onBack={() => {
+            setScreen('start')
+          }}
         />
       )}
     </Layout>

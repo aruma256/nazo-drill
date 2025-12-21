@@ -188,10 +188,6 @@ export function AlphaShiftPage() {
     setScreen('drill')
   }
 
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
-
   return (
     <Layout maxWidth="2xl">
       {screen === 'start' && (
@@ -204,7 +200,12 @@ export function AlphaShiftPage() {
         </>
       )}
       {screen === 'drill' && (
-        <DrillScreen onBack={handleBackToStart} mode={currentMode} />
+        <DrillScreen
+          onBack={() => {
+            setScreen('start')
+          }}
+          mode={currentMode}
+        />
       )}
     </Layout>
   )

@@ -244,10 +244,6 @@ export function PrefectureFillPage() {
     setScreen('drill')
   }
 
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
-
   return (
     <Layout maxWidth="2xl">
       {screen === 'start' && (
@@ -260,7 +256,12 @@ export function PrefectureFillPage() {
         </>
       )}
       {screen === 'drill' && (
-        <DrillScreen mode={mode} onBack={handleBackToStart} />
+        <DrillScreen
+          mode={mode}
+          onBack={() => {
+            setScreen('start')
+          }}
+        />
       )}
     </Layout>
   )
