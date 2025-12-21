@@ -16,6 +16,7 @@ import {
   useDrillStorage,
   type Feedback,
   type HistoryEntry,
+  type Question,
 } from '../hooks'
 import {
   type DrillMode,
@@ -391,6 +392,12 @@ export function GojuonPickPage() {
     setScreen('start')
   }
 
+  // 問題列のカスタム表示（小さい五十音表を表示）
+  const renderQuestion = useCallback((question: Question) => {
+    const markedCells = parseMarkedCells(question.question)
+    return <GojuonTable markedCells={markedCells} size="small" className="" />
+  }, [])
+
   return (
     <Layout maxWidth="2xl">
       {screen === 'start' && (
@@ -422,6 +429,7 @@ export function GojuonPickPage() {
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
           history={challengeHistory}
+          questionRenderer={renderQuestion}
           onRetry={handleRetryChallenge}
           onBack={handleBackToStart}
         />

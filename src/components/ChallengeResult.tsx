@@ -1,4 +1,5 @@
-import type { HistoryEntry } from '../hooks'
+import type { ReactNode } from 'react'
+import type { HistoryEntry, Question } from '../hooks'
 
 interface ChallengeResultProps {
   /** 正答数 */
@@ -11,12 +12,20 @@ interface ChallengeResultProps {
   onBack: () => void
   /** 解答履歴（オプショナル） */
   history?: HistoryEntry[]
+  /** 問題列のカスタム表示（オプショナル） */
+  questionRenderer?: (question: Question) => ReactNode
 }
 
 /**
  * 解答履歴テーブルコンポーネント
  */
-function HistoryTable({ history }: { history: HistoryEntry[] }) {
+function HistoryTable({
+  history,
+  questionRenderer,
+}: {
+  history: HistoryEntry[]
+  questionRenderer?: (question: Question) => ReactNode
+}) {
   if (history.length === 0) return null
 
   return (
@@ -43,7 +52,9 @@ function HistoryTable({ history }: { history: HistoryEntry[] }) {
               >
                 <td className="px-2 py-2 text-gray-400">{entry.id}</td>
                 <td className="px-2 py-2 font-mono">
-                  {entry.question.question}
+                  {questionRenderer
+                    ? questionRenderer(entry.question)
+                    : entry.question.question}
                 </td>
                 <td className="px-2 py-2 font-mono">
                   {entry.userAnswer || '-'}
@@ -74,6 +85,7 @@ export function ChallengeResult({
   onRetry,
   onBack,
   history,
+  questionRenderer,
 }: ChallengeResultProps) {
   return (
     <div className="rounded-lg bg-white/70 p-6 text-center">
@@ -100,7 +112,9 @@ export function ChallengeResult({
         </button>
       </div>
 
-      {history && history.length > 0 && <HistoryTable history={history} />}
+      {history && history.length > 0 && (
+        <HistoryTable history={history} questionRenderer={questionRenderer} />
+      )}
     </div>
   )
 }
