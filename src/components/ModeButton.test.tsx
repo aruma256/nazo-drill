@@ -40,7 +40,7 @@ describe('ModeButton', () => {
     expect(onClick).toHaveBeenCalledOnce()
   })
 
-  it('ポイントが0の場合は「0 pt」と表示される', () => {
+  it('ポイントが0の場合は「0」と「pt」が表示される', () => {
     render(
       <ModeButton
         label="1文字モード"
@@ -49,7 +49,9 @@ describe('ModeButton', () => {
         onClick={() => {}}
       />,
     )
-    expect(screen.getByText('0 pt')).toBeDefined()
+    // 新しいUIでは「0」と「pt」が別の要素に分かれている
+    expect(screen.getByText('0')).toBeDefined()
+    expect(screen.getByText('pt')).toBeDefined()
   })
 
   it('localStorageにポイントがある場合はその値が表示される', () => {
@@ -62,7 +64,9 @@ describe('ModeButton', () => {
         onClick={() => {}}
       />,
     )
-    expect(screen.getByText('42 pt')).toBeDefined()
+    // 新しいUIでは「42」と「pt」が別の要素に分かれている
+    expect(screen.getByText('42')).toBeDefined()
+    expect(screen.getByText('pt')).toBeDefined()
   })
 
   it('disabledの場合はクリックしてもonClickが呼ばれない', async () => {

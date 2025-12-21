@@ -44,43 +44,74 @@ export function GojuonTable({
   }
 
   const sizeClasses = SIZE_CLASSES[size]
+  const isLarge = size === 'large'
 
   return (
     <div className={`flex justify-center ${className}`}>
-      <table className="border-collapse border border-gray-400">
-        <tbody>
-          {GOJUON_TABLE.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((_, colIndex) => {
-                const isEmpty = isEmptyCell(rowIndex, colIndex)
-                const number = markedMap.get(`${rowIndex}-${colIndex}`)
-                const isMarked = number !== undefined
+      <div
+        className={`overflow-hidden ${isLarge ? 'rounded-xl shadow-lg' : 'rounded-lg'}`}
+        style={{
+          border: isLarge
+            ? '2px solid var(--drill-primary)'
+            : '1px solid #d1d5db',
+        }}
+      >
+        <table className="border-collapse">
+          <tbody>
+            {GOJUON_TABLE.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {row.map((_, colIndex) => {
+                  const isEmpty = isEmptyCell(rowIndex, colIndex)
+                  const number = markedMap.get(`${rowIndex}-${colIndex}`)
+                  const isMarked = number !== undefined
 
-                // た〜も特訓モード時の境界線
-                const borderClass =
-                  isTaMoMode && colIndex === 5
-                    ? 'border-l-2 border-r-2 border-gray-700'
-                    : ''
+                  // た〜も特訓モード時の境界線
+                  const borderClass =
+                    isTaMoMode && colIndex === 5 ? 'border-l-2 border-r-2' : ''
 
-                return (
-                  <td
-                    key={colIndex}
-                    className={`${sizeClasses.cell} ${sizeClasses.text} border border-gray-400 text-center font-bold text-indigo-600 ${
-                      isEmpty
-                        ? 'bg-neutral-800'
-                        : isMarked
-                          ? 'bg-amber-100'
-                          : 'bg-white'
-                    } ${borderClass}`}
-                  >
-                    {isMarked ? number : ''}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  return (
+                    <td
+                      key={colIndex}
+                      className={`${sizeClasses.cell} ${sizeClasses.text} text-center font-bold transition-colors duration-200 ${borderClass}`}
+                      style={{
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: isLarge
+                          ? 'var(--drill-primary-light)'
+                          : '#d1d5db',
+                        backgroundColor: isEmpty
+                          ? '#1f2937'
+                          : isMarked
+                            ? 'var(--drill-primary-light)'
+                            : '#ffffff',
+                        color: isMarked
+                          ? 'var(--drill-primary)'
+                          : 'var(--drill-primary)',
+                        ...(isTaMoMode && colIndex === 5
+                          ? {
+                              borderLeftColor: '#374151',
+                              borderRightColor: '#374151',
+                            }
+                          : {}),
+                      }}
+                    >
+                      {isMarked && (
+                        <span
+                          className={
+                            isLarge ? 'animate-bounce-in inline-block' : ''
+                          }
+                        >
+                          {number}
+                        </span>
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

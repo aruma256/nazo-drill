@@ -9,6 +9,101 @@ interface FeedbackModalProps {
   delayOnIncorrect?: number
 }
 
+// Pre-generated confetti particles data (deterministic)
+const CONFETTI_PARTICLES = Array.from({ length: 50 }, (_, i) => {
+  // Use index-based pseudo-random values for deterministic results
+  const seed = i * 137.5
+  const colors = [
+    '#10b981', // green
+    '#3b82f6', // blue
+    '#f59e0b', // amber
+    '#ec4899', // pink
+    '#8b5cf6', // purple
+    '#06b6d4', // cyan
+  ]
+
+  return {
+    id: i,
+    left: seed % 100,
+    delay: ((i * 17) % 50) / 100,
+    duration: 2 + ((i * 23) % 200) / 100,
+    color: colors[i % colors.length],
+    size: 6 + ((i * 31) % 80) / 10,
+    rotation: (seed * 2.5) % 360,
+    isCircle: i % 2 === 0,
+  }
+})
+
+// Confetti particle component
+function Confetti() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {CONFETTI_PARTICLES.map((p) => (
+        <div
+          key={p.id}
+          className="confetti-particle"
+          style={{
+            left: `${p.left}%`,
+            top: '-20px',
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            backgroundColor: p.color,
+            borderRadius: p.isCircle ? '50%' : '2px',
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            transform: `rotate(${p.rotation}deg)`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// Animated checkmark SVG
+function AnimatedCheckmark() {
+  return (
+    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-green-500 shadow-lg shadow-green-200">
+      <svg
+        className="h-12 w-12 text-white"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          style={{
+            strokeDasharray: 30,
+            strokeDashoffset: 30,
+            animation: 'checkmark-draw 0.5s ease-out forwards 0.2s',
+          }}
+        />
+      </svg>
+    </div>
+  )
+}
+
+// Animated X mark SVG
+function AnimatedXMark() {
+  return (
+    <div className="animate-shake mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-rose-500 shadow-lg shadow-red-200">
+      <svg
+        className="h-12 w-12 text-white"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M6 6l12 12M6 18L18 6" />
+      </svg>
+    </div>
+  )
+}
+
 function ProgressBar({ durationMs }: { durationMs: number }) {
   const [progress, setProgress] = useState(100)
 
@@ -32,14 +127,19 @@ function ProgressBar({ durationMs }: { durationMs: number }) {
   }, [durationMs])
 
   return (
-    <div
-      data-testid="progress-bar"
-      className="mt-4 h-2 w-full rounded-full bg-gray-200"
-    >
+    <div className="mt-6">
+      <div className="mb-2 text-xs text-gray-400">
+        しばらくお待ちください...
+      </div>
       <div
-        className="h-2 rounded-full bg-red-500"
-        style={{ width: `${progress}%` }}
-      />
+        data-testid="progress-bar"
+        className="h-2 w-full overflow-hidden rounded-full bg-gray-100"
+      >
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-rose-400 to-red-500 transition-all duration-100"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </div>
   )
 }
@@ -56,10 +156,14 @@ export function FeedbackModal({
   const needsWaiting = type === 'incorrect' && !!delayOnIncorrect
   // 待機完了フラグ
   const [waitComplete, setWaitComplete] = useState(false)
+  // 正解時のコンフェッティ表示（isOpenとtypeから直接導出）
+  const showConfetti = isOpen && type === 'correct'
 
-  // モーダルが閉じたときにwaitCompleteをリセット（クリーンアップ時）
+  // モーダルが閉じたときにwaitCompleteをリセット
   useEffect(() => {
     if (!isOpen) return
+
+    // クリーンアップ関数でリセット（モーダルが閉じたとき）
     return () => {
       setWaitComplete(false)
     }
@@ -111,43 +215,97 @@ export function FeedbackModal({
   if (!isOpen) return null
 
   return (
-    <div
-      data-testid="feedback-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={handleClose}
-    >
-      {/* 背景オーバーレイ */}
-      <div className="absolute inset-0 bg-black/20" />
+    <>
+      {showConfetti && <Confetti />}
 
-      {/* モーダル本体 */}
-      <div className="relative mx-4 w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-2xl">
-        {/* メッセージ */}
-        {type === 'correct' ? (
-          <div className="mb-4 text-3xl font-bold text-green-600">✓ 正解！</div>
-        ) : (
-          <div className="mb-4 text-3xl font-bold text-red-600">
-            ✗ 不正解
-            <div className="mt-2 text-xl">正解は「{correctAnswer}」</div>
-          </div>
-        )}
+      <div
+        data-testid="feedback-modal"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={handleClose}
+      >
+        {/* 背景オーバーレイ */}
+        <div
+          className="animate-fade-in absolute inset-0"
+          style={{
+            background:
+              type === 'correct'
+                ? 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%)'
+                : 'radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
+          }}
+        />
 
-        {/* 補助情報 */}
-        {hintContent && (
+        {/* モーダル本体 */}
+        <div className="animate-bounce-in relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-2xl">
+          {/* Top decoration */}
           <div
-            data-testid="modal-hint"
-            className="mb-4 text-xl text-indigo-900"
-          >
-            {hintContent}
-          </div>
-        )}
+            className="h-2"
+            style={{
+              background:
+                type === 'correct'
+                  ? 'linear-gradient(90deg, #10b981, #34d399, #6ee7b7)'
+                  : 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)',
+            }}
+          />
 
-        {/* タップして次へ / プログレスバー */}
-        {isWaiting ? (
-          <ProgressBar durationMs={delayOnIncorrect} />
-        ) : (
-          <div className="mt-6 text-sm text-gray-400">タップして次へ</div>
-        )}
+          <div className="p-8">
+            {/* アイコンとメッセージ */}
+            {type === 'correct' ? (
+              <>
+                <AnimatedCheckmark />
+                <div className="font-display text-3xl font-black text-emerald-600">
+                  正解！
+                </div>
+                <div className="mt-2 text-gray-500">すばらしい！</div>
+              </>
+            ) : (
+              <>
+                <AnimatedXMark />
+                <div className="font-display text-3xl font-black text-rose-600">
+                  不正解
+                </div>
+                <div className="mt-4 rounded-2xl bg-rose-50 p-4">
+                  <div className="text-sm text-rose-400">正解は</div>
+                  <div className="font-mono mt-1 text-2xl font-bold text-rose-600">
+                    {correctAnswer}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* 補助情報 */}
+            {hintContent && (
+              <div
+                data-testid="modal-hint"
+                className="mt-4 rounded-2xl bg-indigo-50 p-4 text-lg font-medium text-indigo-900"
+              >
+                {hintContent}
+              </div>
+            )}
+
+            {/* タップして次へ / プログレスバー */}
+            {isWaiting ? (
+              <ProgressBar durationMs={delayOnIncorrect} />
+            ) : (
+              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
+                <span>タップして次へ</span>
+                <svg
+                  className="h-4 w-4 animate-pulse"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

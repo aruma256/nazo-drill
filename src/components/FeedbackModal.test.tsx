@@ -4,20 +4,20 @@ import { FeedbackModal } from './FeedbackModal'
 
 describe('FeedbackModal', () => {
   describe('正解時', () => {
-    it('「✓ 正解！」と表示される', () => {
+    it('「正解！」と表示される', () => {
       render(<FeedbackModal isOpen={true} type="correct" onNext={vi.fn()} />)
-      expect(screen.getByText('✓ 正解！')).toBeInTheDocument()
+      expect(screen.getByText('正解！')).toBeInTheDocument()
     })
 
     it('緑色のテキストで表示される', () => {
       render(<FeedbackModal isOpen={true} type="correct" onNext={vi.fn()} />)
-      const message = screen.getByText('✓ 正解！')
-      expect(message).toHaveClass('text-green-600')
+      const message = screen.getByText('正解！')
+      expect(message).toHaveClass('text-emerald-600')
     })
   })
 
   describe('不正解時', () => {
-    it('「✗ 不正解」と正解が表示される', () => {
+    it('「不正解」と正解が表示される', () => {
       render(
         <FeedbackModal
           isOpen={true}
@@ -26,8 +26,9 @@ describe('FeedbackModal', () => {
           onNext={vi.fn()}
         />,
       )
-      expect(screen.getByText('✗ 不正解')).toBeInTheDocument()
-      expect(screen.getByText(/正解は「A」/)).toBeInTheDocument()
+      expect(screen.getByText('不正解')).toBeInTheDocument()
+      expect(screen.getByText('正解は')).toBeInTheDocument()
+      expect(screen.getByText('A')).toBeInTheDocument()
     })
 
     it('赤色のテキストで表示される', () => {
@@ -39,8 +40,8 @@ describe('FeedbackModal', () => {
           onNext={vi.fn()}
         />,
       )
-      const message = screen.getByText('✗ 不正解')
-      expect(message).toHaveClass('text-red-600')
+      const message = screen.getByText('不正解')
+      expect(message).toHaveClass('text-rose-600')
     })
   })
 

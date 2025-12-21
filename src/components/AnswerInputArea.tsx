@@ -74,34 +74,63 @@ export function AnswerInputArea({
       <label htmlFor="answer-input" className="sr-only">
         あなたの答え:
       </label>
-      <div className="flex items-stretch gap-2">
-        <input
-          ref={inputRef}
-          type="text"
-          id="answer-input"
-          value={value}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          autoComplete={autoComplete}
-          disabled={disabled || (!instantMode && !!feedback)}
-          className={`min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold focus:border-indigo-500 focus:outline-none disabled:bg-gray-100 ${inputClassName}`}
-        />
+      <div className="flex items-stretch gap-3">
+        <div className="relative min-w-0 flex-1">
+          <input
+            ref={inputRef}
+            type="text"
+            id="answer-input"
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            autoComplete={autoComplete}
+            disabled={disabled || (!instantMode && !!feedback)}
+            className={`w-full rounded-2xl border-2 border-gray-200 bg-white p-4 text-center text-2xl font-bold shadow-sm transition-all duration-200 placeholder:text-gray-300 focus:border-[var(--drill-primary)] focus:outline-none focus:ring-4 focus:ring-[var(--drill-primary-light)] disabled:bg-gray-50 disabled:text-gray-400 ${inputClassName}`}
+          />
+          {/* Focus glow effect */}
+          <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-200 peer-focus:opacity-100" />
+        </div>
+
         {instantMode || !feedback ? (
           <button
             onClick={onSubmit}
             disabled={!value.trim()}
-            className="min-w-[80px] whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className="group flex min-w-[72px] items-center justify-center rounded-2xl bg-[var(--drill-primary)] px-5 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none disabled:hover:scale-100"
           >
-            <span className="text-lg">➤</span>
+            <svg
+              className="h-6 w-6 transition-transform duration-200 group-hover:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </button>
         ) : (
           <button
             onClick={onNext}
-            className="min-w-[80px] whitespace-nowrap rounded-lg bg-green-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-green-700"
+            className="group flex min-w-[72px] items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
           >
-            <span className="text-lg">→</span>
+            <svg
+              className="h-6 w-6 transition-transform duration-200 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
           </button>
         )}
       </div>
