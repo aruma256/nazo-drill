@@ -428,6 +428,7 @@ export function GojuonPickPage() {
         <ChallengeResult
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
+          drillName="五十音表の文字拾い"
           history={challengeHistory}
           questionRenderer={renderQuestion}
           onRetry={handleRetryChallenge}

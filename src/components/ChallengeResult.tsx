@@ -6,6 +6,8 @@ interface ChallengeResultProps {
   score: number
   /** 制限時間（秒） */
   timeLimit: number
+  /** ドリル名（シェア用） */
+  drillName: string
   /** 「もう一度」ボタン押下時のコールバック */
   onRetry: () => void
   /** 「戻る」ボタン押下時のコールバック */
@@ -82,11 +84,18 @@ function HistoryTable({
 export function ChallengeResult({
   score,
   timeLimit,
+  drillName,
   onRetry,
   onBack,
   history,
   questionRenderer,
 }: ChallengeResultProps) {
+  const handleShare = () => {
+    const text = `#ナゾドリル 【${drillName}】実力テストで ${score}問 正解しました！\n\nhttps://nazo-drill.aruma256.dev/`
+    const url = `https://x.com/intent/post?text=${encodeURIComponent(text)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="rounded-lg bg-white/70 p-6 text-center">
       <h2 className="mb-2 text-xl font-bold text-gray-800">結果発表</h2>
@@ -103,6 +112,12 @@ export function ChallengeResult({
           className="w-full rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-indigo-700"
         >
           もう一度チャレンジ
+        </button>
+        <button
+          onClick={handleShare}
+          className="w-full rounded-lg bg-black px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-gray-800"
+        >
+          結果を𝕏でシェア！
         </button>
         <button
           onClick={onBack}

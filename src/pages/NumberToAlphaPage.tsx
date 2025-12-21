@@ -700,6 +700,7 @@ export function NumberToAlphaPage() {
         <ChallengeResult
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
+          drillName="数字toアルファベット"
           history={challengeHistory}
           onRetry={handleRetryChallenge}
           onBack={handleBackToStart}
