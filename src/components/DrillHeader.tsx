@@ -18,17 +18,19 @@ export function DrillHeader({
       <div className="mb-4 flex items-center justify-between">
         <Link
           to={backTo}
-          className="flex items-center text-indigo-600 hover:text-indigo-800"
+          className="btn-secondary flex items-center px-3 py-2 text-sm"
         >
-          <span className="mr-2 text-xl">←</span>
+          <span className="mr-2">←</span>
           <span className="font-medium">{backLabel}</span>
         </Link>
       </div>
-      <h1 className="mb-2 text-center text-3xl font-bold text-indigo-900 md:text-4xl">
+      <h1 className="drill-title mb-2 text-center text-3xl md:text-4xl">
         {title}
       </h1>
       {description && (
-        <p className="text-center text-gray-700">{description}</p>
+        <p className="text-center" style={{ color: 'var(--color-ink-light)' }}>
+          {description}
+        </p>
       )}
     </header>
   )

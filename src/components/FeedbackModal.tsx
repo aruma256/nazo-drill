@@ -32,13 +32,13 @@ function ProgressBar({ durationMs }: { durationMs: number }) {
   }, [durationMs])
 
   return (
-    <div
-      data-testid="progress-bar"
-      className="mt-4 h-2 w-full rounded-full bg-gray-200"
-    >
+    <div data-testid="progress-bar" className="progress-bar mt-4">
       <div
-        className="h-2 rounded-full bg-red-500"
-        style={{ width: `${progress}%` }}
+        className="progress-bar-fill"
+        style={{
+          width: `${progress}%`,
+          background: 'var(--color-incorrect)',
+        }}
       />
     </div>
   )
@@ -117,17 +117,44 @@ export function FeedbackModal({
       onClick={handleClose}
     >
       {/* 背景オーバーレイ */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div className="modal-overlay absolute inset-0" />
 
       {/* モーダル本体 */}
-      <div className="relative mx-4 w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-2xl">
-        {/* メッセージ */}
+      <div className="modal-content relative mx-4 w-full max-w-sm p-8 text-center">
+        {/* 丸付けエフェクト + メッセージ */}
         {type === 'correct' ? (
-          <div className="mb-4 text-3xl font-bold text-green-600">✓ 正解！</div>
+          <div className="mb-4">
+            {/* 丸付けエフェクト（正解） */}
+            <div className="maruzuke-modal-correct mx-auto mb-6 flex h-24 w-24 items-center justify-center">
+              <span
+                className="text-4xl font-extrabold"
+                style={{ color: 'var(--color-correct)' }}
+              >
+                正解
+              </span>
+            </div>
+          </div>
         ) : (
-          <div className="mb-4 text-3xl font-bold text-red-600">
-            ✗ 不正解
-            <div className="mt-2 text-xl">正解は「{correctAnswer}」</div>
+          <div className="mb-4">
+            {/* 丸付けエフェクト（不正解） */}
+            <div className="maruzuke-modal-incorrect mx-auto mb-6 flex h-24 w-24 items-center justify-center">
+              <span
+                className="text-3xl font-extrabold"
+                style={{ color: 'var(--color-incorrect)' }}
+              >
+                不正解
+              </span>
+            </div>
+            <div
+              className="mt-2 text-xl font-bold"
+              style={{ color: 'var(--color-ink)' }}
+            >
+              正解は「
+              <span style={{ color: 'var(--color-correct)' }}>
+                {correctAnswer}
+              </span>
+              」
+            </div>
           </div>
         )}
 
@@ -135,7 +162,8 @@ export function FeedbackModal({
         {hintContent && (
           <div
             data-testid="modal-hint"
-            className="mb-4 text-xl text-indigo-900"
+            className="mb-4 text-xl"
+            style={{ color: 'var(--drill-primary, var(--color-ink))' }}
           >
             {hintContent}
           </div>
@@ -145,7 +173,12 @@ export function FeedbackModal({
         {isWaiting ? (
           <ProgressBar durationMs={delayOnIncorrect} />
         ) : (
-          <div className="mt-6 text-sm text-gray-400">タップして次へ</div>
+          <div
+            className="mt-6 text-sm"
+            style={{ color: 'var(--color-ink-muted)' }}
+          >
+            タップして次へ
+          </div>
         )}
       </div>
     </div>

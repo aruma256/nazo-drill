@@ -4,15 +4,13 @@ export function HomePage() {
   return (
     <Layout maxWidth="4xl">
       <header className="mb-12 text-center">
-        <h1 className="mb-4 text-4xl font-bold text-indigo-900 md:text-5xl">
-          ナゾドリル
-        </h1>
-        <p className="text-lg text-gray-700">
+        <h1 className="site-title mb-4">ナゾドリル</h1>
+        <p style={{ color: 'var(--color-ink-light)', fontSize: '1.125rem' }}>
           謎解きの定番変換パターンを
           <br className="md:hidden" />
           ドリル形式でトレーニング
         </p>
-        <div className="mt-6 rounded border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-800">
+        <div className="dev-banner mt-6">
           <p className="font-semibold">開発中のサイトです</p>
           <p className="mt-1 text-sm">
             一部機能が未実装または変更される可能性があります。
@@ -21,7 +19,10 @@ export function HomePage() {
       </header>
 
       <main>
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+        <h2
+          className="mb-6 text-center text-2xl font-bold"
+          style={{ color: 'var(--color-ink)' }}
+        >
           トレーニングテーマを選択
         </h2>
 
@@ -30,6 +31,7 @@ export function HomePage() {
             to="/drill/50on-pick"
             title="五十音表の文字拾い"
             description="五十音表のマークされたマスから文字を読み取る練習"
+            theme="gojuon"
           >
             <GojuonTable
               markedCells={[
@@ -40,8 +42,17 @@ export function HomePage() {
               size="small"
               className="mb-2"
             />
-            <div className="mt-2 text-center text-sm text-gray-500">
-              答え：<span className="font-bold text-green-600">くるま</span>
+            <div
+              className="mt-2 text-center text-sm"
+              style={{ color: 'var(--color-ink-muted)' }}
+            >
+              答え：
+              <span
+                className="font-bold"
+                style={{ color: 'var(--color-correct)' }}
+              >
+                くるま
+              </span>
             </div>
           </DrillCard>
 
@@ -49,6 +60,7 @@ export function HomePage() {
             to="/drill/123-abc"
             title="数字toアルファベット"
             description="数字をアルファベットに変換する練習"
+            theme="num"
           >
             <DrillExample question="5, 1, 20" answer="EAT" />
           </DrillCard>
@@ -57,6 +69,7 @@ export function HomePage() {
             to="/drill/abc-shift"
             title="アルファベットシフト"
             description="アルファベットをずらして変換する練習"
+            theme="shift"
           >
             <DrillExample question="C+2" answer="E" />
           </DrillCard>
@@ -65,21 +78,36 @@ export function HomePage() {
             to="/drill/prefecture-fill"
             title="都道府県名の穴埋め"
             description="◯で隠された都道府県名を当てる練習"
+            theme="pref"
           >
-            <div className="rounded-lg bg-gray-50 p-3 text-center">
-              <div className="mb-1 text-2xl font-bold tracking-widest text-indigo-900">
+            <div
+              className="rounded-lg p-3 text-center"
+              style={{ backgroundColor: 'var(--color-paper-warm)' }}
+            >
+              <div
+                className="mb-1 text-2xl font-bold tracking-widest"
+                style={{ color: 'var(--drill-primary)' }}
+              >
                 ◯うき◯◯
               </div>
-              <div className="text-sm text-gray-500">
+              <div
+                className="text-sm"
+                style={{ color: 'var(--color-ink-muted)' }}
+              >
                 答え：
-                <span className="font-bold text-green-600">とうきょう</span>
+                <span
+                  className="font-bold"
+                  style={{ color: 'var(--color-correct)' }}
+                >
+                  とうきょう
+                </span>
               </div>
             </div>
           </DrillCard>
         </div>
       </main>
 
-      <footer className="mt-12 text-center text-sm text-gray-600">
+      <footer className="site-footer mt-12 text-center">
         <p>© 2025 ナゾドリル - Powered by aruma256</p>
       </footer>
     </Layout>

@@ -280,11 +280,11 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
-          ルール
-        </h2>
-        <div className="space-y-2 pl-3 text-gray-700">
+        <h2 className="section-accent mb-3 text-lg font-bold">ルール</h2>
+        <div
+          className="space-y-2 pl-3"
+          style={{ color: 'var(--color-ink-light)' }}
+        >
           <p>数字をアルファベットに変換して答えます。</p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
             <p className="font-mono text-lg">
@@ -308,16 +308,25 @@ function StartScreen({
 
       {/* 実力テスト */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
+        <h2
+          className="section-accent mb-3 text-lg font-bold"
+          style={
+            {
+              '--drill-primary': 'var(--color-challenge)',
+            } as React.CSSProperties
+          }
+        >
           実力テスト
         </h2>
         <button
           onClick={onStartChallenge}
-          className="w-full cursor-pointer rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
+          className="btn btn-challenge w-full px-6 py-4 text-lg"
         >
           {CHALLENGE_TIME_LIMIT}秒チャレンジ
-          <span className="mt-1 block text-sm font-normal text-amber-600">
+          <span
+            className="mt-1 block text-sm font-normal"
+            style={{ color: 'var(--color-challenge-light)' }}
+          >
             単語モードで何問正解できるか挑戦！
           </span>
         </button>
@@ -325,10 +334,7 @@ function StartScreen({
 
       {/* モード選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
-          練習モード
-        </h2>
+        <h2 className="section-accent mb-3 text-lg font-bold">練習モード</h2>
         <div className="space-y-3">
           <ModeButton
             label={'"EJOTY"特訓モード'}
@@ -359,16 +365,25 @@ function StartScreen({
 
       {/* 暗記ノート */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-green-500"></span>
+        <h2
+          className="section-accent mb-3 text-lg font-bold"
+          style={
+            { '--drill-primary': 'var(--color-correct)' } as React.CSSProperties
+          }
+        >
           暗記ノート
         </h2>
         <button
           onClick={onOpenNote}
-          className="w-full cursor-pointer rounded-lg border-2 border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 text-lg font-bold text-green-700 shadow-md transition-all duration-200 hover:border-green-500 hover:from-green-100 hover:to-emerald-100 hover:shadow-lg"
+          className="btn w-full px-6 py-4 text-lg"
+          style={{
+            background:
+              'linear-gradient(135deg, var(--color-correct), #1A9458)',
+            color: 'white',
+          }}
         >
           対応表・覚え方を見る
-          <span className="mt-1 block text-sm font-normal text-green-600">
+          <span className="mt-1 block text-sm font-normal opacity-90">
             EJOTYの覚え方や語呂合わせなど
           </span>
         </button>
@@ -670,7 +685,7 @@ export function NumberToAlphaPage() {
   }
 
   return (
-    <Layout maxWidth="2xl">
+    <Layout maxWidth="2xl" className="drill-theme-num">
       {screen === 'start' && (
         <>
           <DrillHeader

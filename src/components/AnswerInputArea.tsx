@@ -86,20 +86,24 @@ export function AnswerInputArea({
           maxLength={maxLength}
           autoComplete={autoComplete}
           disabled={disabled || (!instantMode && !!feedback)}
-          className={`min-w-0 flex-1 rounded-lg border-2 border-gray-300 p-3 text-center text-2xl font-bold focus:border-indigo-500 focus:outline-none disabled:bg-gray-100 ${inputClassName}`}
+          className={`input-answer min-w-0 flex-1 p-3 text-2xl ${inputClassName}`}
         />
         {instantMode || !feedback ? (
           <button
             onClick={onSubmit}
             disabled={!value.trim()}
-            className="min-w-[80px] whitespace-nowrap rounded-lg bg-indigo-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className="btn btn-primary min-w-[80px] whitespace-nowrap px-5 py-3"
           >
             <span className="text-lg">➤</span>
           </button>
         ) : (
           <button
             onClick={onNext}
-            className="min-w-[80px] whitespace-nowrap rounded-lg bg-green-600 px-5 py-3 font-bold text-white transition-colors duration-200 hover:bg-green-700"
+            className="btn min-w-[80px] whitespace-nowrap px-5 py-3"
+            style={{
+              background: 'var(--color-correct)',
+              color: 'white',
+            }}
           >
             <span className="text-lg">→</span>
           </button>

@@ -18,20 +18,26 @@ export function ChallengeTimer({
   return (
     <div className="mb-4">
       <div className="mb-1 flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-600">残り時間</span>
         <span
-          className={`text-2xl font-bold tabular-nums ${
-            isLowTime ? 'text-red-600' : 'text-indigo-600'
-          }`}
+          className="text-sm font-medium"
+          style={{ color: 'var(--color-ink-muted)' }}
+        >
+          残り時間
+        </span>
+        <span
+          className="text-2xl font-bold tabular-nums"
+          style={{
+            color: isLowTime
+              ? 'var(--color-incorrect)'
+              : 'var(--color-challenge)',
+          }}
         >
           {remainingSeconds}秒
         </span>
       </div>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="progress-bar">
         <div
-          className={`h-full transition-all duration-1000 ease-linear ${
-            isLowTime ? 'bg-red-500' : 'bg-indigo-500'
-          }`}
+          className={`progress-bar-fill ${isLowTime ? 'challenge-timer-low' : 'challenge-timer'}`}
           style={{ width: `${progress}%` }}
         />
       </div>

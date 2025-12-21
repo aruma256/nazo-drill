@@ -1,1 +1,674 @@
 @import 'tailwindcss';
+
+/* ============================================
+   ナゾドリル Design System
+   "ドリルノート" - 手書きドリル帳の温かみとデジタルの快適さの融合
+   ============================================ */
+
+/* Typography - M PLUS Rounded 1c */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap');
+
+:root {
+  /* ====== Typography ====== */
+  --font-main: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', 'Rounded M+ 1c', sans-serif;
+
+  /* ====== Base Colors (紙のような温かみ) ====== */
+  --color-paper: #FAF9F7;
+  --color-paper-warm: #F5F3EF;
+  --color-ink: #2C2A26;
+  --color-ink-light: #5C5853;
+  --color-ink-muted: #8A857D;
+
+  /* ====== Drill Theme Colors ====== */
+  /* 五十音 (50on-pick) - 朱赤 - 国語 inspired */
+  --drill-gojuon-primary: #E05858;
+  --drill-gojuon-secondary: #FF7A7A;
+  --drill-gojuon-light: #FFF0EF;
+  --drill-gojuon-dark: #C43C3C;
+
+  /* 数字toアルファベット (123-abc) - 藍青 - 算数 inspired */
+  --drill-num-primary: #3A7BD5;
+  --drill-num-secondary: #5B9AE8;
+  --drill-num-light: #EDF4FD;
+  --drill-num-dark: #2A5CAF;
+
+  /* アルファベットシフト (abc-shift) - ティール */
+  --drill-shift-primary: #0F9D8B;
+  --drill-shift-secondary: #32C4B3;
+  --drill-shift-light: #EDFAF8;
+  --drill-shift-dark: #0A7A6D;
+
+  /* 都道府県 (prefecture-fill) - 山吹 - 社会 inspired */
+  --drill-pref-primary: #E59B24;
+  --drill-pref-secondary: #F4B84A;
+  --drill-pref-light: #FEF8EB;
+  --drill-pref-dark: #C47F12;
+
+  /* ====== Feedback Colors ====== */
+  --color-correct: #22A869;
+  --color-correct-light: #E6F7EE;
+  --color-incorrect: #E54747;
+  --color-incorrect-light: #FDEBEB;
+
+  /* ====== UI Colors ====== */
+  --color-border: #E5E2DC;
+  --color-border-strong: #D0CBC3;
+  --color-shadow: rgba(44, 42, 38, 0.06);
+  --color-shadow-strong: rgba(44, 42, 38, 0.12);
+
+  /* ====== Challenge/Test Mode ====== */
+  --color-challenge: #F26E24;
+  --color-challenge-light: #FEF2E8;
+  --color-challenge-dark: #D85A15;
+
+  /* ====== Maruzuke (丸付け) Colors ====== */
+  --color-maruzuke: #E05858;
+
+  /* ====== Spacing Scale ====== */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* ====== Border Radius ====== */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ====== Shadows ====== */
+  --shadow-card: 0 2px 8px var(--color-shadow), 0 1px 3px var(--color-shadow);
+  --shadow-card-hover: 0 8px 24px var(--color-shadow-strong), 0 4px 12px var(--color-shadow);
+  --shadow-button: 0 2px 4px var(--color-shadow), 0 1px 2px var(--color-shadow);
+  --shadow-modal: 0 24px 64px rgba(44, 42, 38, 0.2), 0 8px 24px rgba(44, 42, 38, 0.12);
+
+  /* ====== Transitions ====== */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ====== Base Styles ====== */
+* {
+  font-family: var(--font-main);
+}
+
+body {
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ====== Paper Texture Background ====== */
+.bg-paper {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(224, 88, 88, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(58, 123, 213, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(15, 157, 139, 0.03) 0%, transparent 40%),
+    linear-gradient(180deg, var(--color-paper-warm) 0%, var(--color-paper) 100%);
+}
+
+/* ====== Drill Theme Classes ====== */
+.drill-theme-gojuon {
+  --drill-primary: var(--drill-gojuon-primary);
+  --drill-secondary: var(--drill-gojuon-secondary);
+  --drill-light: var(--drill-gojuon-light);
+  --drill-dark: var(--drill-gojuon-dark);
+}
+
+.drill-theme-num {
+  --drill-primary: var(--drill-num-primary);
+  --drill-secondary: var(--drill-num-secondary);
+  --drill-light: var(--drill-num-light);
+  --drill-dark: var(--drill-num-dark);
+}
+
+.drill-theme-shift {
+  --drill-primary: var(--drill-shift-primary);
+  --drill-secondary: var(--drill-shift-secondary);
+  --drill-light: var(--drill-shift-light);
+  --drill-dark: var(--drill-shift-dark);
+}
+
+.drill-theme-pref {
+  --drill-primary: var(--drill-pref-primary);
+  --drill-secondary: var(--drill-pref-secondary);
+  --drill-light: var(--drill-pref-light);
+  --drill-dark: var(--drill-pref-dark);
+}
+
+/* ====== Card Styles ====== */
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+}
+
+/* ====== Drill Card with Color Accent ====== */
+.drill-card {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-normal);
+}
+
+.drill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--drill-primary), var(--drill-secondary));
+}
+
+.drill-card:hover {
+  border-color: var(--drill-primary);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* ====== Button Styles ====== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--drill-primary, var(--drill-num-primary));
+  color: white;
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--drill-dark, var(--drill-num-dark));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--color-shadow-strong), 0 2px 4px var(--color-shadow);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px var(--color-shadow);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-ink);
+  border: 2px solid var(--color-border-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--drill-primary, var(--color-ink-light));
+  background: var(--drill-light, var(--color-paper-warm));
+  color: var(--drill-dark, var(--color-ink));
+}
+
+/* ====== Input Styles ====== */
+.input-answer {
+  background: white;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  text-align: center;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-answer:focus {
+  outline: none;
+  border-color: var(--drill-primary, var(--drill-num-primary));
+  box-shadow: 0 0 0 3px var(--drill-light, var(--drill-num-light));
+}
+
+.input-answer:disabled {
+  background: var(--color-paper-warm);
+  color: var(--color-ink-muted);
+}
+
+/* ====== Section Header Accent Bar ====== */
+.section-accent {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-accent::before {
+  content: '';
+  width: 4px;
+  height: 1.25rem;
+  border-radius: var(--radius-full);
+  background: var(--drill-primary, var(--drill-num-primary));
+}
+
+/* ====== Progress Bar ====== */
+.progress-bar {
+  height: 0.75rem;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s linear;
+}
+
+/* ====== Feedback Modal Styles ====== */
+.modal-overlay {
+  background: rgba(44, 42, 38, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-modal);
+}
+
+.feedback-correct {
+  color: var(--color-correct);
+}
+
+.feedback-incorrect {
+  color: var(--color-incorrect);
+}
+
+/* ====== 丸付けエフェクト (Maruzuke Effect) ====== */
+.maruzuke-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 正解の丸（○） */
+.maruzuke-circle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+}
+
+.maruzuke-circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border: 6px solid var(--color-maruzuke);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0) rotate(-90deg);
+  animation: draw-circle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  filter: drop-shadow(0 2px 4px rgba(224, 88, 88, 0.3));
+}
+
+@keyframes draw-circle {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* 不正解のバツ（×） */
+.maruzuke-cross {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+}
+
+.maruzuke-cross::before,
+.maruzuke-cross::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 6px;
+  background: var(--color-maruzuke);
+  border-radius: 3px;
+  filter: drop-shadow(0 2px 4px rgba(224, 88, 88, 0.3));
+}
+
+.maruzuke-cross::before {
+  transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+  animation: draw-cross-1 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+}
+
+.maruzuke-cross::after {
+  transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  animation: draw-cross-2 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s forwards;
+}
+
+@keyframes draw-cross-1 {
+  0% {
+    transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(45deg) scaleX(1);
+  }
+}
+
+@keyframes draw-cross-2 {
+  0% {
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+  }
+}
+
+/* モーダル用の大きな丸付けエフェクト */
+.maruzuke-modal-correct {
+  position: relative;
+}
+
+.maruzuke-modal-correct::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  border: 8px solid var(--color-maruzuke);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0) rotate(-90deg);
+  animation: draw-circle-large 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  filter: drop-shadow(0 4px 8px rgba(224, 88, 88, 0.25));
+}
+
+@keyframes draw-circle-large {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.maruzuke-modal-incorrect {
+  position: relative;
+}
+
+.maruzuke-modal-incorrect::before,
+.maruzuke-modal-incorrect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 8px;
+  background: var(--color-maruzuke);
+  border-radius: 4px;
+  filter: drop-shadow(0 4px 8px rgba(224, 88, 88, 0.25));
+}
+
+.maruzuke-modal-incorrect::before {
+  transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+  animation: draw-cross-1 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+}
+
+.maruzuke-modal-incorrect::after {
+  transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  animation: draw-cross-2 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+}
+
+/* ====== Table Styles (Gojuon) ====== */
+.gojuon-table {
+  border-collapse: collapse;
+}
+
+.gojuon-cell {
+  border: 1px solid var(--color-border-strong);
+  text-align: center;
+  font-weight: 700;
+  transition: background-color var(--transition-fast);
+}
+
+.gojuon-cell-empty {
+  background: #3D3A36;
+}
+
+.gojuon-cell-marked {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: var(--drill-gojuon-dark);
+}
+
+.gojuon-cell-normal {
+  background: white;
+  color: var(--color-ink);
+}
+
+/* ====== Challenge Mode Styles ====== */
+.challenge-timer {
+  background: linear-gradient(90deg, var(--color-challenge), var(--color-challenge-dark));
+}
+
+.challenge-timer-low {
+  background: linear-gradient(90deg, var(--color-incorrect), #D93939);
+  animation: pulse-glow 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 0 0 0 rgba(229, 71, 71, 0.4);
+  }
+  to {
+    box-shadow: 0 0 12px 4px rgba(229, 71, 71, 0.6);
+  }
+}
+
+/* ====== Countdown Animation ====== */
+.countdown-number {
+  animation: countdown-pop 0.3s ease-out;
+}
+
+@keyframes countdown-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ====== Score Display ====== */
+.score-display {
+  background: linear-gradient(135deg, var(--drill-light, #EDF4FD), white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.score-number {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--drill-primary, var(--drill-num-primary)), var(--drill-dark, var(--drill-num-dark)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ====== Mode Button Styles ====== */
+.mode-button {
+  background: white;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--drill-primary, var(--drill-num-primary));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.mode-button:hover:not(:disabled) {
+  border-color: var(--drill-primary, var(--drill-num-primary));
+  background: var(--drill-light, #EDF4FD);
+  transform: translateX(4px);
+}
+
+.mode-button:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.mode-button:disabled {
+  background: var(--color-paper-warm);
+  color: var(--color-ink-muted);
+}
+
+/* ====== Points Badge ====== */
+.points-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--drill-light, #EDF4FD);
+  color: var(--drill-primary, var(--drill-num-primary));
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ====== Site Title ====== */
+.site-title {
+  font-weight: 800;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #E05858 0%, #3A7BD5 50%, #0F9D8B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .site-title {
+    font-size: 3.5rem;
+  }
+}
+
+/* ====== Drill Page Title ====== */
+.drill-title {
+  font-weight: 800;
+  color: var(--drill-primary, var(--color-ink));
+}
+
+/* ====== Development Banner ====== */
+.dev-banner {
+  background: linear-gradient(90deg, #FEF8EB, #FEF3C7);
+  border-left: 4px solid var(--color-challenge);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  color: var(--color-ink);
+}
+
+/* ====== Footer ====== */
+.site-footer {
+  color: var(--color-ink-muted);
+  font-size: 0.875rem;
+}
+
+/* ====== Answer History Table ====== */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.history-table th {
+  background: var(--color-paper-warm);
+  padding: 0.5rem;
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}
+
+.history-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.history-row-correct {
+  background: var(--color-correct-light);
+}
+
+.history-row-incorrect {
+  background: var(--color-incorrect-light);
+}
+
+/* ====== Challenge Button ====== */
+.btn-challenge {
+  background: linear-gradient(135deg, var(--color-challenge), var(--color-challenge-dark));
+  color: white;
+  font-weight: 700;
+  box-shadow: var(--shadow-button);
+}
+
+.btn-challenge:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-challenge-dark), #C04A0A);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--color-shadow-strong);
+}
+
+/* ====== Responsive Utilities ====== */
+@media (max-width: 640px) {
+  :root {
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+  }
+}

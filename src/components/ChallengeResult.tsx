@@ -32,41 +32,49 @@ function HistoryTable({
 
   return (
     <div className="mt-6">
-      <h3 className="mb-3 text-left text-sm font-bold text-gray-600">
+      <h3
+        className="mb-3 text-left text-sm font-bold"
+        style={{ color: 'var(--color-ink-muted)' }}
+      >
         解答履歴
       </h3>
-      <div className="rounded-lg border border-gray-200">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50">
+      <div
+        className="overflow-hidden rounded-lg"
+        style={{ border: '1px solid var(--color-border)' }}
+      >
+        <table className="history-table">
+          <thead>
             <tr>
-              <th className="px-2 py-2 text-center text-gray-500">#</th>
-              <th className="px-2 py-2 text-center text-gray-500">問題</th>
-              <th className="px-2 py-2 text-center text-gray-500">回答</th>
-              <th className="px-2 py-2 text-center text-gray-500">正解</th>
-              <th className="px-2 py-2 text-center text-gray-500">結果</th>
+              <th>#</th>
+              <th>問題</th>
+              <th>回答</th>
+              <th>正解</th>
+              <th>結果</th>
             </tr>
           </thead>
           <tbody>
             {history.map((entry) => (
               <tr
                 key={entry.id}
-                className={entry.isCorrect ? 'bg-green-50' : 'bg-red-50'}
+                className={
+                  entry.isCorrect
+                    ? 'history-row-correct'
+                    : 'history-row-incorrect'
+                }
               >
-                <td className="px-2 py-2 text-gray-400">{entry.id}</td>
-                <td className="px-2 py-2 font-mono">
+                <td style={{ color: 'var(--color-ink-muted)' }}>{entry.id}</td>
+                <td className="font-mono">
                   {questionRenderer
                     ? questionRenderer(entry.question)
                     : entry.question.question}
                 </td>
-                <td className="px-2 py-2 font-mono">
-                  {entry.userAnswer || '-'}
-                </td>
-                <td className="px-2 py-2 font-mono">{entry.question.answer}</td>
-                <td className="px-2 py-2 text-center">
+                <td className="font-mono">{entry.userAnswer || '-'}</td>
+                <td className="font-mono">{entry.question.answer}</td>
+                <td className="text-center">
                   {entry.isCorrect ? (
-                    <span className="text-green-600">○</span>
+                    <span style={{ color: 'var(--color-correct)' }}>○</span>
                   ) : (
-                    <span className="text-red-600">×</span>
+                    <span style={{ color: 'var(--color-incorrect)' }}>×</span>
                   )}
                 </td>
               </tr>
@@ -97,32 +105,42 @@ export function ChallengeResult({
   }
 
   return (
-    <div className="rounded-lg bg-white/70 p-6 text-center">
-      <h2 className="mb-2 text-xl font-bold text-gray-800">結果発表</h2>
-      <p className="mb-6 text-sm text-gray-500">{timeLimit}秒チャレンジ</p>
+    <div className="card p-6 text-center">
+      <h2
+        className="mb-2 text-xl font-bold"
+        style={{ color: 'var(--color-ink)' }}
+      >
+        結果発表
+      </h2>
+      <p className="mb-6 text-sm" style={{ color: 'var(--color-ink-muted)' }}>
+        {timeLimit}秒チャレンジ
+      </p>
 
-      <div className="mb-8">
-        <div className="text-6xl font-bold text-indigo-600">{score}</div>
-        <div className="mt-1 text-lg text-gray-600">問正解</div>
+      <div className="score-display mb-8">
+        <div className="score-number">{score}</div>
+        <div
+          className="mt-1 text-lg"
+          style={{ color: 'var(--color-ink-light)' }}
+        >
+          問正解
+        </div>
       </div>
 
       <div className="space-y-3">
         <button
           onClick={onRetry}
-          className="w-full rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-indigo-700"
+          className="btn btn-challenge w-full px-6 py-3"
         >
           もう一度チャレンジ
         </button>
         <button
           onClick={handleShare}
-          className="w-full rounded-lg bg-black px-6 py-3 font-bold text-white shadow-md transition-all hover:bg-gray-800"
+          className="btn w-full px-6 py-3"
+          style={{ background: '#000', color: '#fff' }}
         >
           結果を𝕏でシェア！
         </button>
-        <button
-          onClick={onBack}
-          className="w-full rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-bold text-gray-700 transition-all hover:bg-gray-50"
-        >
+        <button onClick={onBack} className="btn btn-secondary w-full px-6 py-3">
           モード選択に戻る
         </button>
       </div>

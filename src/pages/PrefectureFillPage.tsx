@@ -34,11 +34,11 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
-          ルール
-        </h2>
-        <div className="space-y-2 pl-3 text-gray-700">
+        <h2 className="section-accent mb-3 text-lg font-bold">ルール</h2>
+        <div
+          className="space-y-2 pl-3"
+          style={{ color: 'var(--color-ink-light)' }}
+        >
           <p>◯で隠された文字を推測し、都道府県名を当てます。</p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
             <p className="font-mono text-lg">
@@ -54,10 +54,7 @@ function StartScreen({
 
       {/* モード選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
-          モードを選択
-        </h2>
+        <h2 className="section-accent mb-3 text-lg font-bold">モードを選択</h2>
         <div className="space-y-3">
           <ModeButton
             label="穴埋めモード"
@@ -249,7 +246,7 @@ export function PrefectureFillPage() {
   }
 
   return (
-    <Layout maxWidth="2xl">
+    <Layout maxWidth="2xl" className="drill-theme-pref">
       {screen === 'start' && (
         <>
           <DrillHeader

@@ -30,24 +30,18 @@ export function ModeButton({
 
   if (disabled) {
     return (
-      <button
-        disabled
-        className="w-full cursor-not-allowed rounded-lg bg-gray-100 px-6 py-4 text-lg font-bold text-gray-400"
-      >
+      <button disabled className="mode-button w-full cursor-not-allowed">
         {label}
       </button>
     )
   }
 
   return (
-    <button
-      onClick={onClick}
-      className="w-full cursor-pointer rounded-lg border-2 border-transparent bg-white px-6 py-4 text-lg font-bold text-indigo-700 shadow-md transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-lg"
-    >
-      {label}
-      <span className="mt-1 block text-sm font-normal text-gray-500">
-        {points} pt
+    <button onClick={onClick} className="mode-button w-full cursor-pointer">
+      <span className="text-lg font-bold" style={{ color: 'var(--color-ink)' }}>
+        {label}
       </span>
+      <span className="points-badge ml-2">{points} pt</span>
     </button>
   )
 }

@@ -47,7 +47,7 @@ export function GojuonTable({
 
   return (
     <div className={`flex justify-center ${className}`}>
-      <table className="border-collapse border border-gray-400">
+      <table className="gojuon-table">
         <tbody>
           {GOJUON_TABLE.map((row, rowIndex) => (
             <tr key={rowIndex}>
@@ -57,21 +57,25 @@ export function GojuonTable({
                 const isMarked = number !== undefined
 
                 // た〜も特訓モード時の境界線
-                const borderClass =
+                const borderStyle =
                   isTaMoMode && colIndex === 5
-                    ? 'border-l-2 border-r-2 border-gray-700'
-                    : ''
+                    ? {
+                        borderLeft: '2px solid var(--color-ink)',
+                        borderRight: '2px solid var(--color-ink)',
+                      }
+                    : {}
 
                 return (
                   <td
                     key={colIndex}
-                    className={`${sizeClasses.cell} ${sizeClasses.text} border border-gray-400 text-center font-bold text-indigo-600 ${
+                    className={`gojuon-cell ${sizeClasses.cell} ${sizeClasses.text} ${
                       isEmpty
-                        ? 'bg-neutral-800'
+                        ? 'gojuon-cell-empty'
                         : isMarked
-                          ? 'bg-amber-100'
-                          : 'bg-white'
-                    } ${borderClass}`}
+                          ? 'gojuon-cell-marked'
+                          : 'gojuon-cell-normal'
+                    }`}
+                    style={borderStyle}
                   >
                     {isMarked ? number : ''}
                   </td>

@@ -32,8 +32,14 @@ export function ChallengeCountdownModal({
   if (count === 0) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="text-9xl font-bold text-white tabular-nums">{count}</div>
+    <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="countdown-number text-9xl font-bold tabular-nums"
+        key={count}
+        style={{ color: 'var(--color-challenge)' }}
+      >
+        {count}
+      </div>
     </div>
   )
 }
