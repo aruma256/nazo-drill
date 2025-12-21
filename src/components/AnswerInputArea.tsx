@@ -5,7 +5,7 @@
  */
 
 import { useRef, useEffect } from 'react'
-import type { Feedback } from '../hooks/useDrill'
+import type { Feedback } from '../hooks'
 
 interface AnswerInputAreaProps {
   value: string
