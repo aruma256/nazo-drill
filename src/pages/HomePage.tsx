@@ -1,14 +1,28 @@
 import { Layout, DrillCard, DrillExample, GojuonTable } from '../components'
 
+const LOGO_BLOCKS = [
+  { char: 'ナ', color: '#e11d48', rotate: '-rotate-2' }, // 国語(赤)
+  { char: 'ゾ', color: '#ea580c', rotate: 'rotate-1' }, // 社会(橙)
+  { char: 'ド', color: '#16a34a', rotate: '-rotate-1' }, // 理科(緑)
+  { char: 'リ', color: '#0284c7', rotate: 'rotate-2' }, // 算数(青)
+  { char: 'ル', color: '#7c3aed', rotate: '-rotate-1' }, // 英語(紫)
+]
+
 export function HomePage() {
   return (
     <Layout maxWidth="4xl">
       {/* Hero Section */}
       <header className="animate-fade-in-up mb-12 text-center">
-        <h1 className="font-display mb-4 text-5xl font-black tracking-tight text-gray-900 md:text-6xl">
-          <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            ナゾドリル
-          </span>
+        <h1 className="mb-4 flex justify-center gap-1.5">
+          {LOGO_BLOCKS.map(({ char, color, rotate }) => (
+            <span
+              key={char}
+              className={`${rotate} font-display inline-flex h-12 w-12 items-center justify-center rounded-lg text-2xl font-black text-white shadow-md md:h-14 md:w-14 md:text-3xl`}
+              style={{ backgroundColor: color }}
+            >
+              {char}
+            </span>
+          ))}
         </h1>
         <p className="font-display text-lg text-gray-600 md:text-xl">
           謎解きの定番変換パターンを
