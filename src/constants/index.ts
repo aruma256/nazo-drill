@@ -1,1 +1,7 @@
-export { SUBJECT_COLORS, DRILL_THEMES, type DrillId } from './theme'
+export {
+  SUBJECT_THEMES,
+  DRILL_CONFIG,
+  DRILL_THEMES,
+  type SubjectId,
+  type DrillId,
+} from './theme'

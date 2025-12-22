@@ -1,47 +1,66 @@
 /**
- * 教科カラー（五教科に基づく）
+ * 教科テーマ（五教科に基づく配色）
  * - 国語: 赤
  * - 算数: 青
  * - 理科: 緑
  * - 社会: 橙
  * - 英語: 紫
  */
-export const SUBJECT_COLORS = {
-  japanese: '#e11d48', // 国語 - 赤
-  math: '#0284c7', // 算数 - 青
-  science: '#16a34a', // 理科 - 緑
-  social: '#ea580c', // 社会 - 橙
-  english: '#7c3aed', // 英語 - 紫
-} as const
-
-/**
- * 各ドリルのテーマ設定
- */
-export const DRILL_THEMES = {
-  '50on-pick': {
-    primary: SUBJECT_COLORS.japanese,
+export const SUBJECT_THEMES = {
+  japanese: {
+    primary: '#e11d48',
     light: '#ffe4e6',
     accent: '#fda4af',
-    icon: 'あ',
   },
-  '123-abc': {
-    primary: SUBJECT_COLORS.math,
+  math: {
+    primary: '#0284c7',
     light: '#e0f2fe',
     accent: '#7dd3fc',
-    icon: '123',
   },
-  'abc-shift': {
-    primary: SUBJECT_COLORS.english,
-    light: '#ede9fe',
-    accent: '#c4b5fd',
-    icon: 'A→',
+  science: {
+    primary: '#16a34a',
+    light: '#dcfce7',
+    accent: '#86efac',
   },
-  'prefecture-fill': {
-    primary: SUBJECT_COLORS.social,
+  social: {
+    primary: '#ea580c',
     light: '#fef3c7',
     accent: '#fcd34d',
-    icon: '◯',
+  },
+  english: {
+    primary: '#7c3aed',
+    light: '#ede9fe',
+    accent: '#c4b5fd',
   },
 } as const
 
-export type DrillId = keyof typeof DRILL_THEMES
+export type SubjectId = keyof typeof SUBJECT_THEMES
+
+/**
+ * 各ドリルの設定（教科とアイコン）
+ */
+export const DRILL_CONFIG = {
+  '50on-pick': { subject: 'japanese', icon: 'あ' },
+  '123-abc': { subject: 'math', icon: '123' },
+  'abc-shift': { subject: 'english', icon: 'A→' },
+  'prefecture-fill': { subject: 'social', icon: '◯' },
+} as const satisfies Record<string, { subject: SubjectId; icon: string }>
+
+export type DrillId = keyof typeof DRILL_CONFIG
+
+/**
+ * 各ドリルのテーマ（SUBJECT_THEMES + DRILL_CONFIG から自動生成）
+ */
+export const DRILL_THEMES = Object.fromEntries(
+  Object.entries(DRILL_CONFIG).map(([drillId, config]) => [
+    drillId,
+    {
+      ...SUBJECT_THEMES[config.subject],
+      icon: config.icon,
+    },
+  ]),
+) as {
+  [K in DrillId]: (typeof SUBJECT_THEMES)[(typeof DRILL_CONFIG)[K]['subject']] & {
+    icon: (typeof DRILL_CONFIG)[K]['icon']
+  }
+}
