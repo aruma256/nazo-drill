@@ -14,7 +14,7 @@ export function DrillHeader({
   backLabel = 'トップへ戻る',
 }: DrillHeaderProps) {
   return (
-    <header className="animate-fade-in-up mb-8">
+    <header className="mb-8">
       {/* Back navigation */}
       <div className="mb-6">
         <Link

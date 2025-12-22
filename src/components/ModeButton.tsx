@@ -13,8 +13,6 @@ interface ModeButtonProps {
   disabled?: boolean
   /** アイコン（オプション） */
   icon?: React.ReactNode
-  /** アニメーション遅延（スタガード用） */
-  animationDelay?: string
 }
 
 /**
@@ -29,7 +27,6 @@ export function ModeButton({
   onClick,
   disabled = false,
   icon,
-  animationDelay,
 }: ModeButtonProps) {
   const { getCorrectCount } = useDrillStorage(drillName)
   const points = getCorrectCount(mode)
@@ -39,7 +36,6 @@ export function ModeButton({
       <button
         disabled
         className="font-display w-full cursor-not-allowed rounded-2xl bg-gray-100 px-6 py-5 text-lg font-bold text-gray-400"
-        style={{ animationDelay }}
       >
         <div className="flex items-center justify-center gap-3">
           {icon && <span className="text-2xl opacity-50">{icon}</span>}
@@ -55,8 +51,7 @@ export function ModeButton({
   return (
     <button
       onClick={onClick}
-      className="animate-fade-in-up group relative w-full overflow-hidden rounded-2xl border-2 border-transparent bg-white px-6 py-5 text-left shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--drill-primary)] hover:shadow-xl active:scale-[0.98]"
-      style={{ animationDelay }}
+      className="group relative w-full overflow-hidden rounded-2xl border-2 border-transparent bg-white px-6 py-5 text-left shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--drill-primary)] hover:shadow-xl active:scale-[0.98]"
     >
       {/* Gradient border effect on hover */}
       <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">

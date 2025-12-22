@@ -160,7 +160,7 @@ export function ChallengeResult({
   }
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       {/* Result card */}
       <div className="mb-6 overflow-hidden rounded-3xl bg-white shadow-xl">
         {/* Header decoration */}

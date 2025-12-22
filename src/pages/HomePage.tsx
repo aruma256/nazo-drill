@@ -13,7 +13,7 @@ export function HomePage() {
   return (
     <Layout maxWidth="4xl">
       {/* Hero Section */}
-      <header className="animate-fade-in-up mb-12 text-center">
+      <header className="mb-12 text-center">
         <h1 className="mb-4 flex justify-center gap-1.5">
           {LOGO_BLOCKS.map(({ char, color, rotate }) => (
             <span
@@ -49,7 +49,7 @@ export function HomePage() {
 
       {/* Drill Selection */}
       <main>
-        <h2 className="animate-fade-in-up animate-delay-100 font-display mb-8 text-center text-2xl font-bold text-gray-800">
+        <h2 className="font-display mb-8 text-center text-2xl font-bold text-gray-800">
           <span className="relative">
             トレーニングテーマを選択
             <span className="absolute -bottom-2 left-0 right-0 mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></span>
@@ -58,7 +58,7 @@ export function HomePage() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* 五十音表の文字拾い */}
-          <div className="animate-fade-in-up animate-delay-200">
+          <div>
             <DrillCard
               to="/drill/50on-pick"
               title="五十音表の文字拾い"
@@ -84,7 +84,7 @@ export function HomePage() {
           </div>
 
           {/* 数字toアルファベット */}
-          <div className="animate-fade-in-up animate-delay-300">
+          <div>
             <DrillCard
               to="/drill/123-abc"
               title="数字toアルファベット"
@@ -96,7 +96,7 @@ export function HomePage() {
           </div>
 
           {/* アルファベットシフト */}
-          <div className="animate-fade-in-up animate-delay-400">
+          <div>
             <DrillCard
               to="/drill/abc-shift"
               title="アルファベットシフト"
@@ -108,7 +108,7 @@ export function HomePage() {
           </div>
 
           {/* 都道府県名の穴埋め */}
-          <div className="animate-fade-in-up animate-delay-500">
+          <div>
             <DrillCard
               to="/drill/prefecture-fill"
               title="都道府県名の穴埋め"
@@ -132,7 +132,7 @@ export function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="animate-fade-in mt-16 text-center">
+      <footer className="mt-16 text-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/50 px-6 py-3 text-sm text-gray-500 shadow-sm backdrop-blur-sm">
           <span>© 2025 ナゾドリル</span>
           <span className="text-gray-300">|</span>
