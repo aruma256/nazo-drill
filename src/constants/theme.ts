@@ -64,3 +64,8 @@ export const DRILL_THEMES = Object.fromEntries(
     icon: (typeof DRILL_CONFIG)[K]['icon']
   }
 }
+
+/**
+ * チャレンジモードの制限時間（秒）
+ */
+export const CHALLENGE_TIME_LIMIT = 45

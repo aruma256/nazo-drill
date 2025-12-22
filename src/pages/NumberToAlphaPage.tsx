@@ -22,9 +22,9 @@ import {
   generateSingleQuestion,
   generateWordQuestion,
 } from '../drills/numberToAlpha'
+import { CHALLENGE_TIME_LIMIT } from '../constants'
 
 const DRILL_NAME = '123-abc'
-const CHALLENGE_TIME_LIMIT = 45
 
 type Screen =
   | 'start'
