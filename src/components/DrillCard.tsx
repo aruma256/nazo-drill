@@ -1,35 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-
-// Drill theme color definitions
-const drillThemes = {
-  '50on-pick': {
-    primary: '#e11d48',
-    light: '#ffe4e6',
-    accent: '#fda4af',
-    icon: 'あ',
-  },
-  '123-abc': {
-    primary: '#0284c7',
-    light: '#e0f2fe',
-    accent: '#7dd3fc',
-    icon: '123',
-  },
-  'abc-shift': {
-    primary: '#7c3aed',
-    light: '#ede9fe',
-    accent: '#c4b5fd',
-    icon: 'A→',
-  },
-  'prefecture-fill': {
-    primary: '#d97706',
-    light: '#fef3c7',
-    accent: '#fcd34d',
-    icon: '◯',
-  },
-} as const
-
-type DrillId = keyof typeof drillThemes
+import { DRILL_THEMES, type DrillId } from '../constants'
 
 interface DrillCardProps {
   to: string
@@ -48,7 +19,7 @@ export function DrillCard({
   drillId,
   points,
 }: DrillCardProps) {
-  const theme = drillId ? drillThemes[drillId] : null
+  const theme = drillId ? DRILL_THEMES[drillId] : null
 
   return (
     <Link

@@ -1,11 +1,12 @@
 import { Layout, DrillCard, DrillExample, GojuonTable } from '../components'
+import { SUBJECT_COLORS } from '../constants/theme'
 
 const LOGO_BLOCKS = [
-  { char: 'ナ', color: '#e11d48', rotate: '-rotate-2' }, // 国語(赤)
-  { char: 'ゾ', color: '#ea580c', rotate: 'rotate-1' }, // 社会(橙)
-  { char: 'ド', color: '#16a34a', rotate: '-rotate-1' }, // 理科(緑)
-  { char: 'リ', color: '#0284c7', rotate: 'rotate-2' }, // 算数(青)
-  { char: 'ル', color: '#7c3aed', rotate: '-rotate-1' }, // 英語(紫)
+  { char: 'ナ', color: SUBJECT_COLORS.japanese, rotate: '-rotate-2' },
+  { char: 'ゾ', color: SUBJECT_COLORS.social, rotate: 'rotate-1' },
+  { char: 'ド', color: SUBJECT_COLORS.science, rotate: '-rotate-1' },
+  { char: 'リ', color: SUBJECT_COLORS.math, rotate: 'rotate-2' },
+  { char: 'ル', color: SUBJECT_COLORS.english, rotate: '-rotate-1' },
 ]
 
 export function HomePage() {
