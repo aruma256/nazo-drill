@@ -12,6 +12,7 @@ import {
   ChallengeCountdownModal,
 } from '../components'
 import {
+  useCountdownTimer,
   useDrill,
   useDrillStorage,
   type Feedback,
@@ -252,7 +253,7 @@ function ChallengeScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [score, setScore] = useState(0)
-  const [remainingTime, setRemainingTime] = useState(CHALLENGE_TIME_LIMIT)
+  const remainingTime = useCountdownTimer(CHALLENGE_TIME_LIMIT)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -272,23 +273,6 @@ function ChallengeScreen({
   useEffect(() => {
     presentQuestion()
   }, [presentQuestion])
-
-  // カウントダウンタイマー
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRemainingTime((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
 
   // タイムアップ時の処理
   useEffect(() => {
