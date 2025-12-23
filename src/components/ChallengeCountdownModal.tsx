@@ -76,17 +76,6 @@ export function ChallengeCountdownModal({
           </span>
         </div>
       </div>
-
-      {/* Ready text */}
-      <div className="absolute bottom-1/4 text-center">
-        <p className="font-display text-2xl font-bold text-white/90">
-          {count === 3
-            ? '準備はいい？'
-            : count === 2
-              ? 'もうすぐ...'
-              : 'スタート！'}
-        </p>
-      </div>
     </div>
   )
 }
