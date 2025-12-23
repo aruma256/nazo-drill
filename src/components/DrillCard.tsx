@@ -53,7 +53,7 @@ export function DrillCard({
         <div className="mb-3 flex items-center gap-3">
           {theme && (
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md transition-transform duration-300 group-hover:scale-110"
+              className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md"
               style={{
                 backgroundColor: theme.primary,
                 fontFamily:
