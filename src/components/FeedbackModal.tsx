@@ -9,56 +9,6 @@ interface FeedbackModalProps {
   delayOnIncorrect?: number
 }
 
-// Pre-generated confetti particles data (deterministic)
-const CONFETTI_PARTICLES = Array.from({ length: 50 }, (_, i) => {
-  // Use index-based pseudo-random values for deterministic results
-  const seed = i * 137.5
-  const colors = [
-    '#10b981', // green
-    '#3b82f6', // blue
-    '#f59e0b', // amber
-    '#ec4899', // pink
-    '#8b5cf6', // purple
-    '#06b6d4', // cyan
-  ]
-
-  return {
-    id: i,
-    left: seed % 100,
-    delay: ((i * 17) % 50) / 100,
-    duration: 2 + ((i * 23) % 200) / 100,
-    color: colors[i % colors.length],
-    size: 6 + ((i * 31) % 80) / 10,
-    rotation: (seed * 2.5) % 360,
-    isCircle: i % 2 === 0,
-  }
-})
-
-// Confetti particle component
-function Confetti() {
-  return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {CONFETTI_PARTICLES.map((p) => (
-        <div
-          key={p.id}
-          className="confetti-particle"
-          style={{
-            left: `${p.left}%`,
-            top: '-20px',
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            backgroundColor: p.color,
-            borderRadius: p.isCircle ? '50%' : '2px',
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            transform: `rotate(${p.rotation}deg)`,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
 // Animated checkmark SVG
 function AnimatedCheckmark() {
   return (
@@ -156,8 +106,6 @@ export function FeedbackModal({
   const needsWaiting = type === 'incorrect' && !!delayOnIncorrect
   // 待機完了フラグ
   const [waitComplete, setWaitComplete] = useState(false)
-  // 正解時のコンフェッティ表示（isOpenとtypeから直接導出）
-  const showConfetti = isOpen && type === 'correct'
 
   // モーダルが閉じたときにwaitCompleteをリセット
   useEffect(() => {
@@ -215,97 +163,93 @@ export function FeedbackModal({
   if (!isOpen) return null
 
   return (
-    <>
-      {showConfetti && <Confetti />}
-
+    <div
+      data-testid="feedback-modal"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={handleClose}
+    >
+      {/* 背景オーバーレイ */}
       <div
-        data-testid="feedback-modal"
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        onClick={handleClose}
-      >
-        {/* 背景オーバーレイ */}
+        className="animate-fade-in absolute inset-0"
+        style={{
+          background:
+            type === 'correct'
+              ? 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%)'
+              : 'radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
+        }}
+      />
+
+      {/* モーダル本体 */}
+      <div className="animate-bounce-in relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-2xl">
+        {/* Top decoration */}
         <div
-          className="animate-fade-in absolute inset-0"
+          className="h-2"
           style={{
             background:
               type === 'correct'
-                ? 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%)'
-                : 'radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
+                ? 'linear-gradient(90deg, #10b981, #34d399, #6ee7b7)'
+                : 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)',
           }}
         />
 
-        {/* モーダル本体 */}
-        <div className="animate-bounce-in relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-2xl">
-          {/* Top decoration */}
-          <div
-            className="h-2"
-            style={{
-              background:
-                type === 'correct'
-                  ? 'linear-gradient(90deg, #10b981, #34d399, #6ee7b7)'
-                  : 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)',
-            }}
-          />
+        <div className="p-8">
+          {/* アイコンとメッセージ */}
+          {type === 'correct' ? (
+            <>
+              <AnimatedCheckmark />
+              <div className="font-display text-3xl font-black text-emerald-600">
+                正解！
+              </div>
+              <div className="mt-2 text-gray-500">すばらしい！</div>
+            </>
+          ) : (
+            <>
+              <AnimatedXMark />
+              <div className="font-display text-3xl font-black text-rose-600">
+                不正解
+              </div>
+              <div className="mt-4 rounded-2xl bg-rose-50 p-4">
+                <div className="text-sm text-rose-400">正解は</div>
+                <div className="font-mono mt-1 text-2xl font-bold text-rose-600">
+                  {correctAnswer}
+                </div>
+              </div>
+            </>
+          )}
 
-          <div className="p-8">
-            {/* アイコンとメッセージ */}
-            {type === 'correct' ? (
-              <>
-                <AnimatedCheckmark />
-                <div className="font-display text-3xl font-black text-emerald-600">
-                  正解！
-                </div>
-                <div className="mt-2 text-gray-500">すばらしい！</div>
-              </>
-            ) : (
-              <>
-                <AnimatedXMark />
-                <div className="font-display text-3xl font-black text-rose-600">
-                  不正解
-                </div>
-                <div className="mt-4 rounded-2xl bg-rose-50 p-4">
-                  <div className="text-sm text-rose-400">正解は</div>
-                  <div className="font-mono mt-1 text-2xl font-bold text-rose-600">
-                    {correctAnswer}
-                  </div>
-                </div>
-              </>
-            )}
+          {/* 補助情報 */}
+          {hintContent && (
+            <div
+              data-testid="modal-hint"
+              className="mt-4 rounded-2xl bg-indigo-50 p-4 text-lg font-medium text-indigo-900"
+            >
+              {hintContent}
+            </div>
+          )}
 
-            {/* 補助情報 */}
-            {hintContent && (
-              <div
-                data-testid="modal-hint"
-                className="mt-4 rounded-2xl bg-indigo-50 p-4 text-lg font-medium text-indigo-900"
+          {/* タップして次へ / プログレスバー */}
+          {isWaiting ? (
+            <ProgressBar durationMs={delayOnIncorrect} />
+          ) : (
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
+              <span>タップして次へ</span>
+              <svg
+                className="h-4 w-4 animate-pulse"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                {hintContent}
-              </div>
-            )}
-
-            {/* タップして次へ / プログレスバー */}
-            {isWaiting ? (
-              <ProgressBar durationMs={delayOnIncorrect} />
-            ) : (
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
-                <span>タップして次へ</span>
-                <svg
-                  className="h-4 w-4 animate-pulse"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            )}
-          </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
