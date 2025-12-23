@@ -65,14 +65,10 @@ export function GojuonTable({
                   const number = markedMap.get(`${rowIndex}-${colIndex}`)
                   const isMarked = number !== undefined
 
-                  // た〜も特訓モード時の境界線
-                  const borderClass =
-                    isTaMoMode && colIndex === 5 ? 'border-l-2 border-r-2' : ''
-
                   return (
                     <td
                       key={colIndex}
-                      className={`${sizeClasses.cell} ${sizeClasses.text} text-center font-bold transition-colors duration-200 ${borderClass}`}
+                      className={`${sizeClasses.cell} ${sizeClasses.text} text-center font-bold transition-colors duration-200`}
                       style={{
                         borderWidth: '1px',
                         borderStyle: 'solid',
@@ -89,6 +85,8 @@ export function GojuonTable({
                           : 'var(--drill-primary)',
                         ...(isTaMoMode && colIndex === 5
                           ? {
+                              borderLeftWidth: '2px',
+                              borderRightWidth: '2px',
                               borderLeftColor: '#374151',
                               borderRightColor: '#374151',
                             }
