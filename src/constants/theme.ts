@@ -41,7 +41,7 @@ export type SubjectId = keyof typeof SUBJECT_THEMES
  */
 export const DRILL_CONFIG = {
   '50on-pick': { subject: 'japanese', icon: 'あ' },
-  '123-abc': { subject: 'math', icon: '123' },
+  '123-abc': { subject: 'math', icon: '1A' },
   'abc-shift': { subject: 'english', icon: 'A→' },
   'prefecture-fill': { subject: 'social', icon: '◯' },
 } as const satisfies Record<string, { subject: SubjectId; icon: string }>
