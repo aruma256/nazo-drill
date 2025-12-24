@@ -33,35 +33,6 @@
   --drill-accent: #a5b4fc;
 }
 
-/* ===== Drill Theme Colors ===== */
-[data-drill='50on-pick'] {
-  --drill-primary: #e11d48;
-  --drill-primary-dark: #be123c;
-  --drill-primary-light: #ffe4e6;
-  --drill-accent: #fda4af;
-}
-
-[data-drill='123-abc'] {
-  --drill-primary: #0284c7;
-  --drill-primary-dark: #0369a1;
-  --drill-primary-light: #e0f2fe;
-  --drill-accent: #7dd3fc;
-}
-
-[data-drill='abc-shift'] {
-  --drill-primary: #7c3aed;
-  --drill-primary-dark: #6d28d9;
-  --drill-primary-light: #ede9fe;
-  --drill-accent: #c4b5fd;
-}
-
-[data-drill='prefecture-fill'] {
-  --drill-primary: #d97706;
-  --drill-primary-dark: #b45309;
-  --drill-primary-light: #fef3c7;
-  --drill-accent: #fcd34d;
-}
-
 /* ===== Base Styles ===== */
 body {
   font-family: var(--font-body);

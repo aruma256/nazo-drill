@@ -9,26 +9,31 @@
 export const SUBJECT_THEMES = {
   japanese: {
     primary: '#e11d48',
+    dark: '#be123c',
     light: '#ffe4e6',
     accent: '#fda4af',
   },
   math: {
     primary: '#0284c7',
+    dark: '#0369a1',
     light: '#e0f2fe',
     accent: '#7dd3fc',
   },
   science: {
     primary: '#16a34a',
+    dark: '#15803d',
     light: '#dcfce7',
     accent: '#86efac',
   },
   social: {
     primary: '#ea580c',
+    dark: '#c2410c',
     light: '#fef3c7',
     accent: '#fcd34d',
   },
   english: {
     primary: '#7c3aed',
+    dark: '#6d28d9',
     light: '#ede9fe',
     accent: '#c4b5fd',
   },
