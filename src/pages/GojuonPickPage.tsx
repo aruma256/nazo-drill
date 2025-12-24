@@ -45,15 +45,15 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           ルール
         </h2>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>五十音表の中に数字が書かれたマスがあります。</p>
           <p>
             数字を
-            <span className="font-bold text-indigo-600">1, 2, 3...</span>
+            <span className="font-bold text-drill-primary">1, 2, 3...</span>
             の順に拾い、そのマスに対応するひらがなを読み取ります。
           </p>
           <div className="mt-3 rounded-lg bg-white/50 p-3">
@@ -79,7 +79,7 @@ function StartScreen({
 
       {/* 実力テスト */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
           <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
           実力テスト
         </h2>
@@ -96,8 +96,8 @@ function StartScreen({
 
       {/* 練習モード選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           練習モード
         </h2>
         <div className="space-y-3">
@@ -329,7 +329,7 @@ function ChallengeScreen({
         {/* スコア表示 */}
         <div className="mb-4 text-center">
           <span className="text-sm text-gray-500">正解数</span>
-          <span className="ml-2 text-2xl font-bold text-indigo-600">
+          <span className="ml-2 text-2xl font-bold text-drill-primary">
             {score}
           </span>
         </div>
@@ -399,7 +399,7 @@ export function GojuonPickPage() {
   }, [])
 
   return (
-    <Layout maxWidth="2xl">
+    <Layout maxWidth="2xl" drillId="50on-pick">
       {screen === 'start' && (
         <>
           <DrillHeader

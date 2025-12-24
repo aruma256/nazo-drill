@@ -47,7 +47,7 @@ function AlphaTable() {
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
-            <td className="h-7 w-12 border border-gray-300 bg-indigo-100 text-center text-sm font-bold text-indigo-600 sm:h-8 sm:w-14 sm:text-base">
+            <td className="h-7 w-12 border border-gray-300 bg-drill-primary-light text-center text-sm font-bold text-drill-primary sm:h-8 sm:w-14 sm:text-base">
               E
             </td>
           </tr>
@@ -56,7 +56,7 @@ function AlphaTable() {
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
-            <td className="h-7 w-12 border border-gray-300 bg-indigo-100 text-center text-sm font-bold text-indigo-600 sm:h-8 sm:w-14 sm:text-base">
+            <td className="h-7 w-12 border border-gray-300 bg-drill-primary-light text-center text-sm font-bold text-drill-primary sm:h-8 sm:w-14 sm:text-base">
               J
             </td>
           </tr>
@@ -65,7 +65,7 @@ function AlphaTable() {
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
-            <td className="h-7 w-12 border border-gray-300 bg-indigo-100 text-center text-sm font-bold text-indigo-600 sm:h-8 sm:w-14 sm:text-base">
+            <td className="h-7 w-12 border border-gray-300 bg-drill-primary-light text-center text-sm font-bold text-drill-primary sm:h-8 sm:w-14 sm:text-base">
               O
             </td>
           </tr>
@@ -74,7 +74,7 @@ function AlphaTable() {
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
-            <td className="h-7 w-12 border border-gray-300 bg-indigo-100 text-center text-sm font-bold text-indigo-600 sm:h-8 sm:w-14 sm:text-base">
+            <td className="h-7 w-12 border border-gray-300 bg-drill-primary-light text-center text-sm font-bold text-drill-primary sm:h-8 sm:w-14 sm:text-base">
               T
             </td>
           </tr>
@@ -83,7 +83,7 @@ function AlphaTable() {
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
             <td className="h-7 w-12 border border-gray-300 bg-white text-center text-sm font-medium text-gray-700 sm:h-8 sm:w-14 sm:text-base"></td>
-            <td className="h-7 w-12 border border-gray-300 bg-indigo-100 text-center text-sm font-bold text-indigo-600 sm:h-8 sm:w-14 sm:text-base">
+            <td className="h-7 w-12 border border-gray-300 bg-drill-primary-light text-center text-sm font-bold text-drill-primary sm:h-8 sm:w-14 sm:text-base">
               Y
             </td>
           </tr>
@@ -166,33 +166,35 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
       <div className="space-y-6">
         {/* 暗記のステップ */}
         <section className="rounded-lg bg-white/70 p-4">
-          <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-            <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+          <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+            <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
             覚え方のステップ
           </h2>
           <div className="space-y-3 text-gray-700">
-            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
-              <p className="font-bold text-indigo-800">
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
                 ステップ1: EJOTYを覚える
               </p>
               <p className="mt-1 text-sm">
                 まずは5の倍数だけ覚えましょう。
                 <br />
-                <span className="font-mono font-bold text-indigo-600">
+                <span className="font-mono font-bold text-drill-primary">
                   E=5, J=10, O=15, T=20, Y=25
                 </span>
               </p>
             </div>
-            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
-              <p className="font-bold text-indigo-800">ステップ2: 前後を計算</p>
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
+                ステップ2: 前後を計算
+              </p>
               <p className="mt-1 text-sm">
                 EJOTYを基準に、+1や-1で他の文字を導く。
                 <br />
                 例: J=10 なので、K=11, I=9
               </p>
             </div>
-            <div className="rounded-lg border border-indigo-100 bg-indigo-50 p-3">
-              <p className="font-bold text-indigo-800">
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
                 ステップ3: よく出る文字を覚える
               </p>
               <p className="mt-1 text-sm">
@@ -204,8 +206,8 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
 
         {/* 対応表 */}
         <section className="rounded-lg bg-white/70 p-4">
-          <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-            <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+          <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+            <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
             対応表
           </h2>
           <div className="overflow-hidden rounded-lg border border-gray-200">
@@ -244,7 +246,7 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
                         className={`px-3 py-2 text-center font-mono text-lg ${
                           isEjoty
                             ? 'font-bold text-amber-700'
-                            : 'text-indigo-600'
+                            : 'text-drill-primary'
                         }`}
                       >
                         {row.alpha}
@@ -280,23 +282,23 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           ルール
         </h2>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>数字をアルファベットに変換して答えます。</p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
             <p className="font-mono text-lg">
-              <span className="text-indigo-600">1</span> →{' '}
+              <span className="text-drill-primary">1</span> →{' '}
               <span className="font-bold text-green-600">A</span>
             </p>
             <p className="font-mono text-lg">
-              <span className="text-indigo-600">5</span> →{' '}
+              <span className="text-drill-primary">5</span> →{' '}
               <span className="font-bold text-green-600">E</span>
             </p>
             <p className="font-mono text-lg">
-              <span className="text-indigo-600">26</span> →{' '}
+              <span className="text-drill-primary">26</span> →{' '}
               <span className="font-bold text-green-600">Z</span>
             </p>
           </div>
@@ -308,7 +310,7 @@ function StartScreen({
 
       {/* 実力テスト */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
           <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
           実力テスト
         </h2>
@@ -325,8 +327,8 @@ function StartScreen({
 
       {/* モード選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           練習モード
         </h2>
         <div className="space-y-3">
@@ -359,7 +361,7 @@ function StartScreen({
 
       {/* 暗記ノート */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
           <span className="mr-2 h-5 w-1 rounded bg-green-500"></span>
           暗記ノート
         </h2>
@@ -461,7 +463,7 @@ function DrillScreen({
       <div className="rounded-lg bg-white/70 p-4">
         {/* 問題表示 */}
         <div className="mb-4 text-center">
-          <div className="text-5xl font-bold text-indigo-900">
+          <div className="text-5xl font-bold text-drill-primary-dark">
             {currentQuestion?.question ?? '--'}
           </div>
           {currentQuestion?.subtext && (
@@ -591,14 +593,14 @@ function ChallengeScreen({
         {/* スコア表示 */}
         <div className="mb-4 text-center">
           <span className="text-sm text-gray-500">正解数</span>
-          <span className="ml-2 text-2xl font-bold text-indigo-600">
+          <span className="ml-2 text-2xl font-bold text-drill-primary">
             {score}
           </span>
         </div>
 
         {/* 問題表示 */}
         <div className="mb-4 text-center">
-          <div className="text-5xl font-bold text-indigo-900">
+          <div className="text-5xl font-bold text-drill-primary-dark">
             {currentQuestion?.question ?? '--'}
           </div>
           {currentQuestion?.subtext && (
@@ -670,7 +672,7 @@ export function NumberToAlphaPage() {
   }
 
   return (
-    <Layout maxWidth="2xl">
+    <Layout maxWidth="2xl" drillId="123-abc">
       {screen === 'start' && (
         <>
           <DrillHeader

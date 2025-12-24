@@ -34,15 +34,15 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           ルール
         </h2>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>◯で隠された文字を推測し、都道府県名を当てます。</p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
             <p className="font-mono text-lg">
-              <span className="text-indigo-600">◯うき◯◯</span> →{' '}
+              <span className="text-drill-primary">◯うき◯◯</span> →{' '}
               <span className="font-bold text-green-600">とうきょう</span>
             </p>
           </div>
@@ -54,8 +54,8 @@ function StartScreen({
 
       {/* モード選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-indigo-900">
-          <span className="mr-2 h-5 w-1 rounded bg-indigo-500"></span>
+        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           モードを選択
         </h2>
         <div className="space-y-3">
@@ -199,7 +199,7 @@ function DrillScreen({
       <div className="rounded-lg bg-white/70 p-4">
         {/* 問題表示 */}
         <div className="mb-6 text-center">
-          <div className="text-4xl font-bold tracking-widest text-indigo-900 md:text-5xl">
+          <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
             {currentQuestion?.question ?? '--'}
           </div>
           {currentQuestion?.subtext && (
@@ -249,7 +249,7 @@ export function PrefectureFillPage() {
   }
 
   return (
-    <Layout maxWidth="2xl">
+    <Layout maxWidth="2xl" drillId="prefecture-fill">
       {screen === 'start' && (
         <>
           <DrillHeader
