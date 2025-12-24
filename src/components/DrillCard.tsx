@@ -59,7 +59,7 @@ export function DrillCard({
                 fontFamily:
                   theme.icon === 'あ'
                     ? 'var(--font-display)'
-                    : theme.icon === '123'
+                    : theme.icon === '1A'
                       ? 'var(--font-mono)'
                       : 'inherit',
               }}
