@@ -11,6 +11,14 @@ interface DrillCardProps {
   points?: number
 }
 
+/**
+ * アイコンごとのフォントファミリーマッピング
+ */
+const ICON_FONT_MAP: Record<string, string> = {
+  あ: 'var(--font-display)',
+  '1A': 'var(--font-mono)',
+}
+
 export function DrillCard({
   to,
   title,
@@ -56,12 +64,7 @@ export function DrillCard({
               className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md"
               style={{
                 backgroundColor: theme.primary,
-                fontFamily:
-                  theme.icon === 'あ'
-                    ? 'var(--font-display)'
-                    : theme.icon === '1A'
-                      ? 'var(--font-mono)'
-                      : 'inherit',
+                fontFamily: ICON_FONT_MAP[theme.icon] ?? 'inherit',
               }}
             >
               {theme.icon}
