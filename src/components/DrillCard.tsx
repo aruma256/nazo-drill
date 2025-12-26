@@ -2,6 +2,15 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { DRILL_THEMES, type DrillId } from '../constants'
 
+/**
+ * アイコンに応じた適切なフォントファミリーを返す
+ */
+function getIconFontFamily(icon: string): string {
+  if (icon === 'あ') return 'var(--font-display)'
+  if (icon === '1A') return 'var(--font-mono)'
+  return 'inherit'
+}
+
 interface DrillCardProps {
   to: string
   title: string
@@ -56,12 +65,7 @@ export function DrillCard({
               className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold text-white shadow-md"
               style={{
                 backgroundColor: theme.primary,
-                fontFamily:
-                  theme.icon === 'あ'
-                    ? 'var(--font-display)'
-                    : theme.icon === '1A'
-                      ? 'var(--font-mono)'
-                      : 'inherit',
+                fontFamily: getIconFontFamily(theme.icon),
               }}
             >
               {theme.icon}
