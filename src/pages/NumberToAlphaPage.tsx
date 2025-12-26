@@ -308,28 +308,21 @@ function StartScreen({
         </div>
       </section>
 
-      {/* 実力テスト */}
+      {/* モードを選択 */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
           <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          実力テスト
-        </h2>
-        <ModeButton
-          label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
-          mode="challenge"
-          drillName={DRILL_NAME}
-          onClick={onStartChallenge}
-          hidePoints
-        />
-      </section>
-
-      {/* モード選択 */}
-      <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          練習モード
+          モードを選択
         </h2>
         <div className="space-y-3">
+          <ModeButton
+            label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
+            mode="challenge"
+            drillName={DRILL_NAME}
+            onClick={onStartChallenge}
+            icon="⏱️"
+            hidePoints
+          />
           <ModeButton
             label={'"EJOTY"特訓モード'}
             mode="ejoty"
@@ -337,6 +330,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('ejoty')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="1文字モード"
@@ -345,6 +339,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('single')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="単語モード"
@@ -353,23 +348,17 @@ function StartScreen({
             onClick={() => {
               onStartDrill('word')
             }}
+            icon="✏️"
+          />
+          <ModeButton
+            label="対応表・覚え方を見る"
+            mode="note"
+            drillName={DRILL_NAME}
+            onClick={onOpenNote}
+            icon="📖"
+            hidePoints
           />
         </div>
-      </section>
-
-      {/* 暗記ノート */}
-      <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          暗記ノート
-        </h2>
-        <ModeButton
-          label="対応表・覚え方を見る"
-          mode="note"
-          drillName={DRILL_NAME}
-          onClick={onOpenNote}
-          hidePoints
-        />
       </section>
     </>
   )

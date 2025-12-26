@@ -77,28 +77,21 @@ function StartScreen({
         </div>
       </section>
 
-      {/* 実力テスト */}
+      {/* モードを選択 */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
           <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          実力テスト
-        </h2>
-        <ModeButton
-          label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
-          mode="challenge"
-          drillName={DRILL_NAME}
-          onClick={onStartChallenge}
-          hidePoints
-        />
-      </section>
-
-      {/* 練習モード選択 */}
-      <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          練習モード
+          モードを選択
         </h2>
         <div className="space-y-3">
+          <ModeButton
+            label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
+            mode="challenge"
+            drillName={DRILL_NAME}
+            onClick={onStartChallenge}
+            icon="⏱️"
+            hidePoints
+          />
           <ModeButton
             label="「た」〜「も」特訓モード"
             mode="ta-mo"
@@ -106,6 +99,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('ta-mo')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="1文字モード"
@@ -114,6 +108,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('single')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="単語モード"
@@ -122,6 +117,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('word')
             }}
+            icon="✏️"
           />
         </div>
       </section>

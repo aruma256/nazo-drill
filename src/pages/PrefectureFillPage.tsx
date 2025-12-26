@@ -66,6 +66,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('normal')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="1県確定特訓"
@@ -74,6 +75,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('one-prefecture')
             }}
+            icon="✏️"
           />
           <ModeButton
             label="2県確定特訓"
@@ -82,6 +84,7 @@ function StartScreen({
             onClick={() => {
               onStartDrill('two-prefectures')
             }}
+            icon="✏️"
           />
         </div>
       </section>
