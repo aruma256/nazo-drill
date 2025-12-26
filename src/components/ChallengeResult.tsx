@@ -187,7 +187,9 @@ export function ChallengeResult({
           <h2 className="font-display mb-1 text-2xl font-black text-gray-800">
             結果発表
           </h2>
-          <p className="mb-6 text-sm text-gray-500">{timeLimit}秒チャレンジ</p>
+          <p className="mb-6 text-sm text-gray-500">
+            実力テスト（{timeLimit}秒）
+          </p>
 
           {/* Score display */}
           <div className="mb-8">

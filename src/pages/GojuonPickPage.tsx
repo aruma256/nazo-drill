@@ -85,7 +85,7 @@ function StartScreen({
         </h2>
         <div className="space-y-3">
           <ModeButton
-            label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
+            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
             mode="challenge"
             drillName={DRILL_NAME}
             onClick={onStartChallenge}
