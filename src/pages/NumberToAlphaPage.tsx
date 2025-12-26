@@ -311,18 +311,16 @@ function StartScreen({
       {/* 実力テスト */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-amber-500"></span>
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           実力テスト
         </h2>
-        <button
+        <ModeButton
+          label={`${CHALLENGE_TIME_LIMIT}秒チャレンジ`}
+          mode="challenge"
+          drillName={DRILL_NAME}
           onClick={onStartChallenge}
-          className="w-full cursor-pointer rounded-lg border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 text-lg font-bold text-amber-700 shadow-md transition-all duration-200 hover:border-amber-500 hover:from-amber-100 hover:to-orange-100 hover:shadow-lg"
-        >
-          {CHALLENGE_TIME_LIMIT}秒チャレンジ
-          <span className="mt-1 block text-sm font-normal text-amber-600">
-            単語モードで何問正解できるか挑戦！
-          </span>
-        </button>
+          hidePoints
+        />
       </section>
 
       {/* モード選択 */}
@@ -362,18 +360,16 @@ function StartScreen({
       {/* 暗記ノート */}
       <section className="mb-6">
         <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-green-500"></span>
+          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
           暗記ノート
         </h2>
-        <button
+        <ModeButton
+          label="対応表・覚え方を見る"
+          mode="note"
+          drillName={DRILL_NAME}
           onClick={onOpenNote}
-          className="w-full cursor-pointer rounded-lg border-2 border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 text-lg font-bold text-green-700 shadow-md transition-all duration-200 hover:border-green-500 hover:from-green-100 hover:to-emerald-100 hover:shadow-lg"
-        >
-          対応表・覚え方を見る
-          <span className="mt-1 block text-sm font-normal text-green-600">
-            EJOTYの覚え方や語呂合わせなど
-          </span>
-        </button>
+          hidePoints
+        />
       </section>
     </>
   )

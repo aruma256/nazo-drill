@@ -13,6 +13,8 @@ interface ModeButtonProps {
   disabled?: boolean
   /** アイコン（オプション） */
   icon?: React.ReactNode
+  /** ポイント表示を非表示にする */
+  hidePoints?: boolean
 }
 
 /**
@@ -27,6 +29,7 @@ export function ModeButton({
   onClick,
   disabled = false,
   icon,
+  hidePoints = false,
 }: ModeButtonProps) {
   const { getCorrectCount } = useDrillStorage(drillName)
   const points = getCorrectCount(mode)
@@ -76,19 +79,21 @@ export function ModeButton({
           </span>
         </div>
 
-        {/* Points badge */}
         <div className="flex items-center gap-2">
-          <div
-            className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-            style={{
-              backgroundColor:
-                points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-              color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
-            }}
-          >
-            <span className="font-mono">{points}</span>
-            <span className="text-xs opacity-70">pt</span>
-          </div>
+          {/* Points badge */}
+          {!hidePoints && (
+            <div
+              className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+              style={{
+                backgroundColor:
+                  points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
+                color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
+              }}
+            >
+              <span className="font-mono">{points}</span>
+              <span className="text-xs opacity-70">pt</span>
+            </div>
+          )}
 
           {/* Arrow indicator */}
           <svg
