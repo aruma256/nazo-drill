@@ -9,6 +9,7 @@ import {
   ChallengeTimer,
   ChallengeResult,
   ChallengeCountdownModal,
+  SectionHeader,
 } from '../components'
 import {
   useCountdownTimer,
@@ -167,10 +168,7 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
       <div className="space-y-6">
         {/* 暗記のステップ */}
         <section className="rounded-lg bg-white/70 p-4">
-          <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-            <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-            覚え方のステップ
-          </h2>
+          <SectionHeader>覚え方のステップ</SectionHeader>
           <div className="space-y-3 text-gray-700">
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
@@ -207,10 +205,7 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
 
         {/* 対応表 */}
         <section className="rounded-lg bg-white/70 p-4">
-          <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-            <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-            対応表
-          </h2>
+          <SectionHeader>対応表</SectionHeader>
           <div className="overflow-hidden rounded-lg border border-gray-200">
             <table className="w-full">
               <thead>
@@ -283,10 +278,7 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          ルール
-        </h2>
+        <SectionHeader>ルール</SectionHeader>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>数字をアルファベットに変換して答えます。</p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
@@ -311,10 +303,7 @@ function StartScreen({
 
       {/* モードを選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          モードを選択
-        </h2>
+        <SectionHeader>モードを選択</SectionHeader>
         <div className="space-y-3">
           <ModeButton
             label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}

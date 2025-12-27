@@ -10,6 +10,7 @@ import {
   ChallengeTimer,
   ChallengeResult,
   ChallengeCountdownModal,
+  SectionHeader,
 } from '../components'
 import {
   useCountdownTimer,
@@ -46,10 +47,7 @@ function StartScreen({
     <>
       {/* ルール説明 */}
       <section className="mb-8">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          ルール
-        </h2>
+        <SectionHeader>ルール</SectionHeader>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>五十音表の中に数字が書かれたマスがあります。</p>
           <p>
@@ -80,10 +78,7 @@ function StartScreen({
 
       {/* モードを選択 */}
       <section className="mb-6">
-        <h2 className="mb-3 flex items-center text-lg font-bold text-drill-primary-dark">
-          <span className="mr-2 h-5 w-1 rounded bg-drill-primary"></span>
-          モードを選択
-        </h2>
+        <SectionHeader>モードを選択</SectionHeader>
         <div className="space-y-3">
           <ModeButton
             label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
