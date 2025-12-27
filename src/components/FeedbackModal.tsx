@@ -126,7 +126,6 @@ export function FeedbackModal({
               <div className="font-display text-3xl font-black text-emerald-600">
                 正解！
               </div>
-              <div className="mt-2 text-gray-500">すばらしい！</div>
             </>
           ) : (
             <>
@@ -134,7 +133,6 @@ export function FeedbackModal({
               <div className="font-display text-3xl font-black text-amber-600">
                 もう一度！
               </div>
-              <div className="mt-2 text-gray-500">正解するまでがんばろう</div>
             </>
           )}
 
