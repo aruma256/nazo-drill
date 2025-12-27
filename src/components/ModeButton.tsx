@@ -15,6 +15,8 @@ interface ModeButtonProps {
   icon?: React.ReactNode
   /** ポイント表示を非表示にする */
   hidePoints?: boolean
+  /** 強調スタイル（実力テスト用） */
+  variant?: 'default' | 'highlight'
 }
 
 /**
@@ -30,6 +32,7 @@ export function ModeButton({
   disabled = false,
   icon,
   hidePoints = false,
+  variant = 'default',
 }: ModeButtonProps) {
   const { getCorrectCount } = useDrillStorage(drillName)
   const points = getCorrectCount(mode)
@@ -51,21 +54,37 @@ export function ModeButton({
     )
   }
 
+  const isHighlight = variant === 'highlight'
+
   return (
     <button
       onClick={onClick}
-      className="group relative w-full overflow-hidden rounded-2xl border-2 border-transparent bg-white px-6 py-5 text-left shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--drill-primary)] hover:shadow-xl active:scale-[0.98]"
+      className={`group relative w-full overflow-hidden rounded-2xl px-6 py-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] ${
+        isHighlight
+          ? 'border-2 shadow-lg'
+          : 'border-2 border-transparent bg-white shadow-lg hover:border-[var(--drill-primary)]'
+      }`}
+      style={
+        isHighlight
+          ? {
+              backgroundColor: 'var(--drill-primary-light)',
+              borderColor: 'var(--drill-primary)',
+            }
+          : undefined
+      }
     >
-      {/* Gradient border effect on hover */}
-      <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <div
-          className="absolute inset-0 rounded-2xl"
-          style={{
-            background:
-              'linear-gradient(135deg, var(--drill-primary-light) 0%, transparent 50%)',
-          }}
-        />
-      </div>
+      {/* Default: Gradient border effect on hover */}
+      {!isHighlight && (
+        <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div
+            className="absolute inset-0 rounded-2xl"
+            style={{
+              background:
+                'linear-gradient(135deg, var(--drill-primary-light) 0%, transparent 50%)',
+            }}
+          />
+        </div>
+      )}
 
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -74,7 +93,13 @@ export function ModeButton({
               {icon}
             </span>
           )}
-          <span className="font-display text-lg font-bold text-gray-800 transition-colors duration-300 group-hover:text-drill-primary-dark">
+          <span
+            className={`font-display text-lg font-bold transition-colors duration-300 ${
+              isHighlight
+                ? 'text-drill-primary-dark'
+                : 'text-gray-800 group-hover:text-drill-primary-dark'
+            }`}
+          >
             {label}
           </span>
         </div>
@@ -97,7 +122,11 @@ export function ModeButton({
 
           {/* Arrow indicator */}
           <svg
-            className="h-5 w-5 text-gray-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--drill-primary)]"
+            className={`h-5 w-5 transition-all duration-300 group-hover:translate-x-1 ${
+              isHighlight
+                ? 'text-drill-primary group-hover:text-drill-primary-dark'
+                : 'text-gray-400 group-hover:text-[var(--drill-primary)]'
+            }`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -322,6 +322,7 @@ function StartScreen({
             onClick={onStartChallenge}
             icon="⏱️"
             hidePoints
+            variant="highlight"
           />
           <ModeButton
             label={'"EJOTY"特訓モード'}

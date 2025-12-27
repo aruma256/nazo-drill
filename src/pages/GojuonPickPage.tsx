@@ -91,6 +91,7 @@ function StartScreen({
             onClick={onStartChallenge}
             icon="⏱️"
             hidePoints
+            variant="highlight"
           />
           <ModeButton
             label="「た」〜「も」特訓モード"
