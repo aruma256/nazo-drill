@@ -59,7 +59,7 @@ export function ModeButton({
   return (
     <button
       onClick={onClick}
-      className={`group relative w-full overflow-hidden rounded-2xl px-6 py-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] ${
+      className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl px-6 py-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] ${
         isHighlight
           ? 'border-2 shadow-lg'
           : 'border-2 border-transparent bg-white shadow-lg hover:border-[var(--drill-primary)]'
