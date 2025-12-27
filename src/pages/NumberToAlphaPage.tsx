@@ -325,6 +325,9 @@ function StartScreen({
             hidePoints
             variant="highlight"
           />
+
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+
           <ModeButton
             label={'"EJOTY"特訓モード'}
             mode="ejoty"
@@ -352,6 +355,9 @@ function StartScreen({
             }}
             icon="✏️"
           />
+
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+
           <ModeButton
             label="暗記ノート"
             mode="note"

@@ -94,6 +94,9 @@ function StartScreen({
             hidePoints
             variant="highlight"
           />
+
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+
           <ModeButton
             label="「た」〜「も」特訓モード"
             mode="ta-mo"
