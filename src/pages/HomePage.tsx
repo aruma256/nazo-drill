@@ -74,11 +74,9 @@ export function HomePage() {
                 size="small"
                 className="mb-2"
               />
-              <div className="mt-2 flex items-center justify-center gap-2 text-sm text-gray-500">
+              <div className="mt-2 text-center text-sm text-gray-500">
                 <span>答え：</span>
-                <span className="rounded-lg bg-rose-100 px-3 py-1 font-bold text-rose-600">
-                  くるま
-                </span>
+                <span className="font-bold">くるま</span>
               </div>
             </DrillCard>
           </div>
@@ -119,11 +117,9 @@ export function HomePage() {
                 <div className="font-display mb-2 text-2xl font-bold tracking-widest text-gray-800">
                   ◯うき◯◯
                 </div>
-                <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                <div className="text-sm text-gray-500">
                   <span>答え：</span>
-                  <span className="rounded-lg bg-amber-100 px-3 py-1 font-bold text-amber-600">
-                    とうきょう
-                  </span>
+                  <span className="font-bold">とうきょう</span>
                 </div>
               </div>
             </DrillCard>

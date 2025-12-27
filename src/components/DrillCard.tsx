@@ -123,11 +123,9 @@ export function DrillExample({ question, answer }: DrillExampleProps) {
       <div className="font-mono mb-2 text-2xl font-bold text-gray-800">
         {question}
       </div>
-      <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+      <div className="text-sm text-gray-500">
         <span>答え：</span>
-        <span className="font-mono rounded-lg bg-emerald-100 px-3 py-1 font-bold text-emerald-600">
-          {answer}
-        </span>
+        <span className="font-mono font-bold">{answer}</span>
       </div>
     </div>
   )
