@@ -29,9 +29,7 @@ export interface ScoreStats {
  */
 export interface Feedback {
   /** フィードバックの種類 */
-  type: 'correct' | 'incorrect' | 'retry'
-  /** 正解の答え（不正解の場合に表示） */
-  correctAnswer?: string
+  type: 'correct' | 'retry'
 }
 
 /**
