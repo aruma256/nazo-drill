@@ -27,7 +27,7 @@ function AnimatedCheckmark() {
           style={{
             strokeDasharray: 30,
             strokeDashoffset: 30,
-            animation: 'checkmark-draw 0.5s ease-out forwards 0.2s',
+            animation: 'checkmark-draw 0.2s ease-out forwards 0.1s',
           }}
         />
       </svg>
@@ -202,7 +202,7 @@ export function FeedbackModal({
       />
 
       {/* モーダル本体 */}
-      <div className="animate-bounce-in relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-2xl">
+      <div className="animate-scale-in relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-white text-center shadow-2xl">
         {/* Top decoration */}
         <div
           className="h-2"

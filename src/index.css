@@ -233,7 +233,7 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
+  animation: fade-in 0.15s ease-out forwards;
 }
 
 .animate-scale-in {
@@ -241,11 +241,11 @@ body {
 }
 
 .animate-bounce-in {
-  animation: bounce-in 0.6s ease-out forwards;
+  animation: bounce-in 0.3s ease-out forwards;
 }
 
 .animate-shake {
-  animation: shake 0.5s ease-in-out;
+  animation: shake 0.25s ease-in-out;
 }
 
 .animate-countdown-pulse {
@@ -257,7 +257,7 @@ body {
 }
 
 .animate-spin-once {
-  animation: spin-once 0.5s ease-out forwards;
+  animation: spin-once 0.25s ease-out forwards;
 }
 
 /* Staggered animation delays */
