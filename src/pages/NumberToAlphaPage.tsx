@@ -424,18 +424,19 @@ function DrillScreen({
       incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
-      setFeedback({
-        type: 'incorrect',
-        correctAnswer: currentQuestion?.answer,
-      })
+      setFeedback({ type: 'retry' })
     }
     setUserAnswer('')
   }
 
   const handleNext = () => {
+    const wasCorrect = feedback?.type === 'correct'
     setFeedback(null)
-    setQuestionCount((c) => c + 1)
-    presentQuestion()
+    if (wasCorrect) {
+      setQuestionCount((c) => c + 1)
+      presentQuestion()
+    }
+    // リトライの場合は同じ問題を続ける
   }
 
   // EJOTYモードで6問目以降にヒントをフェードアウト
@@ -482,14 +483,12 @@ function DrillScreen({
       <FeedbackModal
         isOpen={!!feedback}
         type={feedback?.type ?? 'correct'}
-        correctAnswer={feedback?.correctAnswer}
         hintContent={
-          currentQuestion
+          feedback?.type === 'correct' && currentQuestion
             ? `${currentQuestion.answer} = ${currentQuestion.question}`
             : undefined
         }
         onNext={handleNext}
-        delayOnIncorrect={3000}
       />
     </>
   )

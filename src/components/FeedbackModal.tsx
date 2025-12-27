@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState } from 'react'
 
 interface FeedbackModalProps {
   isOpen: boolean
-  type: 'correct' | 'incorrect'
+  type: 'correct' | 'incorrect' | 'retry'
   correctAnswer?: string
   hintContent?: string
   onNext: () => void
@@ -49,6 +49,26 @@ function AnimatedXMark() {
         strokeLinejoin="round"
       >
         <path d="M6 6l12 12M6 18L18 6" />
+      </svg>
+    </div>
+  )
+}
+
+// Animated retry icon
+function AnimatedRetryMark() {
+  return (
+    <div className="animate-spin-once mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-200">
+      <svg
+        className="h-12 w-12 text-white"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
       </svg>
     </div>
   )
@@ -175,7 +195,9 @@ export function FeedbackModal({
           background:
             type === 'correct'
               ? 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%)'
-              : 'radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
+              : type === 'retry'
+                ? 'radial-gradient(circle at center, rgba(245, 158, 11, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%)'
+                : 'radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
         }}
       />
 
@@ -188,7 +210,9 @@ export function FeedbackModal({
             background:
               type === 'correct'
                 ? 'linear-gradient(90deg, #10b981, #34d399, #6ee7b7)'
-                : 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)',
+                : type === 'retry'
+                  ? 'linear-gradient(90deg, #f59e0b, #fbbf24, #fcd34d)'
+                  : 'linear-gradient(90deg, #ef4444, #f87171, #fca5a5)',
           }}
         />
 
@@ -201,6 +225,14 @@ export function FeedbackModal({
                 正解！
               </div>
               <div className="mt-2 text-gray-500">すばらしい！</div>
+            </>
+          ) : type === 'retry' ? (
+            <>
+              <AnimatedRetryMark />
+              <div className="font-display text-3xl font-black text-amber-600">
+                もう一度！
+              </div>
+              <div className="mt-2 text-gray-500">正解するまでがんばろう</div>
             </>
           ) : (
             <>
@@ -232,7 +264,9 @@ export function FeedbackModal({
             <ProgressBar durationMs={delayOnIncorrect} />
           ) : (
             <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-400">
-              <span>タップして次へ</span>
+              <span>
+                {type === 'retry' ? 'タップしてもう一度' : 'タップして次へ'}
+              </span>
               <svg
                 className="h-4 w-4 animate-pulse"
                 fill="none"
@@ -243,7 +277,11 @@ export function FeedbackModal({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 5l7 7-7 7"
+                  d={
+                    type === 'retry'
+                      ? 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+                      : 'M9 5l7 7-7 7'
+                  }
                 />
               </svg>
             </div>

@@ -182,17 +182,18 @@ function DrillScreen({
       incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
-      setFeedback({
-        type: 'incorrect',
-        correctAnswer: currentQuestion?.answer,
-      })
+      setFeedback({ type: 'retry' })
     }
     setUserAnswer('')
   }
 
   const handleNext = () => {
+    const wasCorrect = feedback?.type === 'correct'
     setFeedback(null)
-    presentQuestion()
+    if (wasCorrect) {
+      presentQuestion()
+    }
+    // リトライの場合は同じ問題を続ける
   }
 
   // 現在の問題のマークされたセル
@@ -227,9 +228,7 @@ function DrillScreen({
       <FeedbackModal
         isOpen={!!feedback}
         type={feedback?.type ?? 'correct'}
-        correctAnswer={feedback?.correctAnswer}
         onNext={handleNext}
-        delayOnIncorrect={3000}
       />
     </>
   )
