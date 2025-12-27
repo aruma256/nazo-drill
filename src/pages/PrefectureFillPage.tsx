@@ -104,6 +104,8 @@ function DrillScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  // 2県確定モード用: 1つ目の回答を保持
+  const [firstAnswer, setFirstAnswer] = useState<string | null>(null)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -153,6 +155,32 @@ function DrillScreen({
   const handleSubmit = () => {
     if (!userAnswer.trim()) return
 
+    // 2県確定モードの場合、2段階で回答
+    if (mode === 'two-prefectures') {
+      if (firstAnswer === null) {
+        // 1つ目の回答を保存
+        setFirstAnswer(userAnswer.trim())
+        setUserAnswer('')
+        return
+      }
+      // 2つ目の回答 → 結合して判定
+      const combinedAnswer = `${firstAnswer} ${userAnswer.trim()}`
+      const isCorrect = checkUserAnswer(combinedAnswer)
+      if (isCorrect) {
+        incrementCorrectCount(mode)
+        setFeedback({ type: 'correct' })
+      } else {
+        setFeedback({
+          type: 'incorrect',
+          correctAnswer: currentQuestion?.answer,
+        })
+      }
+      setUserAnswer('')
+      setFirstAnswer(null)
+      return
+    }
+
+    // 通常モード・1県確定モード
     const isCorrect = checkUserAnswer(userAnswer)
     if (isCorrect) {
       incrementCorrectCount(mode)
@@ -168,6 +196,7 @@ function DrillScreen({
 
   const handleNext = () => {
     setFeedback(null)
+    setFirstAnswer(null)
     presentQuestion()
   }
 
@@ -186,7 +215,7 @@ function DrillScreen({
   // プレースホルダーを取得
   const getPlaceholder = () => {
     if (mode === 'two-prefectures') {
-      return '2県をスペース区切りで'
+      return firstAnswer === null ? '県名を1つ入力' : 'もう1つ入力'
     }
     return 'ひらがなで入力'
   }
@@ -212,6 +241,15 @@ function DrillScreen({
           )}
         </div>
 
+        {/* 2県確定モード: 回答済みの県を表示 */}
+        {mode === 'two-prefectures' && firstAnswer && (
+          <div className="mb-3 flex items-center justify-center gap-2">
+            <span className="rounded-full bg-drill-primary/20 px-3 py-1 text-sm font-medium text-drill-primary-dark">
+              {firstAnswer} ✓
+            </span>
+          </div>
+        )}
+
         <AnswerInputArea
           value={userAnswer}
           onChange={setUserAnswer}
@@ -219,7 +257,7 @@ function DrillScreen({
           onNext={handleNext}
           feedback={feedback}
           placeholder={getPlaceholder()}
-          maxLength={mode === 'two-prefectures' ? 20 : 10}
+          maxLength={10}
         />
       </div>
 
