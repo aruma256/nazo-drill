@@ -65,7 +65,7 @@ export function ChallengeCountdownModal({
               'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
           }}
         >
-          <span className="font-display text-8xl font-black tabular-nums text-white">
+          <span className="font-mono text-8xl font-black text-white">
             {count}
           </span>
         </div>
