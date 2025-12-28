@@ -17,7 +17,7 @@ const DRILL_NAME = 'original-nazo'
 const QUESTIONS = [
   {
     id: 'q1',
-    label: '問題1',
+    label: 'ナゾ1',
     image: '/images/original-nazo/q1.jpg',
     answer: 'think',
   },
