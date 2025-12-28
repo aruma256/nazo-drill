@@ -17,8 +17,8 @@ import {
   useDrillStorage,
   type Feedback,
   type HistoryEntry,
+  type Question,
 } from '../hooks'
-import type { Question } from '../hooks/useDrill'
 import {
   generateNormalQuestion,
   generateOnePrefectureQuestion,
