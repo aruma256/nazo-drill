@@ -131,8 +131,9 @@ export function ModeButton({
                   color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
                 }}
               >
+                <span className="text-xs opacity-70">累計</span>
                 <span className="font-mono">{points}</span>
-                <span className="text-xs opacity-70">pt</span>
+                <span className="text-xs opacity-70">問</span>
               </div>
             ))}
 
