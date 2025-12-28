@@ -3,7 +3,7 @@ import type { Question } from '../../hooks/useDrill'
 import { ASCII_CODE_A } from '../../utils/conversion'
 
 /** アルファベットシフトのモード */
-export type AlphaShiftMode = 'plus-training' | 'minus-training'
+export type AlphaShiftMode = 'plus-training' | 'minus-training' | 'challenge'
 
 /**
  * モードごとのシフト範囲を取得
@@ -75,5 +75,29 @@ export function generateAlphaShiftQuestion(
       answer,
     },
     newLastQuestion: questionText,
+  }
+}
+
+/**
+ * 実力テスト用: +1〜+3と-1〜-3を交互に出題
+ * @param lastQuestion - 前回の問題文
+ * @param isPlus - trueなら+シフト、falseなら-シフト
+ * @returns 問題オブジェクトと新しい状態
+ */
+export function generateChallengeQuestion(
+  lastQuestion: string | null,
+  isPlus: boolean,
+): {
+  question: Question
+  newLastQuestion: string
+  nextIsPlus: boolean
+} {
+  const mode: AlphaShiftMode = isPlus ? 'plus-training' : 'minus-training'
+  const result = generateAlphaShiftQuestion(lastQuestion, mode)
+
+  return {
+    question: result.question,
+    newLastQuestion: result.newLastQuestion,
+    nextIsPlus: !isPlus, // 次回は逆
   }
 }

@@ -7,24 +7,37 @@ import {
   AnswerInputArea,
   DrillMiniHeader,
   SectionHeader,
+  ChallengeTimer,
+  ChallengeResult,
+  ChallengeCountdownModal,
 } from '../components'
-import { useDrill, useDrillStorage, type Feedback } from '../hooks'
+import {
+  useCountdownTimer,
+  useDrill,
+  useDrillStorage,
+  type Feedback,
+  type HistoryEntry,
+} from '../hooks'
 import {
   generateAlphaShiftQuestion,
+  generateChallengeQuestion,
   type AlphaShiftMode,
 } from '../drills/alphaShift'
 
 const DRILL_NAME = 'abc-shift'
+const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill'
+type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
 
 /**
  * スタート画面
  */
 function StartScreen({
   onStartDrill,
+  onStartChallenge,
 }: {
   onStartDrill: (mode: AlphaShiftMode) => void
+  onStartChallenge: () => void
 }) {
   return (
     <>
@@ -57,6 +70,17 @@ function StartScreen({
       <section className="mb-6">
         <SectionHeader>モードを選択</SectionHeader>
         <div className="space-y-3">
+          <ModeButton
+            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            mode="challenge"
+            drillName={DRILL_NAME}
+            onClick={onStartChallenge}
+            icon="⏱️"
+            variant="challenge"
+          />
+
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+
           <ModeButton
             label="+1～+3 特訓"
             mode="plus-training"
@@ -172,16 +196,145 @@ function DrillScreen({
 }
 
 /**
+ * チャレンジ画面（実力テストモード）
+ * +1〜+3と-1〜-3を交互に出題
+ */
+function ChallengeScreen({
+  onTimeUp,
+  onBack,
+}: {
+  onTimeUp: (score: number, history: HistoryEntry[]) => void
+  onBack: () => void
+}) {
+  const [userAnswer, setUserAnswer] = useState('')
+  const [score, setScore] = useState(0)
+  const remainingTime = useCountdownTimer(CHALLENGE_TIME_LIMIT)
+  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+
+  // 前回の問題を追跡するRef
+  const lastQuestionRef = useRef<string | null>(null)
+  // +と-の交互出題を管理
+  const isPlusRef = useRef<boolean>(true)
+
+  // 問題生成関数（交互出題）
+  const generateQuestion = useCallback(() => {
+    const result = generateChallengeQuestion(
+      lastQuestionRef.current,
+      isPlusRef.current,
+    )
+    lastQuestionRef.current = result.newLastQuestion
+    isPlusRef.current = result.nextIsPlus
+    return result.question
+  }, [])
+
+  const { currentQuestion, presentQuestion, checkAnswer, history } =
+    useDrill(generateQuestion)
+
+  // ドリル開始時に最初の問題を出題
+  useEffect(() => {
+    presentQuestion()
+  }, [presentQuestion])
+
+  // タイムアップ時の処理
+  useEffect(() => {
+    if (remainingTime === 0) {
+      onTimeUp(score, history)
+    }
+  }, [remainingTime, score, history, onTimeUp])
+
+  const handleSubmit = () => {
+    if (!userAnswer.trim() || remainingTime === 0) return
+
+    const isCorrect = checkAnswer(userAnswer)
+    if (isCorrect) {
+      setScore((prev) => prev + 1)
+      incrementCorrectCount('challenge')
+    }
+    presentQuestion()
+    setUserAnswer('')
+  }
+
+  return (
+    <>
+      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
+
+      {/* 問題エリア */}
+      <div className="rounded-lg bg-white/70 p-4">
+        {/* タイマー */}
+        <ChallengeTimer
+          remainingSeconds={remainingTime}
+          totalSeconds={CHALLENGE_TIME_LIMIT}
+        />
+
+        {/* スコア表示 */}
+        <div className="mb-4 text-center">
+          <span className="text-sm text-gray-500">正解数</span>
+          <span className="ml-2 text-2xl font-bold text-drill-primary">
+            {score}
+          </span>
+        </div>
+
+        {/* 問題表示 */}
+        <div className="mb-4 text-center">
+          <div className="text-5xl font-bold text-drill-primary-dark">
+            {currentQuestion?.question ?? '--'}
+          </div>
+        </div>
+
+        {/* 回答入力エリア（フィードバックなし、即時次問題） */}
+        <AnswerInputArea
+          value={userAnswer}
+          onChange={setUserAnswer}
+          onSubmit={handleSubmit}
+          placeholder="答えを入力"
+          maxLength={1}
+          inputTransform={(value) => value.toUpperCase()}
+          inputClassName="uppercase"
+          instantMode
+        />
+      </div>
+    </>
+  )
+}
+
+/**
  * アルファベットシフトページ
  */
 export function AlphaShiftPage() {
   const [screen, setScreen] = useState<Screen>('start')
   const [currentMode, setCurrentMode] =
     useState<AlphaShiftMode>('plus-training')
+  const [challengeScore, setChallengeScore] = useState(0)
+  const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
+  const { updateHighScore } = useDrillStorage(DRILL_NAME)
 
   const handleStartDrill = (mode: AlphaShiftMode) => {
     setCurrentMode(mode)
     setScreen('drill')
+  }
+
+  const handleStartChallenge = () => {
+    setScreen('countdown')
+  }
+
+  const handleCountdownComplete = () => {
+    setScreen('challenge')
+  }
+
+  const handleChallengeTimeUp = useCallback(
+    (score: number, history: HistoryEntry[]) => {
+      setChallengeScore(score)
+      setChallengeHistory(history)
+      updateHighScore('challenge', score)
+      setScreen('challengeResult')
+    },
+    [updateHighScore],
+  )
+
+  const handleRetryChallenge = () => {
+    setChallengeScore(0)
+    setChallengeHistory([])
+    setScreen('countdown')
   }
 
   const handleBackToStart = () => {
@@ -196,11 +349,33 @@ export function AlphaShiftPage() {
             title="アルファベットシフト"
             description="アルファベットをずらして変換しよう"
           />
-          <StartScreen onStartDrill={handleStartDrill} />
+          <StartScreen
+            onStartDrill={handleStartDrill}
+            onStartChallenge={handleStartChallenge}
+          />
         </>
       )}
       {screen === 'drill' && (
         <DrillScreen onBack={handleBackToStart} mode={currentMode} />
+      )}
+      {screen === 'countdown' && (
+        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
+      )}
+      {screen === 'challenge' && (
+        <ChallengeScreen
+          onTimeUp={handleChallengeTimeUp}
+          onBack={handleBackToStart}
+        />
+      )}
+      {screen === 'challengeResult' && (
+        <ChallengeResult
+          score={challengeScore}
+          timeLimit={CHALLENGE_TIME_LIMIT}
+          drillName="ABCシフト"
+          history={challengeHistory}
+          onRetry={handleRetryChallenge}
+          onBack={handleBackToStart}
+        />
       )}
     </Layout>
   )
