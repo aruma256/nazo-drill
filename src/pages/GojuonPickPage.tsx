@@ -86,8 +86,7 @@ function StartScreen({
             drillName={DRILL_NAME}
             onClick={onStartChallenge}
             icon="⏱️"
-            hidePoints
-            variant="highlight"
+            variant="challenge"
           />
 
           <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
@@ -336,6 +335,7 @@ export function GojuonPickPage() {
   const [mode, setMode] = useState<DrillMode>('word')
   const [challengeScore, setChallengeScore] = useState(0)
   const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
+  const { updateHighScore } = useDrillStorage(DRILL_NAME)
 
   const handleStartDrill = (selectedMode: DrillMode) => {
     setMode(selectedMode)
@@ -354,9 +354,10 @@ export function GojuonPickPage() {
     (score: number, history: HistoryEntry[]) => {
       setChallengeScore(score)
       setChallengeHistory(history)
+      updateHighScore('challenge', score)
       setScreen('challengeResult')
     },
-    [],
+    [updateHighScore],
   )
 
   const handleRetryChallenge = () => {

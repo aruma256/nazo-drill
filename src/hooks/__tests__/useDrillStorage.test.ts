@@ -109,4 +109,72 @@ describe('useDrillStorage', () => {
       })
     })
   })
+
+  describe('getHighScore', () => {
+    it('should return 0 when no data exists', () => {
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      expect(result.current.getHighScore('challenge')).toBe(0)
+    })
+
+    it('should return the stored high score', () => {
+      localStorage.setItem('test-drill-challenge-highScore', '15')
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      expect(result.current.getHighScore('challenge')).toBe(15)
+    })
+  })
+
+  describe('updateHighScore', () => {
+    it('should save the score when no previous high score exists', () => {
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      let newHighScore = 0
+      act(() => {
+        newHighScore = result.current.updateHighScore('challenge', 10)
+      })
+
+      expect(newHighScore).toBe(10)
+      expect(localStorage.getItem('test-drill-challenge-highScore')).toBe('10')
+    })
+
+    it('should update the score when it is higher than the current high score', () => {
+      localStorage.setItem('test-drill-challenge-highScore', '5')
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      let newHighScore = 0
+      act(() => {
+        newHighScore = result.current.updateHighScore('challenge', 10)
+      })
+
+      expect(newHighScore).toBe(10)
+      expect(localStorage.getItem('test-drill-challenge-highScore')).toBe('10')
+    })
+
+    it('should not update the score when it is lower than the current high score', () => {
+      localStorage.setItem('test-drill-challenge-highScore', '15')
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      let returnedScore = 0
+      act(() => {
+        returnedScore = result.current.updateHighScore('challenge', 10)
+      })
+
+      expect(returnedScore).toBe(15)
+      expect(localStorage.getItem('test-drill-challenge-highScore')).toBe('15')
+    })
+
+    it('should not update the score when it is equal to the current high score', () => {
+      localStorage.setItem('test-drill-challenge-highScore', '10')
+      const { result } = renderHook(() => useDrillStorage('test-drill'))
+
+      let returnedScore = 0
+      act(() => {
+        returnedScore = result.current.updateHighScore('challenge', 10)
+      })
+
+      expect(returnedScore).toBe(10)
+      expect(localStorage.getItem('test-drill-challenge-highScore')).toBe('10')
+    })
+  })
 })

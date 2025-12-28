@@ -7,6 +7,10 @@ function getCorrectCountKey(drillName: string, mode: string): string {
   return `${drillName}-${mode}-correctCount`
 }
 
+function getHighScoreKey(drillName: string, mode: string): string {
+  return `${drillName}-${mode}-highScore`
+}
+
 /**
  * ドリルの累計正答数をlocalStorageで管理するカスタムフック
  */
@@ -61,10 +65,41 @@ export function useDrillStorage(drillName: string) {
     [getCorrectCount],
   )
 
+  /**
+   * 最高記録を取得
+   */
+  const getHighScore = useCallback(
+    (mode: string): number => {
+      const key = getHighScoreKey(drillName, mode)
+      const value = localStorage.getItem(key)
+      return value ? parseInt(value, 10) : 0
+    },
+    [drillName],
+  )
+
+  /**
+   * 最高記録を更新（現在より高い場合のみ）
+   * @returns 更新後の最高記録
+   */
+  const updateHighScore = useCallback(
+    (mode: string, score: number): number => {
+      const currentHighScore = getHighScore(mode)
+      if (score > currentHighScore) {
+        const key = getHighScoreKey(drillName, mode)
+        localStorage.setItem(key, score.toString())
+        return score
+      }
+      return currentHighScore
+    },
+    [drillName, getHighScore],
+  )
+
   return {
     getCorrectCount,
     incrementCorrectCount,
     resetCorrectCount,
     getAllCorrectCounts,
+    getHighScore,
+    updateHighScore,
   }
 }

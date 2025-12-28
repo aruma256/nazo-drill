@@ -13,15 +13,17 @@ interface ModeButtonProps {
   disabled?: boolean
   /** アイコン（オプション） */
   icon?: React.ReactNode
-  /** ポイント表示を非表示にする */
+  /** ポイント/最高記録の表示を非表示にする（暗記ノート等） */
   hidePoints?: boolean
-  /** 強調スタイル（実力テスト用） */
-  variant?: 'default' | 'highlight'
+  /** 実力テストモード（最高記録を表示） */
+  variant?: 'default' | 'challenge'
 }
 
 /**
  * モード選択ボタン
- * - ポイント（累計正答数）を表示
+ * - 練習モード（default）: ポイント（累計正答数）を表示
+ * - 実力テスト（highlight）: 最高記録を表示
+ * - hidePoints=true: 何も表示しない
  * - disabled時はポイント非表示＆グレーアウト
  */
 export function ModeButton({
@@ -34,8 +36,10 @@ export function ModeButton({
   hidePoints = false,
   variant = 'default',
 }: ModeButtonProps) {
-  const { getCorrectCount } = useDrillStorage(drillName)
+  const { getCorrectCount, getHighScore } = useDrillStorage(drillName)
+  const isChallenge = variant === 'challenge'
   const points = getCorrectCount(mode)
+  const highScore = getHighScore(mode)
 
   if (disabled) {
     return (
@@ -54,18 +58,16 @@ export function ModeButton({
     )
   }
 
-  const isHighlight = variant === 'highlight'
-
   return (
     <button
       onClick={onClick}
       className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl px-6 py-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] ${
-        isHighlight
+        isChallenge
           ? 'border-2 shadow-lg'
           : 'border-2 border-transparent bg-white shadow-lg hover:border-[var(--drill-primary)]'
       }`}
       style={
-        isHighlight
+        isChallenge
           ? {
               backgroundColor: 'var(--drill-primary-light)',
               borderColor: 'var(--drill-primary)',
@@ -74,7 +76,7 @@ export function ModeButton({
       }
     >
       {/* Default: Gradient border effect on hover */}
-      {!isHighlight && (
+      {!isChallenge && (
         <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <div
             className="absolute inset-0 rounded-2xl"
@@ -95,7 +97,7 @@ export function ModeButton({
           )}
           <span
             className={`font-display text-lg font-bold transition-colors duration-300 ${
-              isHighlight
+              isChallenge
                 ? 'text-drill-primary-dark'
                 : 'text-gray-800 group-hover:text-drill-primary-dark'
             }`}
@@ -105,25 +107,39 @@ export function ModeButton({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Points badge */}
-          {!hidePoints && (
-            <div
-              className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-              style={{
-                backgroundColor:
-                  points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-                color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
-              }}
-            >
-              <span className="font-mono">{points}</span>
-              <span className="text-xs opacity-70">pt</span>
-            </div>
-          )}
+          {/* Badge: 練習モードはポイント、実力テストは最高記録 */}
+          {!hidePoints &&
+            (isChallenge ? (
+              <div
+                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+                style={{
+                  backgroundColor:
+                    highScore > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
+                  color: highScore > 0 ? 'var(--drill-primary)' : '#94a3b8',
+                }}
+              >
+                <span className="text-xs opacity-70">最高</span>
+                <span className="font-mono">{highScore}</span>
+                <span className="text-xs opacity-70">問</span>
+              </div>
+            ) : (
+              <div
+                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+                style={{
+                  backgroundColor:
+                    points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
+                  color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
+                }}
+              >
+                <span className="font-mono">{points}</span>
+                <span className="text-xs opacity-70">pt</span>
+              </div>
+            ))}
 
           {/* Arrow indicator */}
           <svg
             className={`h-5 w-5 transition-all duration-300 group-hover:translate-x-1 ${
-              isHighlight
+              isChallenge
                 ? 'text-drill-primary group-hover:text-drill-primary-dark'
                 : 'text-gray-400 group-hover:text-[var(--drill-primary)]'
             }`}

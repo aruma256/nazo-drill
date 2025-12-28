@@ -99,4 +99,53 @@ describe('ModeButton', () => {
     )
     expect(screen.queryByText(/pt/)).toBeNull()
   })
+
+  describe('variant="challenge"（実力テスト）の場合', () => {
+    it('最高記録が0の場合は「最高 0 問」が表示される', () => {
+      render(
+        <ModeButton
+          label="実力テスト（45秒）"
+          mode="challenge"
+          drillName="123-abc"
+          onClick={() => {}}
+          variant="challenge"
+        />,
+      )
+      expect(screen.getByText('最高')).toBeDefined()
+      expect(screen.getByText('0')).toBeDefined()
+      expect(screen.getByText('問')).toBeDefined()
+      expect(screen.queryByText('pt')).toBeNull()
+    })
+
+    it('localStorageに最高記録がある場合はその値が表示される', () => {
+      localStorage.setItem('123-abc-challenge-highScore', '8')
+      render(
+        <ModeButton
+          label="実力テスト（45秒）"
+          mode="challenge"
+          drillName="123-abc"
+          onClick={() => {}}
+          variant="challenge"
+        />,
+      )
+      expect(screen.getByText('最高')).toBeDefined()
+      expect(screen.getByText('8')).toBeDefined()
+      expect(screen.getByText('問')).toBeDefined()
+    })
+  })
+
+  it('hidePointsがtrueの場合はポイント/最高記録が表示されない', () => {
+    localStorage.setItem('123-abc-note-correctCount', '5')
+    render(
+      <ModeButton
+        label="暗記ノート"
+        mode="note"
+        drillName="123-abc"
+        onClick={() => {}}
+        hidePoints
+      />,
+    )
+    expect(screen.queryByText('pt')).toBeNull()
+    expect(screen.queryByText('問')).toBeNull()
+  })
 })
