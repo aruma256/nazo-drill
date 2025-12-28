@@ -58,13 +58,6 @@ export function HomePage() {
 
       {/* Drill Selection */}
       <main>
-        <h2 className="font-display mb-8 text-center text-2xl font-bold text-gray-800">
-          <span className="relative">
-            トレーニングテーマを選択
-            <span className="absolute -bottom-2 left-0 right-0 mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></span>
-          </span>
-        </h2>
-
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* 五十音表の文字拾い */}
           <div>

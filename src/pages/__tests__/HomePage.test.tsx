@@ -28,16 +28,6 @@ describe('HomePage', () => {
     expect(screen.getByText(/開発中のサイトです/)).toBeInTheDocument()
   })
 
-  it('「トレーニングテーマを選択」という見出しが表示される', () => {
-    renderHomePage()
-    expect(
-      screen.getByRole('heading', {
-        name: 'トレーニングテーマを選択',
-        level: 2,
-      }),
-    ).toBeInTheDocument()
-  })
-
   describe('ドリルカード', () => {
     it('五十音表の文字拾いへのリンクがある', () => {
       renderHomePage()
