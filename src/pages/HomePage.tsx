@@ -41,7 +41,7 @@ export function HomePage() {
               <p className="font-medium text-amber-800">開発中のサイトです</p>
             </div>
             <p className="mt-1 text-sm text-amber-600">
-              一部機能が未実装または変更される可能性があります
+              機能変更や進捗記録のリセットが行われる場合があります
               <br />
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLSev0krl22iOQIFQ-gxm6FRRQLkSd_uuTuLaeDxxp6IX6_3_fQ/viewform"
