@@ -37,11 +37,10 @@ export function ChallengeCountdownModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Animated background */}
       <div
-        className="absolute inset-0 transition-all duration-300"
+        className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at center,
-            ${count === 3 ? 'rgba(239, 68, 68, 0.3)' : count === 2 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.3)'} 0%,
-            rgba(0, 0, 0, 0.7) 100%)`,
+          background:
+            'radial-gradient(circle at center, color-mix(in srgb, var(--drill-primary) 30%, transparent) 0%, rgba(0, 0, 0, 0.7) 100%)',
         }}
       />
 
@@ -52,8 +51,7 @@ export function ChallengeCountdownModal({
           key={`ring-${animationKey}`}
           className="absolute inset-0 animate-ping rounded-full opacity-30"
           style={{
-            backgroundColor:
-              count === 3 ? '#ef4444' : count === 2 ? '#f59e0b' : '#10b981',
+            backgroundColor: 'var(--drill-primary)',
             transform: 'scale(2)',
           }}
         />
@@ -64,11 +62,7 @@ export function ChallengeCountdownModal({
           className="animate-countdown-pulse relative flex h-40 w-40 items-center justify-center rounded-full shadow-2xl"
           style={{
             background:
-              count === 3
-                ? 'linear-gradient(135deg, #ef4444, #dc2626)'
-                : count === 2
-                  ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-                  : 'linear-gradient(135deg, #10b981, #059669)',
+              'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
           }}
         >
           <span className="font-display text-8xl font-black tabular-nums text-white">
