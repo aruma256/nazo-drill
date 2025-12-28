@@ -194,7 +194,19 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
             </div>
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
-                レベル3: 他の文字も覚える
+                レベル3: CHMRWを覚える
+              </p>
+              <p className="mt-1 text-sm">
+                EJOTYの2つ前の文字を覚える。
+                <br />
+                <span className="font-mono font-bold text-drill-primary">
+                  C=3, H=8, M=13, R=18, W=23
+                </span>
+              </p>
+            </div>
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
+                レベル4: 他の文字も覚える
               </p>
               <p className="mt-1 text-sm">
                 よく使う文字から優先的に暗記していく。
