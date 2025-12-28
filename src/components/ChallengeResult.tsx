@@ -206,7 +206,7 @@ export function ChallengeResult({
           <div className="space-y-3">
             <button
               onClick={onRetry}
-              className="group w-full rounded-2xl px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+              className="group w-full cursor-pointer rounded-2xl px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
               style={{
                 background:
                   'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
@@ -232,7 +232,7 @@ export function ChallengeResult({
 
             <button
               onClick={handleShare}
-              className="group w-full rounded-2xl bg-black px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-gray-900 hover:shadow-xl active:scale-[0.98]"
+              className="group w-full cursor-pointer rounded-2xl bg-black px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-gray-900 hover:shadow-xl active:scale-[0.98]"
             >
               <span className="flex items-center justify-center gap-2">
                 <svg
@@ -248,7 +248,7 @@ export function ChallengeResult({
 
             <button
               onClick={onBack}
-              className="w-full rounded-2xl border-2 border-gray-200 bg-white px-6 py-4 font-bold text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
+              className="w-full cursor-pointer rounded-2xl border-2 border-gray-200 bg-white px-6 py-4 font-bold text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
             >
               モード選択に戻る
             </button>
