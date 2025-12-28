@@ -23,7 +23,7 @@ const QUESTIONS = [
   },
 ]
 
-type Screen = 'start' | 'question'
+type Screen = 'start' | 'question' | 'clear'
 
 /**
  * 問題選択ボタン
@@ -144,9 +144,11 @@ function StartScreen({
 function QuestionScreen({
   questionId,
   onBack,
+  onClear,
 }: {
   questionId: string
   onBack: () => void
+  onClear: () => void
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
@@ -178,8 +180,8 @@ function QuestionScreen({
     const wasCorrect = feedback?.type === 'correct'
     setFeedback(null)
     if (wasCorrect) {
-      // 正解後はスタート画面に戻る
-      onBack()
+      // 正解後はクリア画面へ
+      onClear()
     }
     // リトライの場合は同じ問題を続ける
   }
@@ -221,6 +223,110 @@ function QuestionScreen({
 }
 
 /**
+ * クリア画面
+ */
+function ClearScreen({
+  questionLabel,
+  onBack,
+}: {
+  questionLabel: string
+  onBack: () => void
+}) {
+  const handleShare = () => {
+    const text = `#ナゾドリル おまけ謎「${questionLabel}」をクリアしました！\n\nhttps://nazo-drill.aruma256.dev/`
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleBuy = () => {
+    window.open(
+      'https://suzuri.jp/aruma256/designs/18500610',
+      '_blank',
+      'noopener,noreferrer',
+    )
+  }
+
+  return (
+    <div className="mb-6 overflow-hidden rounded-3xl bg-white shadow-xl">
+      {/* Header decoration */}
+      <div
+        className="h-2"
+        style={{
+          background:
+            'linear-gradient(90deg, var(--drill-primary), var(--drill-accent))',
+        }}
+      />
+
+      <div className="p-8 text-center">
+        {/* Trophy icon */}
+        <div className="animate-bounce-in mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 shadow-lg shadow-amber-200">
+          <svg
+            className="h-8 w-8 text-white"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2L9 8L2 9L7 14L5.5 21L12 17.5L18.5 21L17 14L22 9L15 8L12 2Z" />
+          </svg>
+        </div>
+
+        <h2 className="font-display mb-1 text-2xl font-black text-gray-800">
+          クリア！
+        </h2>
+        <p className="mb-6 text-sm text-gray-500">「{questionLabel}」正解</p>
+
+        {/* Action buttons */}
+        <div className="space-y-3">
+          <button
+            onClick={handleShare}
+            className="group w-full cursor-pointer rounded-2xl bg-black px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-gray-900 hover:shadow-xl active:scale-[0.98]"
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              結果をシェア！
+            </span>
+          </button>
+
+          <button
+            onClick={handleBuy}
+            className="group w-full cursor-pointer rounded-2xl px-6 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+            style={{
+              background:
+                'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
+            }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              このナゾを買う！
+            </span>
+          </button>
+
+          <button
+            onClick={onBack}
+            className="w-full cursor-pointer rounded-2xl border-2 border-gray-200 bg-white px-6 py-4 font-bold text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50"
+          >
+            問題一覧に戻る
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
  * オリジナル謎解きページ
  */
 export function OriginalNazoPage() {
@@ -236,6 +342,12 @@ export function OriginalNazoPage() {
     setScreen('start')
   }
 
+  const handleClear = () => {
+    setScreen('clear')
+  }
+
+  const selectedQuestion = QUESTIONS.find((q) => q.id === selectedQuestionId)
+
   return (
     <Layout maxWidth="2xl" drillId="original-nazo">
       {screen === 'start' && (
@@ -247,6 +359,13 @@ export function OriginalNazoPage() {
       {screen === 'question' && (
         <QuestionScreen
           questionId={selectedQuestionId}
+          onBack={handleBackToStart}
+          onClear={handleClear}
+        />
+      )}
+      {screen === 'clear' && selectedQuestion && (
+        <ClearScreen
+          questionLabel={selectedQuestion.label}
           onBack={handleBackToStart}
         />
       )}
