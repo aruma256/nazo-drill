@@ -45,30 +45,17 @@ export function ChallengeCountdownModal({
       />
 
       {/* Countdown number */}
-      <div className="relative">
-        {/* Pulse ring effect */}
-        <div
-          key={`ring-${animationKey}`}
-          className="absolute inset-0 animate-ping rounded-full opacity-30"
-          style={{
-            backgroundColor: 'var(--drill-primary)',
-            transform: 'scale(2)',
-          }}
-        />
-
-        {/* Number container */}
-        <div
-          key={`num-${animationKey}`}
-          className="animate-countdown-pulse relative flex h-40 w-40 items-center justify-center rounded-full shadow-2xl"
-          style={{
-            background:
-              'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
-          }}
-        >
-          <span className="font-mono text-8xl font-black text-white">
-            {count}
-          </span>
-        </div>
+      <div
+        key={`num-${animationKey}`}
+        className="animate-countdown-pulse flex h-40 w-40 items-center justify-center rounded-full shadow-2xl"
+        style={{
+          background:
+            'linear-gradient(135deg, var(--drill-primary), var(--drill-primary-dark))',
+        }}
+      >
+        <span className="font-mono text-8xl font-black text-white">
+          {count}
+        </span>
       </div>
     </div>
   )
