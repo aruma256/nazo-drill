@@ -17,8 +17,9 @@ const DRILL_NAME = 'original-nazo'
 const QUESTIONS = [
   {
     id: 'q1',
-    label: 'ナゾ1',
-    image: '/images/original-nazo/q1.jpg',
+    label: 'aruma謎Tシャツ-1',
+    image: '/images/original-nazo/q1-detail.jpg',
+    fullImage: '/images/original-nazo/q1-full.png',
     answer: 'think',
   },
 ]
@@ -180,6 +181,7 @@ function QuestionScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [isZoomed, setIsZoomed] = useState(false)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   const question = QUESTIONS.find((q) => q.id === questionId)
@@ -214,6 +216,8 @@ function QuestionScreen({
     // リトライの場合は同じ問題を続ける
   }
 
+  const currentImage = isZoomed ? question.image : question.fullImage
+
   return (
     <>
       <DrillMiniHeader onBack={onBack} drillLabel={question.label} />
@@ -221,13 +225,61 @@ function QuestionScreen({
       {/* 問題エリア */}
       <div className="rounded-lg bg-white/70 p-4">
         {/* 問題画像 */}
-        <div className="mb-6">
+        <div className="mb-4">
           <img
-            src={question.image}
+            src={currentImage}
             alt={question.label}
-            className="mx-auto max-w-full rounded-lg shadow-md"
+            className={`mx-auto max-w-full rounded-lg shadow-md ${!isZoomed ? 'bg-gray-400 p-2' : ''}`}
           />
         </div>
+
+        {/* 画像切り替えボタン */}
+        {question.fullImage && (
+          <div className="mb-6 text-center">
+            <button
+              onClick={() => {
+                setIsZoomed(!isZoomed)
+              }}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-[var(--drill-primary)] bg-[var(--drill-primary-light)] px-4 py-2 text-sm font-bold text-[var(--drill-primary-dark)] transition-all hover:bg-[var(--drill-primary)] hover:text-white"
+            >
+              {isZoomed ? (
+                <>
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"
+                    />
+                  </svg>
+                  全体を見る
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
+                    />
+                  </svg>
+                  謎部分を拡大する
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         <AnswerInputArea
           value={userAnswer}
