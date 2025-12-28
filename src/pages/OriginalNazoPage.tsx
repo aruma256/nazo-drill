@@ -99,6 +99,22 @@ function QuestionButton({
 }
 
 /**
+ * Coming Soon ボタン
+ */
+function ComingSoonButton() {
+  return (
+    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-5 text-left">
+      <div className="flex items-center gap-3">
+        <span className="text-2xl opacity-40">📝</span>
+        <span className="font-display text-lg font-bold text-gray-400">
+          Coming Soon
+        </span>
+      </div>
+    </div>
+  )
+}
+
+/**
  * スタート画面
  */
 function StartScreen({
@@ -132,6 +148,8 @@ function StartScreen({
               isSolved={getCorrectCount(q.id) > 0}
             />
           ))}
+          <ComingSoonButton />
+          <ComingSoonButton />
         </div>
       </section>
     </>
