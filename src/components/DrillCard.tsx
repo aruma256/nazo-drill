@@ -9,6 +9,7 @@ interface DrillCardProps {
   children: ReactNode
   drillId?: DrillId
   points?: number
+  actionLabel?: string
 }
 
 export function DrillCard({
@@ -18,6 +19,7 @@ export function DrillCard({
   children,
   drillId,
   points,
+  actionLabel = '練習する',
 }: DrillCardProps) {
   const theme = drillId ? DRILL_THEMES[drillId] : null
 
@@ -92,7 +94,7 @@ export function DrillCard({
           className="mt-4 flex items-center justify-end gap-1 text-sm font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{ color: theme?.primary ?? '#6366f1' }}
         >
-          練習する
+          {actionLabel}
           <svg
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
             fill="none"

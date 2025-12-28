@@ -124,6 +124,22 @@ export function HomePage() {
               </div>
             </DrillCard>
           </div>
+
+          {/* おまけ謎 */}
+          <div>
+            <DrillCard
+              to="/original-nazo"
+              title="おまけ謎"
+              description="サイト作者の一枚謎"
+              drillId="original-nazo"
+              actionLabel="チャレンジ"
+            >
+              <div className="text-center">
+                <div className="font-display mb-2 text-4xl">?</div>
+                <div className="text-sm text-gray-500">一問一答形式</div>
+              </div>
+            </DrillCard>
+          </div>
         </div>
       </main>
 

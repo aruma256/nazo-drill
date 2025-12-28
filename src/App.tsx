@@ -6,6 +6,7 @@ import {
   NumberToAlphaPage,
   AlphaShiftPage,
   PrefectureFillPage,
+  OriginalNazoPage,
 } from './pages'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             path="/drill/prefecture-fill"
             element={<PrefectureFillPage />}
           />
+          <Route path="/original-nazo" element={<OriginalNazoPage />} />
         </Routes>
       </div>
     </HashRouter>

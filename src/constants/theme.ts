@@ -49,6 +49,7 @@ export const DRILL_CONFIG = {
   '123-abc': { subject: 'english', icon: '1A' },
   'abc-shift': { subject: 'math', icon: 'A→' },
   'prefecture-fill': { subject: 'social', icon: '◯' },
+  'original-nazo': { subject: 'science', icon: '?' },
 } as const satisfies Record<string, { subject: SubjectId; icon: string }>
 
 export type DrillId = keyof typeof DRILL_CONFIG
