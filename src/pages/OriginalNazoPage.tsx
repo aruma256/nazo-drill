@@ -64,8 +64,8 @@ function QuestionButton({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* 正解済みバッジ */}
-          {isSolved && (
+          {/* 正解済み/未クリアバッジ */}
+          {isSolved ? (
             <div
               className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold"
               style={{
@@ -75,6 +75,16 @@ function QuestionButton({
             >
               <span>済</span>
               <span>✓</span>
+            </div>
+          ) : (
+            <div
+              className="rounded-full px-3 py-1 text-sm font-bold"
+              style={{
+                backgroundColor: '#f1f5f9',
+                color: '#94a3b8',
+              }}
+            >
+              未
             </div>
           )}
 
