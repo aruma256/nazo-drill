@@ -154,7 +154,7 @@ export function ChallengeResult({
   questionRenderer,
 }: ChallengeResultProps) {
   const handleShare = () => {
-    const text = `#ナゾドリル 【${drillName}】実力テストで ${score}問 正解しました！\n\nhttps://nazo-drill.aruma256.dev/`
+    const text = `#ナゾドリル 【${drillName}】実力テストで ${score}問 正解しました！\nhttps://nazo-drill.aruma256.dev/`
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }

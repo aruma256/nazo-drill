@@ -233,7 +233,7 @@ function ClearScreen({
   onBack: () => void
 }) {
   const handleShare = () => {
-    const text = `#ナゾドリル おまけ謎「${questionLabel}」をクリアしました！\n\nhttps://nazo-drill.aruma256.dev/`
+    const text = `#ナゾドリル おまけ謎「${questionLabel}」をクリアしました！\nhttps://nazo-drill.aruma256.dev/`
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }
