@@ -194,7 +194,7 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
             </div>
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
-                レベル3: CHMRWを覚える
+                レベル3: 3, 8, 13, 18, 23 も覚える
               </p>
               <p className="mt-1 text-sm">
                 EJOTYの2つ前の文字を覚える。
