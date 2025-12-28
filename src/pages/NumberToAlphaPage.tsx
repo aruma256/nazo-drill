@@ -166,13 +166,13 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
       <DrillMiniHeader onBack={onBack} drillLabel="暗記ノート" />
 
       <div className="space-y-6">
-        {/* 暗記のステップ */}
+        {/* 習得レベル */}
         <section className="rounded-lg bg-white/70 p-4">
-          <SectionHeader>覚え方のステップ</SectionHeader>
+          <SectionHeader>習得レベル</SectionHeader>
           <div className="space-y-3 text-gray-700">
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
-                ステップ1: EJOTYを覚える
+                レベル1: EJOTYのみ覚える
               </p>
               <p className="mt-1 text-sm">
                 まずは5の倍数だけ覚えましょう。
@@ -184,20 +184,20 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
             </div>
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
-                ステップ2: 前後を計算
+                レベル2: EJOTYから進めて求める
               </p>
               <p className="mt-1 text-sm">
-                EJOTYを基準に、+1や-1で他の文字を導く。
+                EJOTYを基準に、足し算で他の文字を導く。
                 <br />
-                例: J=10 なので、K=11, I=9
+                例: E=5 なので、F=6, G=7
               </p>
             </div>
             <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
               <p className="font-bold text-drill-primary-dark">
-                ステップ3: よく出る文字を覚える
+                レベル3: 他の文字も覚える
               </p>
               <p className="mt-1 text-sm">
-                使用頻度の高い文字から優先的に暗記していく。
+                よく使う文字から優先的に暗記していく。
               </p>
             </div>
           </div>
