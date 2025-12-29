@@ -19,7 +19,7 @@
 
 - **テーマ定義**: `src/constants/theme.ts` で各ドリルの色を一元管理
 - **CSS Custom Properties**: `Layout.tsx` から動的に `--drill-primary` 等を設定
-- **フォント**: Zen Maru Gothic（見出し）、Noto Sans JP（本文）、JetBrains Mono（等幅）
+- **フォント**: Kosugi Maru（見出し）、Noto Sans JP（本文）、JetBrains Mono（等幅）
 - **アニメーション**: `float`, `fade-in-up`, `bounce-in`, `confetti-fall` 等を定義済み
 
 ## 技術スタック
