@@ -24,10 +24,10 @@
 
 ## 技術スタック
 
-- **フレームワーク**: React + TypeScript
+- **フレームワーク**: React 19 + TypeScript
 - **ビルドツール**: Vite
 - **スタイリング**: Tailwind CSS v4
-- **ルーティング**: React Router（HashRouter）
+- **ルーティング**: React Router v7（HashRouter）
 - **テスト**: Vitest + Testing Library
 - **デプロイ環境**: GitHub Pages
 - **カスタムドメイン**: nazo-drill.aruma256.dev
@@ -36,9 +36,11 @@
 
 - `src/` - ソースコード
   - `components/` - 共通コンポーネント
+  - `constants/` - 定数・設定（テーマカラー等）
   - `drills/` - 各ドリルのロジックとコンポーネント
   - `hooks/` - カスタムフック
   - `pages/` - ページコンポーネント
+  - `test/` - テストセットアップ
   - `utils/` - ユーティリティ関数
 - `dist/` - ビルド成果物（GitHub Pages公開元）
 - `legacy-docs/` - 移行前の旧実装（参考用）
@@ -82,6 +84,12 @@
 | アルファベットシフト | `abc-shift` | `/#/drill/abc-shift` |
 | 都道府県名の穴埋め | `prefecture-fill` | `/#/drill/prefecture-fill` |
 
+### 特別ページ
+
+| ページ名 | 内部名 | URL |
+|---------|--------|-----|
+| おまけ謎 | `original-nazo` | `/#/original-nazo` |
+
 ## 実装済み機能
 
 ### 基本機能
@@ -89,6 +97,11 @@
 - 問題の自動生成
 - 問題の出題（連続同一問題の防止付き）
 - 正誤判定（モーダル表示）
+
+### モード
+
+- **練習モード**: 制限時間なしで問題を解く
+- **チャレンジモード**: 制限時間内に問題を解くタイムアタック形式
 
 ### 進捗管理機能
 
@@ -119,6 +132,13 @@
 
 ```bash
 npm run dev -- --host
+```
+
+### テスト
+
+```bash
+npm run test           # テスト実行（watchモード）
+npm run test:coverage  # カバレッジ付きテスト
 ```
 
 ### 動作確認
