@@ -25,13 +25,169 @@ import {
   generateTwoPrefecturesQuestion,
   normalizeAnswer,
   checkTwoPrefecturesAnswer,
+  SINGLE_PREFECTURE_CHARS,
+  DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
 
 const DRILL_NAME = 'prefecture-fill'
 const CHALLENGE_TIME_LIMIT = 45
 
-type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
+type Screen =
+  | 'start'
+  | 'drill'
+  | 'countdown'
+  | 'challenge'
+  | 'challengeResult'
+  | 'note'
 type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures' | 'challenge'
+
+/**
+ * 暗記ノート画面
+ */
+function NoteScreen({ onBack }: { onBack: () => void }) {
+  // 1県確定の文字と対応県のリスト
+  const singlePrefectureEntries = Object.entries(SINGLE_PREFECTURE_CHARS)
+  // 2県確定の文字と対応県のリスト
+  const doublePrefectureEntries = Object.entries(DOUBLE_PREFECTURE_CHARS)
+
+  return (
+    <>
+      <DrillMiniHeader onBack={onBack} drillLabel="暗記ノート" />
+
+      <div className="space-y-6">
+        {/* 参考 */}
+        <section className="rounded-lg bg-white/70 p-4">
+          <SectionHeader>参考</SectionHeader>
+          <div className="space-y-2 text-sm text-gray-600">
+            <p>このページの語呂合わせは以下で紹介されているものです：</p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>
+                <a
+                  href="https://note.com/1220oz_an/n/ncc783842b083"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-drill-primary underline hover:text-drill-primary-dark"
+                >
+                  都道府県は暗記しろ｜フライパン職人
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.youtube.com/watch?v=ye7I-GRgPkM"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-drill-primary underline hover:text-drill-primary-dark"
+                >
+                  謎解きのプロなら、都道府県を使った謎解きも当然瞬殺だよね？｜リドラの謎解きチャンネル
+                </a>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        {/* 1県確定 */}
+        <section className="rounded-lg bg-white/70 p-4">
+          <SectionHeader>1県確定の文字</SectionHeader>
+          <div className="space-y-3 text-gray-700">
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
+                ざ こ ほ ど の て に ね ず め ろ ん
+              </p>
+              <p className="mt-1 text-sm">
+                これらの文字を含む都道府県は1つだけ。
+                <br />
+                <span className="font-bold text-drill-primary">
+                  「雑魚ほどの手に根津メロン」
+                </span>
+                と覚えよう！
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="w-16 px-3 py-2 text-center text-sm font-bold text-gray-600">
+                      文字
+                    </th>
+                    <th className="px-3 py-2 text-left text-sm font-bold text-gray-600">
+                      都道府県
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {singlePrefectureEntries.map(([char, prefectures]) => (
+                    <tr
+                      key={char}
+                      className="border-t border-gray-100 bg-white"
+                    >
+                      <td className="px-3 py-2 text-center text-lg font-bold text-drill-primary">
+                        {char}
+                      </td>
+                      <td className="px-3 py-2 text-gray-700">
+                        {prefectures[0]}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* 2県確定 */}
+        <section className="rounded-lg bg-white/70 p-4">
+          <SectionHeader>2県確定の文字</SectionHeader>
+          <div className="space-y-3 text-gray-700">
+            <div className="rounded-lg border border-drill-accent bg-drill-primary-light p-3">
+              <p className="font-bold text-drill-primary-dark">
+                え っ ぐ も ば ご り ら
+              </p>
+              <p className="mt-1 text-sm">
+                これらの文字を含む都道府県は2つだけ。
+                <br />
+                <span className="font-bold text-drill-primary">
+                  「エッグモバゴリラ」
+                </span>
+                と覚えよう！
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="w-16 px-3 py-2 text-center text-sm font-bold text-gray-600">
+                      文字
+                    </th>
+                    <th className="px-3 py-2 text-left text-sm font-bold text-gray-600">
+                      都道府県（2つ）
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {doublePrefectureEntries.map(([char, prefectures]) => (
+                    <tr
+                      key={char}
+                      className="border-t border-gray-100 bg-white"
+                    >
+                      <td className="px-3 py-2 text-center text-lg font-bold text-drill-primary">
+                        {char}
+                      </td>
+                      <td className="px-3 py-2 text-gray-700">
+                        {prefectures.join('、')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  )
+}
 
 /**
  * スタート画面
@@ -39,9 +195,11 @@ type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures' | 'challenge'
 function StartScreen({
   onStartDrill,
   onStartChallenge,
+  onOpenNote,
 }: {
   onStartDrill: (mode: DrillMode) => void
   onStartChallenge: () => void
+  onOpenNote: () => void
 }) {
   return (
     <>
@@ -103,6 +261,17 @@ function StartScreen({
               onStartDrill('two-prefectures')
             }}
             icon="✏️"
+          />
+
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+
+          <ModeButton
+            label="暗記ノート"
+            mode="note"
+            drillName={DRILL_NAME}
+            onClick={onOpenNote}
+            icon="📖"
+            hidePoints
           />
         </div>
       </section>
@@ -437,6 +606,10 @@ export function PrefectureFillPage() {
     setScreen('start')
   }
 
+  const handleOpenNote = () => {
+    setScreen('note')
+  }
+
   return (
     <Layout maxWidth="2xl" drillId="prefecture-fill">
       {screen === 'start' && (
@@ -448,6 +621,7 @@ export function PrefectureFillPage() {
           <StartScreen
             onStartDrill={handleStartDrill}
             onStartChallenge={handleStartChallenge}
+            onOpenNote={handleOpenNote}
           />
         </>
       )}
@@ -473,6 +647,7 @@ export function PrefectureFillPage() {
           onBack={handleBackToStart}
         />
       )}
+      {screen === 'note' && <NoteScreen onBack={handleBackToStart} />}
     </Layout>
   )
 }
