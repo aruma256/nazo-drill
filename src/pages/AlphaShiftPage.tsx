@@ -199,6 +199,8 @@ function DrillScreen({
  * チャレンジ画面（実力テストモード）
  * +1〜+3と-1〜-3を交互に出題
  */
+const WRONG_ANSWER_PENALTY_SECONDS = 5
+
 function ChallengeScreen({
   onTimeUp,
   onBack,
@@ -208,7 +210,9 @@ function ChallengeScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [score, setScore] = useState(0)
-  const remainingTime = useCountdownTimer(CHALLENGE_TIME_LIMIT)
+  const [isPenalized, setIsPenalized] = useState(false)
+  const { remainingTime, subtractTime } =
+    useCountdownTimer(CHALLENGE_TIME_LIMIT)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -249,6 +253,13 @@ function ChallengeScreen({
     if (isCorrect) {
       setScore((prev) => prev + 1)
       incrementCorrectCount('challenge')
+    } else {
+      // 不正解ペナルティ
+      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
+      setIsPenalized(true)
+      setTimeout(() => {
+        setIsPenalized(false)
+      }, 800)
     }
     presentQuestion()
     setUserAnswer('')
@@ -259,11 +270,24 @@ function ChallengeScreen({
       <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
 
       {/* 問題エリア */}
-      <div className="rounded-lg bg-white/70 p-4">
+      <div className="relative rounded-lg bg-white/70 p-4">
+        {/* ペナルティ表示オーバーレイ */}
+        {isPenalized && (
+          <div className="animate-fade-in-up pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+            <div className="rounded-xl bg-red-500/90 px-6 py-4 text-center text-white shadow-lg">
+              <div className="text-lg font-bold">不正解</div>
+              <div className="text-2xl font-black">
+                -{WRONG_ANSWER_PENALTY_SECONDS}秒
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* タイマー */}
         <ChallengeTimer
           remainingSeconds={remainingTime}
           totalSeconds={CHALLENGE_TIME_LIMIT}
+          isPenalized={isPenalized}
         />
 
         {/* スコア表示 */}

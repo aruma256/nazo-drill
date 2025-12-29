@@ -3,6 +3,8 @@ interface ChallengeTimerProps {
   remainingSeconds: number
   /** 合計時間（秒） */
   totalSeconds: number
+  /** ペナルティ発生時のフラッシュ表示 */
+  isPenalized?: boolean
 }
 
 /**
@@ -11,10 +13,12 @@ interface ChallengeTimerProps {
 export function ChallengeTimer({
   remainingSeconds,
   totalSeconds,
+  isPenalized = false,
 }: ChallengeTimerProps) {
   const progress = (remainingSeconds / totalSeconds) * 100
   const isLowTime = remainingSeconds <= 10
   const isCritical = remainingSeconds <= 5
+  const showPenaltyFlash = isPenalized
 
   return (
     <div className="mb-6">
@@ -23,11 +27,15 @@ export function ChallengeTimer({
         <div className="flex items-center gap-2">
           <div
             className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300 ${
-              isLowTime ? 'bg-red-100' : 'bg-indigo-100'
+              showPenaltyFlash
+                ? 'animate-pulse bg-red-200'
+                : isLowTime
+                  ? 'bg-red-100'
+                  : 'bg-indigo-100'
             }`}
           >
             <svg
-              className={`h-4 w-4 ${isLowTime ? 'text-red-600' : 'text-indigo-600'}`}
+              className={`h-4 w-4 ${showPenaltyFlash || isLowTime ? 'text-red-600' : 'text-indigo-600'}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -47,11 +55,13 @@ export function ChallengeTimer({
 
         <div
           className={`font-mono text-3xl font-black tabular-nums transition-all duration-300 ${
-            isCritical
-              ? 'animate-pulse text-red-600'
-              : isLowTime
-                ? 'text-red-600'
-                : 'text-indigo-600'
+            showPenaltyFlash
+              ? 'scale-110 text-red-600'
+              : isCritical
+                ? 'animate-pulse text-red-600'
+                : isLowTime
+                  ? 'text-red-600'
+                  : 'text-indigo-600'
           }`}
         >
           {remainingSeconds}
@@ -62,10 +72,12 @@ export function ChallengeTimer({
       {/* Progress bar */}
       <div className="relative h-3 w-full overflow-hidden rounded-full bg-gray-100 shadow-inner">
         <div
-          className={`absolute left-0 top-0 h-full rounded-full transition-all duration-1000 ease-linear ${
-            isLowTime
-              ? 'bg-gradient-to-r from-red-500 to-rose-400'
-              : 'bg-gradient-to-r from-indigo-500 to-purple-400'
+          className={`absolute left-0 top-0 h-full rounded-full ${
+            showPenaltyFlash
+              ? 'bg-gradient-to-r from-red-600 to-rose-500 transition-all duration-150'
+              : isLowTime
+                ? 'bg-gradient-to-r from-red-500 to-rose-400 transition-all duration-1000 ease-linear'
+                : 'bg-gradient-to-r from-indigo-500 to-purple-400 transition-all duration-1000 ease-linear'
           }`}
           style={{ width: `${progress}%` }}
         />
