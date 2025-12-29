@@ -150,7 +150,17 @@ export function HomePage() {
         <div className="inline-flex items-center gap-2 rounded-full bg-white/50 px-6 py-3 text-sm text-gray-500 shadow-sm backdrop-blur-sm">
           <span>© 2025 ナゾドリル</span>
           <span className="text-gray-300">|</span>
-          <span>Powered by aruma256</span>
+          <span>
+            Powered by{' '}
+            <a
+              href="http://x.com/aruma256"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-700"
+            >
+              aruma256
+            </a>
+          </span>
         </div>
       </footer>
     </Layout>
