@@ -2,13 +2,16 @@ import { getRandomInt, getRandomElement } from '../../utils'
 import type { Question } from '../../hooks/useDrill'
 import { ASCII_CODE_A } from '../../utils/conversion'
 
-/** アルファベットシフトのモード */
-export type AlphaShiftMode = 'plus-training' | 'minus-training' | 'challenge'
+/** トレーニングモード（実際のシフト範囲を持つ） */
+export type TrainingMode = 'plus-training' | 'minus-training'
+
+/** アルファベットシフトのモード（UI・ストレージ用） */
+export type AlphaShiftMode = TrainingMode | 'challenge'
 
 /**
  * モードごとのシフト範囲を取得
  */
-function getShiftRange(mode: AlphaShiftMode): { min: number; max: number } {
+function getShiftRange(mode: TrainingMode): { min: number; max: number } {
   switch (mode) {
     case 'plus-training':
       return { min: 1, max: 3 }
@@ -24,12 +27,12 @@ function getShiftRange(mode: AlphaShiftMode): { min: number; max: number } {
  * - 結果がA-Zの範囲に収まるシフト量のみを許可
  *
  * @param lastQuestion - 前回の問題文（連続同一問題を防ぐ）
- * @param mode - ドリルモード
+ * @param mode - トレーニングモード
  * @returns 問題オブジェクトと新しいlastQuestion
  */
 export function generateAlphaShiftQuestion(
   lastQuestion: string | null,
-  mode: AlphaShiftMode,
+  mode: TrainingMode,
 ): {
   question: Question
   newLastQuestion: string
@@ -92,7 +95,7 @@ export function generateChallengeQuestion(
   newLastQuestion: string
   nextIsPlus: boolean
 } {
-  const mode: AlphaShiftMode = isPlus ? 'plus-training' : 'minus-training'
+  const mode: TrainingMode = isPlus ? 'plus-training' : 'minus-training'
   const result = generateAlphaShiftQuestion(lastQuestion, mode)
 
   return {

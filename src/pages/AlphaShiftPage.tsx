@@ -21,7 +21,7 @@ import {
 import {
   generateAlphaShiftQuestion,
   generateChallengeQuestion,
-  type AlphaShiftMode,
+  type TrainingMode,
 } from '../drills/alphaShift'
 
 const DRILL_NAME = 'abc-shift'
@@ -36,7 +36,7 @@ function StartScreen({
   onStartDrill,
   onStartChallenge,
 }: {
-  onStartDrill: (mode: AlphaShiftMode) => void
+  onStartDrill: (mode: TrainingMode) => void
   onStartChallenge: () => void
 }) {
   return (
@@ -113,7 +113,7 @@ function DrillScreen({
   mode,
 }: {
   onBack: () => void
-  mode: AlphaShiftMode
+  mode: TrainingMode
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
@@ -302,13 +302,12 @@ function ChallengeScreen({
  */
 export function AlphaShiftPage() {
   const [screen, setScreen] = useState<Screen>('start')
-  const [currentMode, setCurrentMode] =
-    useState<AlphaShiftMode>('plus-training')
+  const [currentMode, setCurrentMode] = useState<TrainingMode>('plus-training')
   const [challengeScore, setChallengeScore] = useState(0)
   const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
   const { updateHighScore } = useDrillStorage(DRILL_NAME)
 
-  const handleStartDrill = (mode: AlphaShiftMode) => {
+  const handleStartDrill = (mode: TrainingMode) => {
     setCurrentMode(mode)
     setScreen('drill')
   }
