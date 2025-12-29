@@ -8,6 +8,7 @@ import {
   SectionHeader,
 } from '../components'
 import { useDrillStorage, type Feedback } from '../hooks'
+import { sha256 } from '../utils'
 
 const DRILL_NAME = 'original-nazo'
 
@@ -20,7 +21,9 @@ const QUESTIONS = [
     label: 'aruma謎Tシャツ-1',
     image: '/images/original-nazo/q1-detail.jpg',
     fullImage: '/images/original-nazo/q1-full.png',
-    answer: 'think',
+    // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
+    answerHash:
+      'dc2fc19d8fce376c47641cf15f823a03ad10f2dc7da3f43230551f50706914f5',
     hints: [
       'まずはピンクと、（下の方の）緑に注目してみましょう。',
       'ピンクは4つ、（下の方の）緑は5つ、直線上に並んでいます。',
@@ -324,12 +327,12 @@ function QuestionScreen({
     return <div>問題が見つかりません</div>
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!userAnswer.trim()) return
 
-    // 大文字小文字を無視して比較
-    const isCorrect =
-      userAnswer.trim().toLowerCase() === question.answer.toLowerCase()
+    // 小文字に正規化してハッシュ化し、保存されたハッシュと比較
+    const inputHash = await sha256(userAnswer.trim().toLowerCase())
+    const isCorrect = inputHash === question.answerHash
 
     if (isCorrect) {
       incrementCorrectCount(questionId)
@@ -421,7 +424,7 @@ function QuestionScreen({
         <AnswerInputArea
           value={userAnswer}
           onChange={setUserAnswer}
-          onSubmit={handleSubmit}
+          onSubmit={() => void handleSubmit()}
           onNext={handleNext}
           feedback={feedback}
           placeholder="答えを入力"
