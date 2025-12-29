@@ -142,7 +142,7 @@ function StartScreen({
         <SectionHeader>このページについて</SectionHeader>
         <div className="space-y-2 pl-3 text-gray-700">
           <p>
-            サイト作者{' '}
+            サイト作者（
             <a
               href="http://x.com/aruma256"
               target="_blank"
@@ -150,8 +150,8 @@ function StartScreen({
               className="underline hover:text-gray-700"
             >
               @aruma256
-            </a>{' '}
-            オリジナルの謎解き問題です。
+            </a>
+            ）オリジナルの謎解き問題です。
           </p>
         </div>
       </section>
