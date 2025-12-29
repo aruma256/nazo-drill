@@ -42,6 +42,40 @@ type Screen =
 type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures' | 'challenge'
 
 /**
+ * 都道府県名の中の指定文字を強調表示する
+ */
+function HighlightChar({
+  text,
+  char,
+}: {
+  text: string
+  char: string
+}): React.ReactNode {
+  const parts: React.ReactNode[] = []
+  let lastIndex = 0
+
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === char) {
+      if (i > lastIndex) {
+        parts.push(text.slice(lastIndex, i))
+      }
+      parts.push(
+        <span key={i} className="font-bold text-drill-primary">
+          {char}
+        </span>,
+      )
+      lastIndex = i + 1
+    }
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  return <>{parts}</>
+}
+
+/**
  * 暗記ノート画面
  */
 function NoteScreen({ onBack }: { onBack: () => void }) {
@@ -125,7 +159,7 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
                         {char}
                       </td>
                       <td className="px-3 py-2 text-gray-700">
-                        {prefectures[0]}
+                        <HighlightChar text={prefectures[0]} char={char} />
                       </td>
                     </tr>
                   ))}
@@ -175,7 +209,12 @@ function NoteScreen({ onBack }: { onBack: () => void }) {
                         {char}
                       </td>
                       <td className="px-3 py-2 text-gray-700">
-                        {prefectures.join('、')}
+                        {prefectures.map((pref, i) => (
+                          <span key={pref}>
+                            <HighlightChar text={pref} char={char} />
+                            {i < prefectures.length - 1 && '、'}
+                          </span>
+                        ))}
                       </td>
                     </tr>
                   ))}
