@@ -143,6 +143,40 @@ describe('useDrill', () => {
       expect(isCorrect).toBe(true)
     })
 
+    it('should accept full-width alphabet as correct answer', () => {
+      const generator = createMockGenerator([{ question: 'Q1', answer: 'K' }])
+      const { result } = renderHook(() => useDrill(generator))
+
+      act(() => {
+        result.current.presentQuestion()
+      })
+
+      let isCorrect = false
+      act(() => {
+        isCorrect = result.current.checkAnswer('Ｋ') // 全角K
+      })
+
+      expect(isCorrect).toBe(true)
+    })
+
+    it('should accept full-width lowercase alphabet as correct answer', () => {
+      const generator = createMockGenerator([
+        { question: 'Q1', answer: 'HELLO' },
+      ])
+      const { result } = renderHook(() => useDrill(generator))
+
+      act(() => {
+        result.current.presentQuestion()
+      })
+
+      let isCorrect = false
+      act(() => {
+        isCorrect = result.current.checkAnswer('ｈｅｌｌｏ') // 全角小文字
+      })
+
+      expect(isCorrect).toBe(true)
+    })
+
     it('should increment score on correct answer', () => {
       const generator = createMockGenerator([{ question: 'Q1', answer: 'A1' }])
       const { result } = renderHook(() => useDrill(generator))

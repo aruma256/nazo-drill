@@ -53,10 +53,19 @@ export type QuestionGenerator = () => Question
 const MAX_RETRIES = 100
 
 /**
- * 回答を正規化する（大文字小文字、空白などを統一）
+ * 全角アルファベットを半角に変換
+ */
+function toHalfWidthAlpha(str: string): string {
+  return str.replace(/[Ａ-Ｚａ-ｚ]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) - 0xfee0),
+  )
+}
+
+/**
+ * 回答を正規化する（大文字小文字、空白、全角/半角などを統一）
  */
 function normalizeAnswer(answer: string): string {
-  return answer.trim().toUpperCase()
+  return toHalfWidthAlpha(answer).trim().toUpperCase()
 }
 
 /**
