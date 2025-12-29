@@ -40,7 +40,7 @@ describe('ModeButton', () => {
     expect(onClick).toHaveBeenCalledOnce()
   })
 
-  it('ポイントが0の場合は「0」と「pt」が表示される', () => {
+  it('ポイントが0の場合は「累計」「0」「問」が表示される', () => {
     render(
       <ModeButton
         label="1文字モード"
@@ -49,9 +49,10 @@ describe('ModeButton', () => {
         onClick={() => {}}
       />,
     )
-    // 新しいUIでは「0」と「pt」が別の要素に分かれている
+    // 新しいUIでは「累計」「0」「問」が別の要素に分かれている
+    expect(screen.getByText('累計')).toBeDefined()
     expect(screen.getByText('0')).toBeDefined()
-    expect(screen.getByText('pt')).toBeDefined()
+    expect(screen.getByText('問')).toBeDefined()
   })
 
   it('localStorageにポイントがある場合はその値が表示される', () => {
@@ -64,9 +65,10 @@ describe('ModeButton', () => {
         onClick={() => {}}
       />,
     )
-    // 新しいUIでは「42」と「pt」が別の要素に分かれている
+    // 新しいUIでは「累計」「42」「問」が別の要素に分かれている
+    expect(screen.getByText('累計')).toBeDefined()
     expect(screen.getByText('42')).toBeDefined()
-    expect(screen.getByText('pt')).toBeDefined()
+    expect(screen.getByText('問')).toBeDefined()
   })
 
   it('disabledの場合はクリックしてもonClickが呼ばれない', async () => {
@@ -97,7 +99,7 @@ describe('ModeButton', () => {
         disabled
       />,
     )
-    expect(screen.queryByText(/pt/)).toBeNull()
+    expect(screen.queryByText(/累計/)).toBeNull()
   })
 
   describe('variant="challenge"（実力テスト）の場合', () => {
@@ -145,7 +147,7 @@ describe('ModeButton', () => {
         hidePoints
       />,
     )
-    expect(screen.queryByText('pt')).toBeNull()
-    expect(screen.queryByText('問')).toBeNull()
+    expect(screen.queryByText('累計')).toBeNull()
+    expect(screen.queryByText('最高')).toBeNull()
   })
 })
