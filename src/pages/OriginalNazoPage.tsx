@@ -21,10 +21,133 @@ const QUESTIONS = [
     image: '/images/original-nazo/q1-detail.jpg',
     fullImage: '/images/original-nazo/q1-full.png',
     answer: 'think',
+    hints: [
+      'まずはピンクと、（下の方の）緑に注目してみましょう。',
+      'ピンクは4つ、（下の方の）緑は5つ、直線上に並んでいます。',
+      'ピンク→4つ、緑→5つ となる法則を考えてみましょう。',
+      'この謎に文字は含まれていません。つまり、日本語とは限りません。',
+      '"pink" は4文字、"green" は5文字です。',
+      '文字数とマスの数が一致しているようです。マスに文字を埋めてみましょう。次のヒントからは、左上の部分についてのものになります。',
+      '法則を意識しつつ、左上の十字部分を見てみましょう。',
+      '一旦、緑のマスは無視して考えるとよいかもしれません。',
+      '"yellow", "blue" が当てはまるようです。交差部分が黄色でも青色でもない理由を考えましょう。',
+      '三原色を思い出しましょう。',
+      '黄色と青色を混ぜると、緑色になります。以降のヒントは、矢印部分についてのものになります。',
+      'ここまで、pink, green, yellow, blue を当てはめることがわかりました。実際に書き込んでみると考えやすくなりそうです。',
+      '色名が交差する場合、交差したマスでは2色が混ざった色になるようです。3つある色の薄いマスは、どう解釈すればよいのでしょうか。',
+      '「色の薄いマス」ではなく、単に別の色が混ざったマスなのではないでしょうか。',
+      '黄色、ピンク、緑色と混ぜてこのように変化するといえば…。',
+      '背景色と同じ、白色が混ざっていたようです。黄色の"w"のマスから下方向に、"white" を当てはめてみましょう。矢印が通った文字を拾うと答えになります。',
+    ],
   },
 ]
 
 type Screen = 'start' | 'question' | 'clear'
+
+/**
+ * ヒントパネル
+ */
+function HintPanel({ hints }: { hints: string[] }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [openedCount, setOpenedCount] = useState(0)
+
+  const handleOpenHint = () => {
+    if (openedCount < hints.length) {
+      setOpenedCount(openedCount + 1)
+    }
+  }
+
+  return (
+    <div className="mb-4">
+      {/* ヒントを見るボタン */}
+      <button
+        onClick={() => {
+          setIsOpen(!isOpen)
+        }}
+        className="flex w-full cursor-pointer items-center justify-between rounded-xl border-2 border-amber-300 bg-amber-50 px-4 py-3 text-left transition-all hover:border-amber-400 hover:bg-amber-100"
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-xl">💡</span>
+          <span className="font-bold text-amber-800">ヒント</span>
+          {openedCount > 0 && (
+            <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-bold text-amber-700">
+              {openedCount}/{hints.length}
+            </span>
+          )}
+        </div>
+        <svg
+          className={`h-5 w-5 text-amber-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {/* ヒントパネル本体 */}
+      {isOpen && (
+        <div className="mt-2 rounded-xl border-2 border-amber-200 bg-white p-4">
+          <div className="space-y-3">
+            {/* 開放済みヒント */}
+            {hints.slice(0, openedCount).map((hint, index) => (
+              <div
+                key={index}
+                className="rounded-lg bg-amber-50 p-3 text-sm text-gray-700"
+              >
+                <span className="mr-2 font-bold text-amber-600">
+                  ヒント{index + 1}:
+                </span>
+                {hint}
+              </div>
+            ))}
+
+            {/* 次のヒントを見るボタン */}
+            {openedCount < hints.length && (
+              <button
+                onClick={handleOpenHint}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-amber-300 bg-white px-4 py-3 font-bold text-amber-700 transition-all hover:border-amber-400 hover:bg-amber-50"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                ヒント{openedCount + 1}を見る ({openedCount + 1}/{hints.length})
+              </button>
+            )}
+
+            {/* 全ヒント開放済み */}
+            {openedCount === hints.length && (
+              <div className="text-center text-sm text-gray-500">
+                すべてのヒントを表示しました
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 /**
  * 問題選択ボタン
@@ -291,6 +414,9 @@ function QuestionScreen({
             </button>
           </div>
         )}
+
+        {/* ヒントパネル */}
+        {question.hints.length > 0 && <HintPanel hints={question.hints} />}
 
         <AnswerInputArea
           value={userAnswer}
