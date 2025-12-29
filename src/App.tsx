@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { DecorativeElements } from './components/DecorativeElements'
+import { ScrollToTop } from './components'
 import {
   HomePage,
   GojuonPickPage,
@@ -12,6 +13,7 @@ import {
 function App() {
   return (
     <HashRouter>
+      <ScrollToTop />
       <div
         className="relative min-h-screen overflow-hidden"
         style={{
