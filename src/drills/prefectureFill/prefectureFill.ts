@@ -315,7 +315,7 @@ export function generateTwoPrefecturesQuestion(lastChar: string | null): {
   const chars = Object.keys(DOUBLE_PREFECTURE_CHARS)
   const char = getRandomElementExcluding(chars, lastChar)
   const prefectures = DOUBLE_PREFECTURE_CHARS[char]
-  const answer = [...prefectures].sort().join(' ')
+  const answer = prefectures.toSorted().join(' ')
 
   return {
     question: {

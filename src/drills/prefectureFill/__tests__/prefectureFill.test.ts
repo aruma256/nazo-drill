@@ -131,7 +131,7 @@ describe('prefectureFill', () => {
     it('回答はソートされている', () => {
       const result = generateTwoPrefecturesQuestion(null)
       const answers = result.question.answer.split(' ')
-      expect(answers).toEqual([...answers].sort())
+      expect(answers).toEqual(answers.toSorted())
     })
   })
 
