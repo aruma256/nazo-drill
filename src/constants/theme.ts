@@ -46,8 +46,8 @@ export type SubjectId = keyof typeof SUBJECT_THEMES
  */
 export const DRILL_CONFIG = {
   '50on-pick': { subject: 'japanese', icon: 'あ' },
-  '123-abc': { subject: 'english', icon: '1A' },
-  'abc-shift': { subject: 'math', icon: 'A→' },
+  '123-abc': { subject: 'english', icon: '1→A' },
+  'abc-shift': { subject: 'math', icon: 'A+1' },
   'prefecture-fill': { subject: 'social', icon: '◯' },
   '50on-slide': { subject: 'japanese', icon: '⇒' },
   'original-nazo': { subject: 'science', icon: '?' },
