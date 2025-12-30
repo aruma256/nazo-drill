@@ -536,9 +536,22 @@ function ChallengeScreen({
   // タイムアップ時の処理
   useEffect(() => {
     if (remainingTime === 0) {
-      onTimeUp(score, history)
+      // 出題中の問題があれば、空回答として履歴に追加
+      let finalHistory = history
+      if (currentQuestion) {
+        finalHistory = [
+          ...history,
+          {
+            id: history.length + 1,
+            question: currentQuestion,
+            userAnswer: '',
+            isCorrect: false,
+          },
+        ]
+      }
+      onTimeUp(score, finalHistory)
     }
-  }, [remainingTime, score, history, onTimeUp])
+  }, [remainingTime, score, history, currentQuestion, onTimeUp])
 
   // 回答チェック（normalizeAnswerを使用）
   const checkUserAnswer = useCallback(
