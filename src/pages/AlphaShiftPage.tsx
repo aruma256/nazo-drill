@@ -407,7 +407,7 @@ export function AlphaShiftPage() {
         <ChallengeResult
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="ABCシフト"
+          drillName="アルファベットシフト"
           history={challengeHistory}
           onRetry={handleRetryChallenge}
           onBack={handleBackToStart}
