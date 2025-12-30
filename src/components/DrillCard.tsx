@@ -10,6 +10,7 @@ interface DrillCardProps {
   drillId?: DrillId
   points?: number
   actionLabel?: string
+  comingSoon?: boolean
 }
 
 export function DrillCard({
@@ -20,17 +21,12 @@ export function DrillCard({
   drillId,
   points,
   actionLabel = '練習する',
+  comingSoon = false,
 }: DrillCardProps) {
   const theme = drillId ? DRILL_THEMES[drillId] : null
 
-  return (
-    <Link
-      to={to}
-      className="group relative block overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-      style={{
-        boxShadow: `0 4px 20px -2px ${theme ? theme.primary + '20' : 'rgba(0,0,0,0.1)'}`,
-      }}
-    >
+  const cardContent = (
+    <>
       {/* Theme color ribbon */}
       {theme && (
         <div
@@ -90,26 +86,69 @@ export function DrillCard({
         </div>
 
         {/* Hover indicator */}
-        <div
-          className="mt-4 flex items-center justify-end gap-1 text-sm font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ color: theme?.primary ?? '#6366f1' }}
-        >
-          {actionLabel}
-          <svg
-            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {!comingSoon && (
+          <div
+            className="mt-4 flex items-center justify-end gap-1 text-sm font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{ color: theme?.primary ?? '#6366f1' }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </div>
+            {actionLabel}
+            <svg
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+        )}
+
+        {/* Coming Soon badge */}
+        {comingSoon && (
+          <div className="mt-4 flex items-center justify-end">
+            <span className="rounded-full bg-gray-200 px-3 py-1 text-sm font-medium text-gray-500">
+              Coming Soon
+            </span>
+          </div>
+        )}
       </div>
+    </>
+  )
+
+  const baseClassName =
+    'group relative block overflow-hidden rounded-2xl bg-white transition-all duration-300'
+  const hoverClassName = comingSoon
+    ? ''
+    : 'hover:-translate-y-1 hover:shadow-2xl'
+  const opacityClassName = comingSoon ? 'opacity-70' : ''
+
+  if (comingSoon) {
+    return (
+      <div
+        className={`${baseClassName} ${hoverClassName} ${opacityClassName} cursor-default`}
+        style={{
+          boxShadow: `0 4px 20px -2px ${theme ? theme.primary + '20' : 'rgba(0,0,0,0.1)'}`,
+        }}
+      >
+        {cardContent}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      to={to}
+      className={`${baseClassName} ${hoverClassName}`}
+      style={{
+        boxShadow: `0 4px 20px -2px ${theme ? theme.primary + '20' : 'rgba(0,0,0,0.1)'}`,
+      }}
+    >
+      {cardContent}
     </Link>
   )
 }

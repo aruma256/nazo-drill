@@ -127,6 +127,23 @@ export function HomePage() {
             </DrillCard>
           </div>
 
+          {/* 五十音表スライド */}
+          <div>
+            <DrillCard
+              to="/drill/50on-slide"
+              title="五十音表スライド"
+              description="準備中..."
+              drillId="50on-slide"
+              comingSoon
+            >
+              <div className="text-center">
+                <div className="font-display mb-2 text-2xl font-bold text-gray-400">
+                  準備中...
+                </div>
+              </div>
+            </DrillCard>
+          </div>
+
           {/* おまけ謎 */}
           <div>
             <DrillCard
