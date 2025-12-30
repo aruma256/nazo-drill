@@ -292,7 +292,11 @@ function StartScreen({
       <section className="mb-8">
         <SectionHeader>ルール</SectionHeader>
         <div className="space-y-2 pl-3 text-gray-700">
-          <p>数字をアルファベットに変換して答えます。</p>
+          <p>
+            1, 2, 3 ...
+            を、アルファベットのAから順に対応させて変換します。1はA、2はB ...
+            26はZ となります。
+          </p>
           <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
             <p className="font-mono text-lg">
               <span className="text-drill-primary">1</span> →{' '}
@@ -626,7 +630,7 @@ function ChallengeScreen({
 }
 
 /**
- * 数字toアルファベットページ
+ * 数字→アルファベットページ
  */
 export function NumberToAlphaPage() {
   const [screen, setScreen] = useState<Screen>('start')
@@ -677,8 +681,8 @@ export function NumberToAlphaPage() {
       {screen === 'start' && (
         <>
           <DrillHeader
-            title="数字toアルファベット"
-            description="数字をアルファベットに変換しよう"
+            title="数字→アルファベット"
+            description="1, 2, 3 ... を A, B, C ... に変換しよう"
           />
           <StartScreen
             onStartDrill={handleStartDrill}
@@ -703,7 +707,7 @@ export function NumberToAlphaPage() {
         <ChallengeResult
           score={challengeScore}
           timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="数字toアルファベット"
+          drillName="数字→アルファベット"
           history={challengeHistory}
           onRetry={handleRetryChallenge}
           onBack={handleBackToStart}

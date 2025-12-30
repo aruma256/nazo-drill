@@ -35,9 +35,9 @@ describe('HomePage', () => {
       expect(link).toHaveAttribute('href', '/drill/50on-pick')
     })
 
-    it('数字toアルファベットへのリンクがある', () => {
+    it('数字→アルファベットへのリンクがある', () => {
       renderHomePage()
-      const link = screen.getByRole('link', { name: /数字toアルファベット/ })
+      const link = screen.getByRole('link', { name: /数字→アルファベット/ })
       expect(link).toHaveAttribute('href', '/drill/123-abc')
     })
 

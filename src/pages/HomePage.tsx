@@ -83,12 +83,12 @@ export function HomePage() {
             </DrillCard>
           </div>
 
-          {/* 数字toアルファベット */}
+          {/* 数字→アルファベット */}
           <div>
             <DrillCard
               to="/drill/123-abc"
-              title="数字toアルファベット"
-              description="数字をアルファベットに変換する練習"
+              title="数字→アルファベット"
+              description="1, 2, 3 ... を A, B, C ... に変換する練習"
               drillId="123-abc"
             >
               <DrillExample question="5, 1, 20" answer="EAT" />
