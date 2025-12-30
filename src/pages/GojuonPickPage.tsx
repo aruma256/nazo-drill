@@ -27,9 +27,9 @@ import {
   generateTaMoQuestion,
   parseMarkedCells,
 } from '../drills/gojuonPick'
+import { CHALLENGE_CONFIG } from '../constants'
 
 const DRILL_NAME = '50on-pick'
-const CHALLENGE_TIME_LIMIT = 45
 
 type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
 
@@ -81,7 +81,7 @@ function StartScreen({
         <SectionHeader>モードを選択</SectionHeader>
         <div className="space-y-3">
           <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            label={`実力テスト（${CHALLENGE_CONFIG.TIME_LIMIT}秒）`}
             mode="challenge"
             drillName={DRILL_NAME}
             onClick={onStartChallenge}
@@ -235,8 +235,6 @@ function DrillScreen({
 /**
  * チャレンジ画面（実力テストモード）
  */
-const WRONG_ANSWER_PENALTY_SECONDS = 5
-
 function ChallengeScreen({
   onTimeUp,
   onBack,
@@ -247,8 +245,9 @@ function ChallengeScreen({
   const [userAnswer, setUserAnswer] = useState('')
   const [score, setScore] = useState(0)
   const [isPenalized, setIsPenalized] = useState(false)
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
+  const { remainingTime, subtractTime } = useCountdownTimer(
+    CHALLENGE_CONFIG.TIME_LIMIT,
+  )
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -298,7 +297,7 @@ function ChallengeScreen({
       incrementCorrectCount('challenge')
     } else {
       // 不正解ペナルティ
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
+      subtractTime(CHALLENGE_CONFIG.WRONG_ANSWER_PENALTY_SECONDS)
       setIsPenalized(true)
       setTimeout(() => {
         setIsPenalized(false)
@@ -325,7 +324,7 @@ function ChallengeScreen({
             <div className="rounded-xl bg-red-500/90 px-6 py-4 text-center text-white shadow-lg">
               <div className="text-lg font-bold">不正解</div>
               <div className="text-2xl font-black">
-                -{WRONG_ANSWER_PENALTY_SECONDS}秒
+                -{CHALLENGE_CONFIG.WRONG_ANSWER_PENALTY_SECONDS}秒
               </div>
             </div>
           </div>
@@ -334,7 +333,7 @@ function ChallengeScreen({
         {/* タイマー */}
         <ChallengeTimer
           remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
+          totalSeconds={CHALLENGE_CONFIG.TIME_LIMIT}
           isPenalized={isPenalized}
         />
 
@@ -441,7 +440,7 @@ export function GojuonPickPage() {
       {screen === 'challengeResult' && (
         <ChallengeResult
           score={challengeScore}
-          timeLimit={CHALLENGE_TIME_LIMIT}
+          timeLimit={CHALLENGE_CONFIG.TIME_LIMIT}
           drillName="五十音表の文字拾い"
           history={challengeHistory}
           questionRenderer={renderQuestion}
