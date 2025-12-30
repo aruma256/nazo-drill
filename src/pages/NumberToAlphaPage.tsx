@@ -311,9 +311,6 @@ function StartScreen({
               <span className="font-bold text-green-600">Z</span>
             </p>
           </div>
-          <p className="mt-2 text-sm text-gray-500">
-            参照表を見ながら位置で覚えましょう
-          </p>
         </div>
       </section>
 
