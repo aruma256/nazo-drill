@@ -2,11 +2,15 @@ import { Layout, DrillCard, DrillExample, GojuonTable } from '../components'
 import { SUBJECT_THEMES } from '../constants/theme'
 
 const LOGO_BLOCKS = [
-  { char: 'ナ', color: SUBJECT_THEMES.japanese.primary, rotate: '-rotate-2' },
-  { char: 'ゾ', color: SUBJECT_THEMES.social.primary, rotate: 'rotate-1' },
-  { char: 'ド', color: SUBJECT_THEMES.science.primary, rotate: '-rotate-1' },
-  { char: 'リ', color: SUBJECT_THEMES.math.primary, rotate: 'rotate-2' },
-  { char: 'ル', color: SUBJECT_THEMES.english.primary, rotate: '-rotate-1' },
+  {
+    char: 'ナ',
+    color: SUBJECT_THEMES.japanese.primary,
+    rotate: '-rotate-[4deg]',
+  },
+  { char: 'ゾ', color: SUBJECT_THEMES.social.primary, rotate: 'rotate-2' },
+  { char: 'ド', color: SUBJECT_THEMES.science.primary, rotate: '-rotate-2' },
+  { char: 'リ', color: SUBJECT_THEMES.math.primary, rotate: 'rotate-[4deg]' },
+  { char: 'ル', color: SUBJECT_THEMES.english.primary, rotate: '-rotate-2' },
 ]
 
 export function HomePage() {
