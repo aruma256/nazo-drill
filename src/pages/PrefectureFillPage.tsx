@@ -28,9 +28,12 @@ import {
   SINGLE_PREFECTURE_CHARS,
   DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
+import {
+  CHALLENGE_TIME_LIMIT,
+  WRONG_ANSWER_PENALTY_SECONDS,
+} from '../constants/challenge'
 
 const DRILL_NAME = 'prefecture-fill'
-const CHALLENGE_TIME_LIMIT = 45
 
 type Screen =
   | 'start'
@@ -499,8 +502,6 @@ function DrillScreen({
  * チャレンジ画面（実力テストモード）
  * 穴埋めモードと同じ出題
  */
-const WRONG_ANSWER_PENALTY_SECONDS = 5
-
 function ChallengeScreen({
   onTimeUp,
   onBack,

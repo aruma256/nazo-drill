@@ -24,9 +24,12 @@ import {
   generateSingleQuestion,
   generateWordQuestion,
 } from '../drills/numberToAlpha'
+import {
+  CHALLENGE_TIME_LIMIT,
+  WRONG_ANSWER_PENALTY_SECONDS,
+} from '../constants/challenge'
 
 const DRILL_NAME = '123-abc'
-const CHALLENGE_TIME_LIMIT = 45
 
 type Screen =
   | 'start'
@@ -505,8 +508,6 @@ function DrillScreen({
 /**
  * チャレンジ画面（実力テストモード）
  */
-const WRONG_ANSWER_PENALTY_SECONDS = 5
-
 function ChallengeScreen({
   onTimeUp,
   onBack,

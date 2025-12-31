@@ -23,9 +23,12 @@ import {
   generateChallengeQuestion,
   type TrainingMode,
 } from '../drills/alphaShift'
+import {
+  CHALLENGE_TIME_LIMIT,
+  WRONG_ANSWER_PENALTY_SECONDS,
+} from '../constants/challenge'
 
 const DRILL_NAME = 'abc-shift'
-const CHALLENGE_TIME_LIMIT = 45
 
 type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
 
@@ -199,8 +202,6 @@ function DrillScreen({
  * チャレンジ画面（実力テストモード）
  * +1〜+3と-1〜-3を交互に出題
  */
-const WRONG_ANSWER_PENALTY_SECONDS = 5
-
 function ChallengeScreen({
   onTimeUp,
   onBack,
