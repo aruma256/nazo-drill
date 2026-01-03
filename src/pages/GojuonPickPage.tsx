@@ -28,7 +28,10 @@ import {
   generateTaMoQuestion,
   parseMarkedCells,
 } from '../drills/gojuonPick'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
+import {
+  CHALLENGE_TIME_LIMIT,
+  WRONG_ANSWER_PENALTY_SECONDS,
+} from '../constants/challenge'
 
 const DRILL_NAME = '50on-pick'
 
