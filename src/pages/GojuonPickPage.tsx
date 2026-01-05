@@ -392,6 +392,7 @@ export function GojuonPickPage() {
 
   const handleRetryChallenge = () => {
     setChallengeScore(0)
+    setChallengeHistory([])
     setScreen('countdown')
   }
 
