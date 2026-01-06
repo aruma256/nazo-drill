@@ -32,6 +32,7 @@ import {
 import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
+  PENALTY_DISPLAY_DURATION_MS,
 } from '../constants/challenge'
 
 const DRILL_NAME = 'prefecture-fill'
@@ -581,7 +582,7 @@ function ChallengeScreen({
       setIsPenalized(true)
       setTimeout(() => {
         setIsPenalized(false)
-      }, 800)
+      }, PENALTY_DISPLAY_DURATION_MS)
     }
     presentQuestion()
     setUserAnswer('')
