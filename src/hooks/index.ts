@@ -8,3 +8,4 @@ export type {
   ScoreStats,
 } from './useDrill'
 export { useDrillStorage } from './useDrillStorage'
+export { usePenaltyTimeout } from './usePenaltyTimeout'

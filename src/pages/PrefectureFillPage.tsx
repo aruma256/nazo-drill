@@ -16,6 +16,7 @@ import {
   useCountdownTimer,
   useDrill,
   useDrillStorage,
+  usePenaltyTimeout,
   type Feedback,
   type HistoryEntry,
   type Question,
@@ -32,7 +33,6 @@ import {
 import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
-  PENALTY_DISPLAY_DURATION_MS,
 } from '../constants/challenge'
 
 const DRILL_NAME = 'prefecture-fill'
@@ -513,7 +513,7 @@ function ChallengeScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [score, setScore] = useState(0)
-  const [isPenalized, setIsPenalized] = useState(false)
+  const { isPenalized, activatePenalty } = usePenaltyTimeout()
   const { remainingTime, subtractTime } =
     useCountdownTimer(CHALLENGE_TIME_LIMIT)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
@@ -579,10 +579,7 @@ function ChallengeScreen({
     } else {
       // 不正解ペナルティ
       subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      setIsPenalized(true)
-      setTimeout(() => {
-        setIsPenalized(false)
-      }, PENALTY_DISPLAY_DURATION_MS)
+      activatePenalty()
     }
     presentQuestion()
     setUserAnswer('')
