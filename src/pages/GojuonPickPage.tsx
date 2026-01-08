@@ -69,7 +69,6 @@ function StartScreen({
                 { row: 0, col: 4, number: 3 }, // ま
               ]}
               size="medium"
-              className=""
             />
             <p className="mb-1 mt-3 text-center text-sm text-gray-600">
               1→「く」、2→「る」、3→「ま」
@@ -401,7 +400,7 @@ export function GojuonPickPage() {
   // 問題列のカスタム表示（小さい五十音表を表示）
   const renderQuestion = useCallback((question: Question) => {
     const markedCells = parseMarkedCells(question.question)
-    return <GojuonTable markedCells={markedCells} size="small" className="" />
+    return <GojuonTable markedCells={markedCells} size="small" />
   }, [])
 
   return (
