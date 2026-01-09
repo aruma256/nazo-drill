@@ -33,10 +33,11 @@ import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
 } from '../constants/challenge'
+import { type DrillScreen } from '../types/screen'
 
 const DRILL_NAME = '50on-pick'
 
-type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
+type Screen = DrillScreen
 
 /**
  * スタート画面
