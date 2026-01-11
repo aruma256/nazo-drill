@@ -19,6 +19,11 @@ interface ChallengeResultProps {
   questionRenderer?: (question: Question) => ReactNode
 }
 
+/** スコアアニメーションの総時間（ミリ秒） */
+const SCORE_ANIMATION_DURATION = 1000
+/** スコアアニメーションの最大ステップ数 */
+const SCORE_ANIMATION_MAX_STEPS = 20
+
 /**
  * スコアカウントアップアニメーション
  */
@@ -28,8 +33,8 @@ function AnimatedScore({ target }: { target: number }) {
   useEffect(() => {
     if (target === 0) return
 
-    const duration = 1000 // 1秒
-    const steps = Math.min(target, 20)
+    const duration = SCORE_ANIMATION_DURATION
+    const steps = Math.min(target, SCORE_ANIMATION_MAX_STEPS)
     const stepDuration = duration / steps
 
     let step = 0
