@@ -136,15 +136,10 @@ export function HomePage() {
             <DrillCard
               to="/drill/50on-slide"
               title="五十音表スライド"
-              description="準備中..."
+              description="矢印方向に1マス移動した文字を答える練習"
               drillId="50on-slide"
-              comingSoon
             >
-              <div className="text-center">
-                <div className="font-display mb-2 text-2xl font-bold text-gray-400">
-                  準備中...
-                </div>
-              </div>
+              <DrillExample question="あ ↓" answer="い" />
             </DrillCard>
           </div>
 

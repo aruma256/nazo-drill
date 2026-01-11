@@ -1,5 +1,6 @@
 export { HomePage } from './HomePage'
 export { GojuonPickPage } from './GojuonPickPage'
+export { GojuonSlidePage } from './GojuonSlidePage'
 export { NumberToAlphaPage } from './NumberToAlphaPage'
 export { AlphaShiftPage } from './AlphaShiftPage'
 export { PrefectureFillPage } from './PrefectureFillPage'

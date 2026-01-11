@@ -4,6 +4,7 @@ import { ScrollToTop } from './components'
 import {
   HomePage,
   GojuonPickPage,
+  GojuonSlidePage,
   NumberToAlphaPage,
   AlphaShiftPage,
   PrefectureFillPage,
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/drill/50on-pick" element={<GojuonPickPage />} />
+          <Route path="/drill/50on-slide" element={<GojuonSlidePage />} />
           <Route path="/drill/123-abc" element={<NumberToAlphaPage />} />
           <Route path="/drill/abc-shift" element={<AlphaShiftPage />} />
           <Route
