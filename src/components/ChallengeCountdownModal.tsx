@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CHALLENGE_COUNTDOWN_SECONDS } from '../constants/challenge'
 
 interface ChallengeCountdownModalProps {
   /** カウントダウン完了時のコールバック */
@@ -12,7 +13,7 @@ interface ChallengeCountdownModalProps {
 export function ChallengeCountdownModal({
   onComplete,
 }: ChallengeCountdownModalProps) {
-  const [count, setCount] = useState(3)
+  const [count, setCount] = useState(CHALLENGE_COUNTDOWN_SECONDS)
   const [animationKey, setAnimationKey] = useState(0)
 
   useEffect(() => {
