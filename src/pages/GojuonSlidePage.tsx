@@ -13,6 +13,7 @@ import {
   PenaltyOverlay,
 } from '../components'
 import {
+  useChallengeTimeUp,
   useCountdownTimer,
   useDrill,
   useDrillStorage,
@@ -241,24 +242,7 @@ function ChallengeScreen({
   }, [presentQuestion])
 
   // タイムアップ時の処理
-  useEffect(() => {
-    if (remainingTime === 0) {
-      // 出題中の問題があれば、空回答として履歴に追加
-      let finalHistory = history
-      if (currentQuestion) {
-        finalHistory = [
-          ...history,
-          {
-            id: history.length + 1,
-            question: currentQuestion,
-            userAnswer: '',
-            isCorrect: false,
-          },
-        ]
-      }
-      onTimeUp(score, finalHistory)
-    }
-  }, [remainingTime, score, history, currentQuestion, onTimeUp])
+  useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
 
   const handleSubmit = () => {
     if (!userAnswer.trim() || remainingTime === 0) return

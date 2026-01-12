@@ -1,3 +1,4 @@
+export { useChallengeTimeUp } from './useChallengeTimeUp'
 export { useCountdownTimer } from './useCountdownTimer'
 export { useDrill } from './useDrill'
 export type {
