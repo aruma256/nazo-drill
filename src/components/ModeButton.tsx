@@ -1,5 +1,31 @@
 import { useDrillStorage } from '../hooks'
 
+interface ModeBadgeProps {
+  /** 表示する値 */
+  value: number
+  /** ラベルテキスト（「累計」「最高」など） */
+  label: string
+}
+
+/**
+ * モード選択ボタンのバッジ（ポイント/最高記録）
+ */
+function ModeBadge({ value, label }: ModeBadgeProps) {
+  return (
+    <div
+      className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+      style={{
+        backgroundColor: value > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
+        color: value > 0 ? 'var(--drill-primary)' : '#94a3b8',
+      }}
+    >
+      <span className="text-xs opacity-70">{label}</span>
+      <span className="font-mono">{value}</span>
+      <span className="text-xs opacity-70">問</span>
+    </div>
+  )
+}
+
 interface ModeButtonProps {
   /** ボタンに表示するラベル */
   label: string
@@ -108,34 +134,12 @@ export function ModeButton({
 
         <div className="flex items-center gap-2">
           {/* Badge: 練習モードはポイント、実力テストは最高記録 */}
-          {!hidePoints &&
-            (isChallenge ? (
-              <div
-                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-                style={{
-                  backgroundColor:
-                    highScore > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-                  color: highScore > 0 ? 'var(--drill-primary)' : '#94a3b8',
-                }}
-              >
-                <span className="text-xs opacity-70">最高</span>
-                <span className="font-mono">{highScore}</span>
-                <span className="text-xs opacity-70">問</span>
-              </div>
-            ) : (
-              <div
-                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-                style={{
-                  backgroundColor:
-                    points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-                  color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
-                }}
-              >
-                <span className="text-xs opacity-70">累計</span>
-                <span className="font-mono">{points}</span>
-                <span className="text-xs opacity-70">問</span>
-              </div>
-            ))}
+          {!hidePoints && (
+            <ModeBadge
+              value={isChallenge ? highScore : points}
+              label={isChallenge ? '最高' : '累計'}
+            />
+          )}
 
           {/* Arrow indicator */}
           <svg
