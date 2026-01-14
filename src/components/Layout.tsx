@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { DRILL_THEMES, type DrillId } from '../constants/theme'
 
 type MaxWidth = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl'
@@ -19,26 +19,31 @@ const maxWidthClasses: Record<MaxWidth, string> = {
   '4xl': 'max-w-4xl',
 }
 
+const DEFAULT_THEME = {
+  primary: '#6366f1',
+  dark: '#4f46e5',
+  light: '#e0e7ff',
+  accent: '#a5b4fc',
+}
+
 export function Layout({
   children,
   maxWidth = '4xl',
   className = '',
   drillId,
 }: LayoutProps) {
-  const theme = drillId ? DRILL_THEMES[drillId] : null
-  const drillStyle: CSSProperties | undefined = theme
-    ? ({
-        '--drill-primary': theme.primary,
-        '--drill-primary-dark': theme.dark,
-        '--drill-primary-light': theme.light,
-        '--drill-accent': theme.accent,
-      } as CSSProperties)
-    : undefined
+  useEffect(() => {
+    const theme = drillId ? DRILL_THEMES[drillId] : DEFAULT_THEME
+    const root = document.documentElement
+    root.style.setProperty('--drill-primary', theme.primary)
+    root.style.setProperty('--drill-primary-dark', theme.dark)
+    root.style.setProperty('--drill-primary-light', theme.light)
+    root.style.setProperty('--drill-accent', theme.accent)
+  }, [drillId])
 
   return (
     <div
       className={`container relative z-10 mx-auto px-4 py-8 ${maxWidthClasses[maxWidth]} ${className}`}
-      style={drillStyle}
     >
       {children}
     </div>

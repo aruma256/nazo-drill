@@ -8,6 +8,7 @@ export function DecorativeElements() {
         style={{
           background:
             'radial-gradient(circle, var(--drill-primary-light) 0%, transparent 70%)',
+          transition: 'background 0.5s ease',
         }}
       />
 
@@ -17,21 +18,31 @@ export function DecorativeElements() {
         style={{
           background:
             'radial-gradient(circle, var(--drill-accent) 0%, transparent 70%)',
+          transition: 'background 0.5s ease',
         }}
       />
 
       {/* Small floating shapes */}
       <div
         className="animate-float absolute left-[10%] top-[20%] h-8 w-8 rotate-45 rounded-lg opacity-20"
-        style={{ backgroundColor: 'var(--drill-primary)' }}
+        style={{
+          backgroundColor: 'var(--drill-primary)',
+          transition: 'background-color 0.5s ease',
+        }}
       />
       <div
         className="animate-float-reverse absolute right-[15%] top-[60%] h-6 w-6 rounded-full opacity-25"
-        style={{ backgroundColor: 'var(--drill-accent)' }}
+        style={{
+          backgroundColor: 'var(--drill-accent)',
+          transition: 'background-color 0.5s ease',
+        }}
       />
       <div
         className="animate-float-slow absolute bottom-[30%] left-[20%] h-10 w-10 rounded-full opacity-15"
-        style={{ backgroundColor: 'var(--drill-primary)' }}
+        style={{
+          backgroundColor: 'var(--drill-primary)',
+          transition: 'background-color 0.5s ease',
+        }}
       />
 
       {/* Triangle shapes */}
@@ -43,6 +54,7 @@ export function DecorativeElements() {
           borderLeft: '20px solid transparent',
           borderRight: '20px solid transparent',
           borderBottom: '35px solid var(--drill-primary)',
+          transition: 'border-color 0.5s ease',
         }}
       />
       <div
@@ -53,6 +65,7 @@ export function DecorativeElements() {
           borderLeft: '15px solid transparent',
           borderRight: '15px solid transparent',
           borderBottom: '26px solid var(--drill-accent)',
+          transition: 'border-color 0.5s ease',
         }}
       />
 
@@ -62,8 +75,8 @@ export function DecorativeElements() {
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          fill="var(--drill-primary)"
           className="opacity-25"
+          style={{ fill: 'var(--drill-primary)', transition: 'fill 0.5s ease' }}
         >
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>

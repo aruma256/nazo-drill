@@ -19,7 +19,7 @@ function App() {
         className="relative min-h-screen overflow-hidden"
         style={{
           background:
-            'linear-gradient(135deg, var(--drill-primary-light) 0%, #f0f4ff 50%, #faf5ff 100%)',
+            'linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 50%, #faf5ff 100%)',
         }}
       >
         <DecorativeElements />

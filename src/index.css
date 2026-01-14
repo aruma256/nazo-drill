@@ -3,6 +3,32 @@
 
 @import 'tailwindcss';
 
+/* ===== Drill Theme @property Registration ===== */
+/* Enables smooth color transitions for CSS custom properties */
+@property --drill-primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6366f1;
+}
+
+@property --drill-primary-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4f46e5;
+}
+
+@property --drill-primary-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e0e7ff;
+}
+
+@property --drill-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a5b4fc;
+}
+
 /* ===== CSS Custom Properties ===== */
 :root {
   /* Typography */
