@@ -31,16 +31,9 @@ import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
 } from '../constants/challenge'
+import type { ScreenWithNote as Screen } from '../types/drill'
 
 const DRILL_NAME = '123-abc'
-
-type Screen =
-  | 'start'
-  | 'drill'
-  | 'countdown'
-  | 'challenge'
-  | 'challengeResult'
-  | 'note'
 
 /**
  * アルファベット参照表（EJOTYのみ表示）
