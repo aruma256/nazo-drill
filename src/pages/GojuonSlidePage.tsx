@@ -31,10 +31,9 @@ import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
 } from '../constants/challenge'
+import type { Screen } from '../types/drill'
 
 const DRILL_NAME = '50on-slide'
-
-type Screen = 'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
 
 /**
  * 問題表示コンポーネント

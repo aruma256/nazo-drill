@@ -35,16 +35,10 @@ import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
 } from '../constants/challenge'
+import type { ScreenWithNote as Screen } from '../types/drill'
 
 const DRILL_NAME = 'prefecture-fill'
 
-type Screen =
-  | 'start'
-  | 'drill'
-  | 'countdown'
-  | 'challenge'
-  | 'challengeResult'
-  | 'note'
 type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures' | 'challenge'
 
 /**
