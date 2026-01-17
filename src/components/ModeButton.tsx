@@ -1,5 +1,34 @@
 import { useDrillStorage } from '../hooks'
 
+interface ScoreBadgeProps {
+  /** バッジに表示するラベル（例: "累計"、"最高"） */
+  label: string
+  /** 表示する値 */
+  value: number
+  /** 単位（例: "問"） */
+  unit: string
+}
+
+/**
+ * スコア表示バッジ
+ * 値が0より大きい場合はテーマカラーで、0の場合はグレーで表示する
+ */
+function ScoreBadge({ label, value, unit }: ScoreBadgeProps) {
+  return (
+    <div
+      className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+      style={{
+        backgroundColor: value > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
+        color: value > 0 ? 'var(--drill-primary)' : '#94a3b8',
+      }}
+    >
+      <span className="text-xs opacity-70">{label}</span>
+      <span className="font-mono">{value}</span>
+      <span className="text-xs opacity-70">{unit}</span>
+    </div>
+  )
+}
+
 interface ModeButtonProps {
   /** ボタンに表示するラベル */
   label: string
@@ -110,31 +139,9 @@ export function ModeButton({
           {/* Badge: 練習モードはポイント、実力テストは最高記録 */}
           {!hidePoints &&
             (isChallenge ? (
-              <div
-                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-                style={{
-                  backgroundColor:
-                    highScore > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-                  color: highScore > 0 ? 'var(--drill-primary)' : '#94a3b8',
-                }}
-              >
-                <span className="text-xs opacity-70">最高</span>
-                <span className="font-mono">{highScore}</span>
-                <span className="text-xs opacity-70">問</span>
-              </div>
+              <ScoreBadge label="最高" value={highScore} unit="問" />
             ) : (
-              <div
-                className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
-                style={{
-                  backgroundColor:
-                    points > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
-                  color: points > 0 ? 'var(--drill-primary)' : '#94a3b8',
-                }}
-              >
-                <span className="text-xs opacity-70">累計</span>
-                <span className="font-mono">{points}</span>
-                <span className="text-xs opacity-70">問</span>
-              </div>
+              <ScoreBadge label="累計" value={points} unit="問" />
             ))}
 
           {/* Arrow indicator */}
