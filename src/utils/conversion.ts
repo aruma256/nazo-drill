@@ -56,3 +56,14 @@ export function hiraganaToKatakana(str: string): string {
     return String.fromCharCode(match.charCodeAt(0) + 0x60)
   })
 }
+
+/**
+ * 全角アルファベットを半角に変換
+ * @param str - 変換する文字列
+ * @returns 半角アルファベットに変換された文字列
+ */
+export function toHalfWidthAlpha(str: string): string {
+  return str.replace(/[Ａ-Ｚａ-ｚ]/g, (char) =>
+    String.fromCharCode(char.charCodeAt(0) - 0xfee0),
+  )
+}
