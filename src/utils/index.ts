@@ -14,6 +14,7 @@ export {
   shiftAlpha,
   katakanaToHiragana,
   hiraganaToKatakana,
+  toHalfWidthAlpha,
 } from './conversion'
 
 export { sha256 } from './hash'

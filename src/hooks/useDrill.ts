@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import { toHalfWidthAlpha } from '../utils'
 
 /**
  * ドリルの問題オブジェクト
@@ -51,15 +52,6 @@ export type QuestionGenerator = () => Question
 
 /** 連続同一問題防止の最大リトライ回数 */
 const MAX_RETRIES = 100
-
-/**
- * 全角アルファベットを半角に変換
- */
-function toHalfWidthAlpha(str: string): string {
-  return str.replace(/[Ａ-Ｚａ-ｚ]/g, (char) =>
-    String.fromCharCode(char.charCodeAt(0) - 0xfee0),
-  )
-}
 
 /**
  * 回答を正規化する（大文字小文字、空白、全角/半角などを統一）
