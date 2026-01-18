@@ -12,6 +12,7 @@ import {
   ChallengeCountdownModal,
   SectionHeader,
   PenaltyOverlay,
+  ScoreDisplay,
 } from '../components'
 import {
   useChallengeTimeUp,
@@ -313,12 +314,7 @@ function ChallengeScreen({
         />
 
         {/* スコア表示 */}
-        <div className="mb-4 text-center">
-          <span className="text-sm text-gray-500">正解数</span>
-          <span className="ml-2 text-2xl font-bold text-drill-primary">
-            {score}
-          </span>
-        </div>
+        <ScoreDisplay score={score} />
 
         {/* 問題表示 */}
         <GojuonTable markedCells={markedCells} size="large" />
