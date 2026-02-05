@@ -19,7 +19,7 @@ const QUESTIONS = [
   {
     id: 'q1',
     label: 'aruma謎Tシャツ-1',
-    image: '/images/original-nazo/q1-detail.jpg',
+    image: '/images/original-nazo/q1.jpg',
     // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
     answerHash:
       'dc2fc19d8fce376c47641cf15f823a03ad10f2dc7da3f43230551f50706914f5',
