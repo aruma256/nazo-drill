@@ -18,7 +18,7 @@ const DRILL_NAME = 'original-nazo'
 const QUESTIONS = [
   {
     id: 'q1',
-    label: 'aruma謎Tシャツ-1',
+    label: 'aruma謎-1',
     image: '/images/original-nazo/q1.jpg',
     // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
     answerHash:
