@@ -393,14 +393,16 @@ function QuestionScreen({
  * クリア画面
  */
 function ClearScreen({
+  questionId,
   questionLabel,
   onBack,
 }: {
+  questionId: string
   questionLabel: string
   onBack: () => void
 }) {
   const handleShare = () => {
-    const text = `#ナゾドリル おまけ謎「${questionLabel}」をクリアしました！\nhttps://nazo-drill.aruma256.dev/`
+    const text = `#ナゾドリル おまけ謎「${questionLabel}」をクリアしました！\nhttps://nazo-drill.aruma256.dev/#/original-nazo/${questionId}`
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }
@@ -513,7 +515,13 @@ function SelectedQuestion({
   }
 
   if (isClear) {
-    return <ClearScreen questionLabel={question.label} onBack={onBack} />
+    return (
+      <ClearScreen
+        questionId={questionId}
+        questionLabel={question.label}
+        onBack={onBack}
+      />
+    )
   }
 
   return (
