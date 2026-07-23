@@ -67,7 +67,9 @@ export const DRILL_THEMES = Object.fromEntries(
     },
   ]),
 ) as {
-  [K in DrillId]: (typeof SUBJECT_THEMES)[(typeof DRILL_CONFIG)[K]['subject']] & {
+  [
+    K in DrillId
+  ]: (typeof SUBJECT_THEMES)[(typeof DRILL_CONFIG)[K]['subject']] & {
     icon: (typeof DRILL_CONFIG)[K]['icon']
   }
 }

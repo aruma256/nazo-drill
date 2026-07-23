@@ -83,8 +83,7 @@ export function useDrill(generateQuestion: QuestionGenerator) {
       newQuestion = generateQuestion()
       retries++
     } while (
-      previousQuestionRef.current &&
-      newQuestion.question === previousQuestionRef.current.question &&
+      newQuestion.question === previousQuestionRef.current?.question &&
       retries < MAX_RETRIES
     )
 
