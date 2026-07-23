@@ -21,6 +21,7 @@ const QUESTIONS = [
     id: 'q1',
     label: 'aruma謎-1',
     image: '/images/original-nazo/q1.jpg',
+    buyUrl: 'https://suzuri.jp/aruma256/designs/18500610',
     // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
     answerHash:
       'dc2fc19d8fce376c47641cf15f823a03ad10f2dc7da3f43230551f50706914f5',
@@ -41,6 +42,22 @@ const QUESTIONS = [
       '「色の薄いマス」ではなく、単に別の色が混ざったマスなのではないでしょうか。',
       '黄色、ピンク、緑色と混ぜてこのように変化するといえば…。',
       '背景色と同じ、白色が混ざっていたようです。黄色の"w"のマスから下方向に、"white" を当てはめてみましょう。矢印が通った文字を拾うと答えになります。',
+    ],
+  },
+  {
+    id: 'q2',
+    label: 'aruma謎-2',
+    image: '/images/original-nazo/q2.webp',
+    buyUrl: 'https://suzuri.jp/aruma256/designs/20224069',
+    // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
+    answerHash:
+      'e6640de835ad09fb0a7367ee2e0ba99d0142c139db0272146e35538bd07479fc',
+    hints: [
+      '____ に当てはまる4文字が答えになります。',
+      'ロゴのような部分に含まれる2つのアルファベットに注目しましょう。',
+      '2つのアルファベットの位置関係が重要です。',
+      '位置関係を英語で表現すると…？',
+      'FがDの中にある、と捉えましょう。',
     ],
   },
 ]
@@ -395,10 +412,12 @@ function QuestionScreen({
 function ClearScreen({
   questionId,
   questionLabel,
+  buyUrl,
   onBack,
 }: {
   questionId: string
   questionLabel: string
+  buyUrl: string
   onBack: () => void
 }) {
   const handleShare = () => {
@@ -408,11 +427,7 @@ function ClearScreen({
   }
 
   const handleBuy = () => {
-    window.open(
-      'https://suzuri.jp/aruma256/designs/18500610',
-      '_blank',
-      'noopener,noreferrer',
-    )
+    window.open(buyUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -519,6 +534,7 @@ function SelectedQuestion({
       <ClearScreen
         questionId={questionId}
         questionLabel={question.label}
+        buyUrl={question.buyUrl}
         onBack={onBack}
       />
     )
