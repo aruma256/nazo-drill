@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   Layout,
   DrillHeader,
@@ -43,8 +44,6 @@ const QUESTIONS = [
     ],
   },
 ]
-
-type Screen = 'start' | 'question' | 'clear'
 
 /**
  * ヒントパネル
@@ -495,45 +494,76 @@ function ClearScreen({
 }
 
 /**
+ * 選択された問題を表示するコンテナ
+ * questionId を key にして親からマウントすることで、
+ * URL 変更時に isClear 状態が自動でリセットされる
+ */
+function SelectedQuestion({
+  questionId,
+  onBack,
+}: {
+  questionId: string
+  onBack: () => void
+}) {
+  const [isClear, setIsClear] = useState(false)
+  const question = QUESTIONS.find((q) => q.id === questionId)
+
+  if (!question) {
+    return null
+  }
+
+  if (isClear) {
+    return <ClearScreen questionLabel={question.label} onBack={onBack} />
+  }
+
+  return (
+    <QuestionScreen
+      questionId={questionId}
+      onBack={onBack}
+      onClear={() => {
+        setIsClear(true)
+      }}
+    />
+  )
+}
+
+/**
  * オリジナル謎解きページ
  */
 export function OriginalNazoPage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string>('')
+  const { questionId } = useParams<{ questionId?: string }>()
+  const navigate = useNavigate()
 
-  const handleSelectQuestion = (questionId: string) => {
-    setSelectedQuestionId(questionId)
-    setScreen('question')
+  const isValidQuestion =
+    !!questionId && QUESTIONS.some((q) => q.id === questionId)
+
+  // 不正な questionId が指定された場合はスタート画面に戻す
+  useEffect(() => {
+    if (questionId && !isValidQuestion) {
+      void navigate('/original-nazo', { replace: true })
+    }
+  }, [questionId, isValidQuestion, navigate])
+
+  const handleSelectQuestion = (id: string) => {
+    void navigate(`/original-nazo/${id}`)
   }
 
   const handleBackToStart = () => {
-    setScreen('start')
+    void navigate('/original-nazo')
   }
-
-  const handleClear = () => {
-    setScreen('clear')
-  }
-
-  const selectedQuestion = QUESTIONS.find((q) => q.id === selectedQuestionId)
 
   return (
     <Layout maxWidth="2xl" drillId="original-nazo">
-      {screen === 'start' && (
+      {!questionId && (
         <>
           <DrillHeader title="おまけ謎" description="" />
           <StartScreen onSelectQuestion={handleSelectQuestion} />
         </>
       )}
-      {screen === 'question' && (
-        <QuestionScreen
-          questionId={selectedQuestionId}
-          onBack={handleBackToStart}
-          onClear={handleClear}
-        />
-      )}
-      {screen === 'clear' && selectedQuestion && (
-        <ClearScreen
-          questionLabel={selectedQuestion.label}
+      {isValidQuestion && (
+        <SelectedQuestion
+          key={questionId}
+          questionId={questionId}
           onBack={handleBackToStart}
         />
       )}

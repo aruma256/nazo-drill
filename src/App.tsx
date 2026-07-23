@@ -34,6 +34,10 @@ function App() {
             element={<PrefectureFillPage />}
           />
           <Route path="/original-nazo" element={<OriginalNazoPage />} />
+          <Route
+            path="/original-nazo/:questionId"
+            element={<OriginalNazoPage />}
+          />
         </Routes>
       </div>
     </HashRouter>
