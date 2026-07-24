@@ -378,7 +378,7 @@ function QuestionScreen({
           <img
             src={question.image}
             alt={question.label}
-            className="mx-auto max-w-full rounded-lg shadow-md"
+            className="mx-auto max-h-[60vh] w-auto max-w-full rounded-lg object-contain shadow-md"
           />
         </div>
 
