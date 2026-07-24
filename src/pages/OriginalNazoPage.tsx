@@ -19,7 +19,7 @@ const DRILL_NAME = 'original-nazo'
 const QUESTIONS = [
   {
     id: 'q1',
-    label: 'aruma謎-1',
+    label: '買える謎解き No.1',
     image: '/images/original-nazo/q1.jpg',
     buyUrl: 'https://suzuri.jp/aruma256/designs/18500610',
     // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
@@ -46,7 +46,7 @@ const QUESTIONS = [
   },
   {
     id: 'q2',
-    label: 'aruma謎-2',
+    label: '買える謎解き No.2',
     image: '/images/original-nazo/q2.webp',
     buyUrl: 'https://suzuri.jp/aruma256/designs/20224069',
     // コントリビューターがうっかり答えを読むことが無いようにハッシュ化
