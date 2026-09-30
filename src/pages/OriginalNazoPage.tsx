@@ -115,7 +115,7 @@ function HintPanel({ hints }: { hints: string[] }) {
             {/* 開放済みヒント */}
             {hints.slice(0, openedCount).map((hint, index) => (
               <div
-                key={index}
+                key={hint}
                 className="rounded-lg bg-amber-50 p-3 text-sm text-gray-700"
               >
                 <span className="mr-2 font-bold text-amber-600">
