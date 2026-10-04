@@ -4,146 +4,47 @@ import {
   katakanaToHiragana,
 } from '../../utils'
 import type { Question } from '../../hooks/useDrill'
+import { PREFECTURES as PREFECTURE_DATA } from '../../constants/prefectures'
 
 /**
  * 47都道府県のリスト（ひらがな）
  */
-export const PREFECTURES = [
-  'ほっかいどう',
-  'あおもり',
-  'いわて',
-  'みやぎ',
-  'あきた',
-  'やまがた',
-  'ふくしま',
-  'いばらき',
-  'とちぎ',
-  'ぐんま',
-  'さいたま',
-  'ちば',
-  'とうきょう',
-  'かながわ',
-  'にいがた',
-  'とやま',
-  'いしかわ',
-  'ふくい',
-  'やまなし',
-  'ながの',
-  'ぎふ',
-  'しずおか',
-  'あいち',
-  'みえ',
-  'しが',
-  'きょうと',
-  'おおさか',
-  'ひょうご',
-  'なら',
-  'わかやま',
-  'とっとり',
-  'しまね',
-  'おかやま',
-  'ひろしま',
-  'やまぐち',
-  'とくしま',
-  'かがわ',
-  'えひめ',
-  'こうち',
-  'ふくおか',
-  'さが',
-  'ながさき',
-  'くまもと',
-  'おおいた',
-  'みやざき',
-  'かごしま',
-  'おきなわ',
-] as const
+export const PREFECTURES: readonly string[] = PREFECTURE_DATA.map(
+  (prefecture) => prefecture.shortReading,
+)
+
+function getPrefecturesContaining(chars: string): Record<string, string[]> {
+  return Object.fromEntries(
+    Array.from(chars, (char) => [
+      char,
+      PREFECTURES.filter((prefecture) => prefecture.includes(char)),
+    ]),
+  )
+}
 
 /**
  * 1県確定の文字: その文字を含む都道府県は1つだけ
  * 「ざこほどのてにねずめろん」
  */
-export const SINGLE_PREFECTURE_CHARS: Record<string, string[]> = {
-  ざ: ['みやざき'], // 宮崎
-  こ: ['こうち'], // 高知
-  ほ: ['ほっかいどう'], // 北海道
-  ど: ['ほっかいどう'], // 北海道
-  の: ['ながの'], // 長野
-  て: ['いわて'], // 岩手
-  に: ['にいがた'], // 新潟
-  ね: ['しまね'], // 島根
-  ず: ['しずおか'], // 静岡
-  め: ['えひめ'], // 愛媛
-  ろ: ['ひろしま'], // 広島
-  ん: ['ぐんま'], // 群馬
-}
+export const SINGLE_PREFECTURE_CHARS =
+  getPrefecturesContaining('ざこほどのてにねずめろん')
 
 /**
  * 2県確定の文字: その文字を含む都道府県は2つだけ
  * 「えっぐもばごりら」
  */
-export const DOUBLE_PREFECTURE_CHARS: Record<string, string[]> = {
-  え: ['みえ', 'えひめ'], // 三重、愛媛
-  っ: ['ほっかいどう', 'とっとり'], // 北海道、鳥取
-  ぐ: ['ぐんま', 'やまぐち'], // 群馬、山口
-  も: ['あおもり', 'くまもと'], // 青森、熊本
-  ば: ['いばらき', 'ちば'], // 茨城、千葉
-  ご: ['ひょうご', 'かごしま'], // 兵庫、鹿児島
-  り: ['あおもり', 'とっとり'], // 青森、鳥取
-  ら: ['いばらき', 'なら'], // 茨城、奈良
-}
+export const DOUBLE_PREFECTURE_CHARS =
+  getPrefecturesContaining('えっぐもばごりら')
 
 /**
  * 漢字→ひらがなのマッピング
  */
-export const KANJI_TO_HIRAGANA: Record<string, string> = {
-  北海道: 'ほっかいどう',
-  青森: 'あおもり',
-  岩手: 'いわて',
-  宮城: 'みやぎ',
-  秋田: 'あきた',
-  山形: 'やまがた',
-  福島: 'ふくしま',
-  茨城: 'いばらき',
-  栃木: 'とちぎ',
-  群馬: 'ぐんま',
-  埼玉: 'さいたま',
-  千葉: 'ちば',
-  東京: 'とうきょう',
-  神奈川: 'かながわ',
-  新潟: 'にいがた',
-  富山: 'とやま',
-  石川: 'いしかわ',
-  福井: 'ふくい',
-  山梨: 'やまなし',
-  長野: 'ながの',
-  岐阜: 'ぎふ',
-  静岡: 'しずおか',
-  愛知: 'あいち',
-  三重: 'みえ',
-  滋賀: 'しが',
-  京都: 'きょうと',
-  大阪: 'おおさか',
-  兵庫: 'ひょうご',
-  奈良: 'なら',
-  和歌山: 'わかやま',
-  鳥取: 'とっとり',
-  島根: 'しまね',
-  岡山: 'おかやま',
-  広島: 'ひろしま',
-  山口: 'やまぐち',
-  徳島: 'とくしま',
-  香川: 'かがわ',
-  愛媛: 'えひめ',
-  高知: 'こうち',
-  福岡: 'ふくおか',
-  佐賀: 'さが',
-  長崎: 'ながさき',
-  熊本: 'くまもと',
-  大分: 'おおいた',
-  宮崎: 'みやざき',
-  鹿児島: 'かごしま',
-  沖縄: 'おきなわ',
-}
+export const KANJI_TO_HIRAGANA: Record<string, string> = Object.fromEntries(
+  PREFECTURE_DATA.map((prefecture) => [
+    prefecture.shortName,
+    prefecture.shortReading,
+  ]),
+)
 
 /**
  * 文字列の指定位置を◯に置換

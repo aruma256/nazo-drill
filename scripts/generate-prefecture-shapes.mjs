@@ -7,7 +7,7 @@ import { read } from 'shapefile'
 import { merge } from 'topojson-client'
 import { topology } from 'topojson-server'
 import polygonClipping from 'polygon-clipping'
-import { PREFECTURES } from '../src/drills/prefectureShape/prefectures.ts'
+import { PREFECTURES } from '../src/constants/prefectures.ts'
 import { PREFECTURE_MAP_COLORS } from '../src/constants/theme.ts'
 
 // Source: GSI Global Map Japan v2.1 administrative boundaries (2015-01-01).

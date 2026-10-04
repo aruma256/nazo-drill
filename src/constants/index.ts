@@ -5,3 +5,4 @@ export {
   type SubjectId,
   type DrillId,
 } from './theme'
+export { PREFECTURES, type Prefecture } from './prefectures'

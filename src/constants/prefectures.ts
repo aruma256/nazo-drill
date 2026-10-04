@@ -12,11 +12,16 @@ export interface Prefecture {
   id: number
   name: string
   reading: string
+  shortName: string
+  shortReading: string
   region: Region
 }
 
 // 都道府県コード順。
-export const PREFECTURES: readonly Prefecture[] = [
+const PREFECTURE_DATA: readonly Omit<
+  Prefecture,
+  'shortName' | 'shortReading'
+>[] = [
   {
     id: 1,
     name: '北海道',
@@ -300,3 +305,20 @@ export const PREFECTURES: readonly Prefecture[] = [
     region: '九州・沖縄地方',
   },
 ]
+
+/** 正式名・読み・地方と、ドリルで使う略称をまとめた共通データ。 */
+export const PREFECTURES: readonly Prefecture[] = PREFECTURE_DATA.map(
+  (prefecture) => {
+    const { name, reading } = prefecture
+    // 北海道の「道」は名前の一部なので省略しない。
+    const isHokkaido = name === '北海道'
+    const readingSuffixLength = name.endsWith('県') ? 2 : 1
+    return {
+      ...prefecture,
+      shortName: isHokkaido ? name : name.slice(0, -1),
+      shortReading: isHokkaido
+        ? reading
+        : reading.slice(0, -readingSuffixLength),
+    }
+  },
+)

@@ -8,7 +8,7 @@ import {
   SOURCE_PREFECTURE_NAMES,
   verifySourceArchive,
 } from './generate-prefecture-shapes.mjs'
-import { PREFECTURES } from '../src/drills/prefectureShape/prefectures.ts'
+import { PREFECTURES } from '../src/constants/prefectures.ts'
 
 const rectangle = (left, bottom, right, top) => [
   [left, bottom],
