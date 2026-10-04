@@ -1,5 +1,6 @@
 import { Layout, DrillCard, DrillExample, GojuonTable } from '../components'
 import { SUBJECT_THEMES } from '../constants/theme'
+import { MagicSquareBoard } from '../drills/magicSquare'
 
 const LOGO_BLOCKS = [
   {
@@ -108,6 +109,20 @@ export function HomePage() {
               drillId="abc-shift"
             >
               <DrillExample question="C+2" answer="E" />
+            </DrillCard>
+          </div>
+
+          <div>
+            <DrillCard
+              to="/drill/magic-square"
+              title="3×3魔方陣"
+              description="数字を小さい順に置いて魔方陣を完成させる練習"
+              drillId="magic-square"
+            >
+              <MagicSquareBoard
+                cells={[0, 1, 0, 3, 0, 0, 0, 0, 2]}
+                size="small"
+              />
             </DrillCard>
           </div>
 

@@ -16,7 +16,7 @@ interface ScoreBadgeProps {
 function ScoreBadge({ label, value, unit }: ScoreBadgeProps) {
   return (
     <div
-      className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
+      className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold transition-all duration-300"
       style={{
         backgroundColor: value > 0 ? 'var(--drill-primary-light)' : '#f1f5f9',
         color: value > 0 ? 'var(--drill-primary)' : '#94a3b8',
@@ -123,9 +123,9 @@ export function ModeButton({
       )}
 
       <div className="relative flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           {icon && (
-            <span className="text-2xl transition-transform duration-300 group-hover:scale-110">
+            <span className="shrink-0 text-2xl transition-transform duration-300 group-hover:scale-110">
               {icon}
             </span>
           )}
@@ -140,7 +140,7 @@ export function ModeButton({
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {/* Badge: 練習モードはポイント、実力テストは最高記録 */}
           {!hidePoints &&
             (isChallenge ? (

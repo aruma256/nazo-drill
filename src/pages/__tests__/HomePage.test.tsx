@@ -29,6 +29,11 @@ describe('HomePage', () => {
   })
 
   describe('ドリルカード', () => {
+    it('3×3魔方陣へのリンクがある', () => {
+      renderHomePage()
+      const link = screen.getByRole('link', { name: /3×3魔方陣/ })
+      expect(link).toHaveAttribute('href', '/drill/magic-square')
+    })
     it('都道府県の形へのリンクがある', () => {
       renderHomePage()
       const link = screen.getByRole('link', { name: /都道府県の形/ })

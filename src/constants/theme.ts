@@ -55,6 +55,7 @@ export const DRILL_CONFIG = {
   '50on-pick': { subject: 'japanese', icon: 'あ' },
   '123-abc': { subject: 'english', icon: '1→A' },
   'abc-shift': { subject: 'math', icon: 'A+1' },
+  'magic-square': { subject: 'math', icon: '3×3' },
   'prefecture-fill': { subject: 'social', icon: '◯' },
   'prefecture-shape': { subject: 'social', icon: '🗾' },
   '50on-slide': { subject: 'japanese', icon: '⇒' },

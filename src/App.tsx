@@ -8,6 +8,7 @@ import {
   GojuonSlidePage,
   NumberToAlphaPage,
   AlphaShiftPage,
+  MagicSquarePage,
   PrefectureFillPage,
   OriginalNazoPage,
 } from './pages'
@@ -36,6 +37,7 @@ function App() {
           <Route path="/drill/50on-slide" element={<GojuonSlidePage />} />
           <Route path="/drill/123-abc" element={<NumberToAlphaPage />} />
           <Route path="/drill/abc-shift" element={<AlphaShiftPage />} />
+          <Route path="/drill/magic-square" element={<MagicSquarePage />} />
           <Route
             path="/drill/prefecture-fill"
             element={<PrefectureFillPage />}
