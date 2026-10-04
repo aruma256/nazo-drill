@@ -87,6 +87,7 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [revealed, setRevealed] = useState(false)
+  const [hintLevel, setHintLevel] = useState(0)
 
   const handleSubmit = () => {
     if (!userAnswer.trim() || feedback || revealed || !currentQuestion) return
@@ -96,7 +97,10 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
     setUserAnswer('')
   }
   const handleNext = () => {
-    if (feedback?.type === 'correct' || revealed) presentQuestion()
+    if (feedback?.type === 'correct' || revealed) {
+      presentQuestion()
+      setHintLevel(0)
+    }
     setFeedback(null)
     setRevealed(false)
     setUserAnswer('')
@@ -134,6 +138,36 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
               placeholder="答えを入力"
               maxLength={20}
             />
+            {prefecture && (
+              <div className="mt-4 rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
+                <div aria-live="polite" className="space-y-2 text-sm">
+                  {hintLevel >= 1 && (
+                    <p className="text-drill-primary-dark">
+                      <span className="font-bold">ヒント1：</span>
+                      {prefecture.region}
+                    </p>
+                  )}
+                  {hintLevel >= 2 && (
+                    <p className="text-drill-primary-dark">
+                      <span className="font-bold">ヒント2：</span>
+                      頭文字は「{prefecture.reading[0]}」
+                    </p>
+                  )}
+                </div>
+                {hintLevel < 2 && (
+                  <button
+                    onClick={() => {
+                      setHintLevel((level) => level + 1)
+                    }}
+                    disabled={!!feedback}
+                    className={`w-full cursor-pointer rounded-lg border-2 border-dashed border-drill-accent bg-white px-4 py-3 text-sm font-bold text-drill-primary-dark transition-colors hover:bg-drill-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${hintLevel > 0 ? 'mt-3' : ''}`}
+                  >
+                    <span aria-hidden="true">💡 </span>
+                    ヒント{hintLevel + 1}を見る
+                  </button>
+                )}
+              </div>
+            )}
             <div className="mt-4 text-center">
               <button
                 onClick={() => {

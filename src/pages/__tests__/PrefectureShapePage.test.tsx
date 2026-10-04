@@ -81,19 +81,88 @@ describe('都道府県の形の画面', () => {
     ).toHaveTextContent('累計1問')
   })
 
+  it('地方名、読みの頭文字の順にヒントを表示し、入力と出題を維持する', () => {
+    vi.mocked(Math.random).mockReturnValue(12.5 / 47)
+    renderPage()
+    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    const firstShape = screen
+      .getByRole('img')
+      .querySelector('path')!
+      .getAttribute('d')
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'とう' },
+    })
+    expect(screen.queryByText('関東地方')).not.toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'ヒント2を見る' }),
+    ).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
+    expect(screen.getByText('関東地方')).toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
+    expect(screen.getByText('関東地方')).toBeInTheDocument()
+    expect(screen.getByText(/頭文字は「と」/)).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /ヒント.*を見る/ }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText('東京都')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox')).toHaveValue('とう')
+    expect(
+      screen.getByRole('img').querySelector('path')!.getAttribute('d'),
+    ).toBe(firstShape)
+    expect(
+      localStorage.getItem('prefecture-shape-prefecture-correctCount'),
+    ).toBeNull()
+  })
+
+  it('不正解時はヒントを維持し、正解して次の問題に進むとリセットする', () => {
+    renderPage()
+    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
+    answer('間違い')
+    expect(screen.getByRole('button', { name: 'ヒント2を見る' })).toBeDisabled()
+    fireEvent.click(screen.getByTestId('feedback-modal'))
+    expect(screen.getByText('北海道地方')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'ヒント2を見る' })).toBeEnabled()
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
+    expect(screen.getByText(/頭文字は「ほ」/)).toBeInTheDocument()
+
+    answer('北海道')
+    expect(
+      localStorage.getItem('prefecture-shape-prefecture-correctCount'),
+    ).toBe('1')
+    fireEvent.click(screen.getByTestId('feedback-modal'))
+    expect(screen.getByRole('button', { name: 'ヒント1を見る' })).toBeEnabled()
+    expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
+    expect(screen.getByText('東北地方')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
+    expect(screen.getByText(/頭文字は「あ」/)).toBeInTheDocument()
+  })
+
   it('答えを見ると都道府県名を表示し、ポイントを加算しない', () => {
     renderPage()
     fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
+    fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
     fireEvent.click(
       screen.getByRole('button', { name: 'わからないので答えを見る' }),
     )
     expect(screen.getByRole('status')).toHaveTextContent(/^北海道$/)
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
     expect(
       localStorage.getItem('prefecture-shape-prefecture-correctCount'),
     ).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
     expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'ヒント1を見る' })).toBeEnabled()
+    expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
     fireEvent.click(
       screen.getByRole('button', { name: 'わからないので答えを見る' }),
     )
@@ -123,6 +192,11 @@ describe('都道府県の形の画面', () => {
       act(() => {
         vi.advanceTimersByTime(1000)
       })
+    expect(
+      screen.queryByRole('button', { name: /ヒント.*を見る/ }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
     answer('ホッカイドウ')
     expect(
       localStorage.getItem(
