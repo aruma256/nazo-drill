@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="ja">
   <head>
+    <script>
+      if (window.location.hostname === 'nazo-drill.lolipop-now.app') {
+        const targetUrl = new URL(window.location.href)
+        targetUrl.protocol = 'https:'
+        targetUrl.hostname = 'nazo-drill.aruma256.dev'
+        targetUrl.port = ''
+        window.location.replace(targetUrl.href)
+      }
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MV9QYRHC2"></script>
     <script>
