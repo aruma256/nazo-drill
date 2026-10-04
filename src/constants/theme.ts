@@ -41,6 +41,13 @@ export const SUBJECT_THEMES = {
 
 export type SubjectId = keyof typeof SUBJECT_THEMES
 
+/** 都道府県の地図に使う配色。ページの教科テーマとは独立。 */
+export const PREFECTURE_MAP_COLORS = {
+  land: '#dce9ba',
+  border: '#71834d',
+  lake: '#d6edf7',
+} as const
+
 /**
  * 各ドリルの設定（教科とアイコン）
  */
@@ -49,6 +56,7 @@ export const DRILL_CONFIG = {
   '123-abc': { subject: 'english', icon: '1→A' },
   'abc-shift': { subject: 'math', icon: 'A+1' },
   'prefecture-fill': { subject: 'social', icon: '◯' },
+  'prefecture-shape': { subject: 'social', icon: '🗾' },
   '50on-slide': { subject: 'japanese', icon: '⇒' },
   'original-nazo': { subject: 'science', icon: '?' },
 } as const satisfies Record<string, { subject: SubjectId; icon: string }>

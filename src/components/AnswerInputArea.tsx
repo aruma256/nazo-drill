@@ -53,6 +53,7 @@ export function AnswerInputArea({
   }, [feedback, instantMode])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.nativeEvent.isComposing) return
     if (e.key === 'Enter') {
       if (!instantMode && feedback && onNext) {
         onNext()
@@ -96,7 +97,8 @@ export function AnswerInputArea({
         {instantMode || !feedback ? (
           <button
             onClick={onSubmit}
-            disabled={!value.trim()}
+            aria-label="回答する"
+            disabled={disabled || !value.trim()}
             className="group flex min-w-[72px] items-center justify-center rounded-2xl bg-[var(--drill-primary)] px-5 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none disabled:hover:scale-100"
           >
             <svg
@@ -116,6 +118,7 @@ export function AnswerInputArea({
         ) : (
           <button
             onClick={onNext}
+            aria-label="次へ"
             className="group flex min-w-[72px] items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-4 font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
           >
             <svg

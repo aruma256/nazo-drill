@@ -29,6 +29,11 @@ describe('HomePage', () => {
   })
 
   describe('ドリルカード', () => {
+    it('都道府県の形へのリンクがある', () => {
+      renderHomePage()
+      const link = screen.getByRole('link', { name: /都道府県の形/ })
+      expect(link).toHaveAttribute('href', '/drill/prefecture-shape')
+    })
     it('五十音表の文字拾いへのリンクがある', () => {
       renderHomePage()
       const link = screen.getByRole('link', { name: /五十音表の文字拾い/ })

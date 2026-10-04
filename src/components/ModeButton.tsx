@@ -32,6 +32,8 @@ function ScoreBadge({ label, value, unit }: ScoreBadgeProps) {
 interface ModeButtonProps {
   /** ボタンに表示するラベル */
   label: string
+  /** 表示ラベルを短くする場合の、読み上げ用の完全な名前 */
+  ariaLabel?: string
   /** モード名（localStorageのキーに使用） */
   mode: string
   /** ドリル名（localStorageのキーに使用） */
@@ -57,6 +59,7 @@ interface ModeButtonProps {
  */
 export function ModeButton({
   label,
+  ariaLabel,
   mode,
   drillName,
   onClick,
@@ -73,6 +76,7 @@ export function ModeButton({
   if (disabled) {
     return (
       <button
+        aria-label={ariaLabel}
         disabled
         className="font-display w-full cursor-not-allowed rounded-2xl bg-gray-100 px-6 py-5 text-lg font-bold text-gray-400"
       >
@@ -89,6 +93,7 @@ export function ModeButton({
 
   return (
     <button
+      aria-label={ariaLabel}
       onClick={onClick}
       className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl px-6 py-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] ${
         isChallenge

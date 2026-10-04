@@ -63,8 +63,12 @@ function normalizeAnswer(answer: string): string {
 /**
  * ドリルのコアロジックを提供するカスタムフック
  * @param generateQuestion - 問題を生成する関数
+ * @param validateAnswer - ドリル独自の回答判定（省略時は文字列を正規化して比較）
  */
-export function useDrill(generateQuestion: QuestionGenerator) {
+export function useDrill(
+  generateQuestion: QuestionGenerator,
+  validateAnswer?: (userAnswer: string, question: Question) => boolean,
+) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
   const [score, setScore] = useState(0)
   const [totalQuestions, setTotalQuestions] = useState(0)
@@ -102,8 +106,10 @@ export function useDrill(generateQuestion: QuestionGenerator) {
         throw new Error('No question has been presented')
       }
 
-      const isCorrect =
-        normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.answer)
+      const isCorrect = validateAnswer
+        ? validateAnswer(userAnswer, currentQuestion)
+        : normalizeAnswer(userAnswer) ===
+          normalizeAnswer(currentQuestion.answer)
 
       if (isCorrect) {
         setScore((prev) => prev + 1)
@@ -122,7 +128,7 @@ export function useDrill(generateQuestion: QuestionGenerator) {
 
       return isCorrect
     },
-    [currentQuestion],
+    [currentQuestion, validateAnswer],
   )
 
   /**

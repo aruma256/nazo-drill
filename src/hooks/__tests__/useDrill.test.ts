@@ -73,6 +73,32 @@ describe('useDrill', () => {
   })
 
   describe('checkAnswer', () => {
+    it('uses a custom validator and preserves the original answer in history', () => {
+      const question = { question: '13', answer: '東京都' }
+      const validator = vi.fn((answer: string) => answer === 'とうきょう')
+      const { result } = renderHook(() => useDrill(() => question, validator))
+      act(() => {
+        result.current.presentQuestion()
+      })
+      act(() => {
+        expect(result.current.checkAnswer('とうきょう')).toBe(true)
+      })
+      expect(validator).toHaveBeenCalledWith('とうきょう', question)
+      expect(result.current.score).toBe(1)
+      expect(result.current.history[0]).toMatchObject({
+        question,
+        userAnswer: 'とうきょう',
+        isCorrect: true,
+      })
+      act(() => {
+        expect(result.current.checkAnswer('大阪')).toBe(false)
+      })
+      expect(result.current.score).toBe(1)
+      expect(result.current.history[1]).toMatchObject({
+        userAnswer: '大阪',
+        isCorrect: false,
+      })
+    })
     it('should return true for correct answer', () => {
       const generator = createMockGenerator([
         { question: 'Q1', answer: 'HELLO' },

@@ -131,6 +131,30 @@ export function HomePage() {
             </DrillCard>
           </div>
 
+          <div>
+            <DrillCard
+              to="/drill/prefecture-shape"
+              title="都道府県の形"
+              description="形から都道府県名を答える練習"
+              drillId="prefecture-shape"
+            >
+              <div className="flex items-center justify-center gap-4">
+                <img
+                  src={`${import.meta.env.BASE_URL}prefecture-shape-example.svg`}
+                  alt="北海道の形"
+                  width={80}
+                  height={80}
+                  className="shrink-0"
+                />
+                <div className="text-sm text-gray-500">
+                  <p>
+                    → <strong>北海道</strong>
+                  </p>
+                </div>
+              </div>
+            </DrillCard>
+          </div>
+
           {/* 五十音表スライド */}
           <div>
             <DrillCard

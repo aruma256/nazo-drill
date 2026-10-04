@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { DecorativeElements } from './components/DecorativeElements'
 import { ScrollToTop } from './components'
@@ -10,6 +11,12 @@ import {
   PrefectureFillPage,
   OriginalNazoPage,
 } from './pages'
+
+const PrefectureShapePage = lazy(() =>
+  import('./pages/PrefectureShapePage').then((module) => ({
+    default: module.PrefectureShapePage,
+  })),
+)
 
 function App() {
   return (
@@ -34,6 +41,20 @@ function App() {
             element={<PrefectureFillPage />}
           />
           <Route path="/original-nazo" element={<OriginalNazoPage />} />
+          <Route
+            path="/drill/prefecture-shape"
+            element={
+              <Suspense
+                fallback={
+                  <p role="status" className="p-8 text-center text-gray-600">
+                    読み込み中…
+                  </p>
+                }
+              >
+                <PrefectureShapePage />
+              </Suspense>
+            }
+          />
           <Route
             path="/original-nazo/:questionId"
             element={<OriginalNazoPage />}
