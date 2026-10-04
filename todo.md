@@ -24,5 +24,5 @@
 - [ ] Cookie保存機能
 
 ## デプロイ
-- [ ] GitHub Pagesへのデプロイ設定
-- [ ] カスタムドメイン（nazo-drill.aruma256.dev）の設定
+- [x] デプロイナウの GitHub 連携による静的サイトの自動デプロイ設定
+- [x] カスタムドメイン（nazo-drill.aruma256.dev）の設定

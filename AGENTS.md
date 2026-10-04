@@ -29,7 +29,7 @@
 - **スタイリング**: Tailwind CSS v4
 - **ルーティング**: React Router v7（HashRouter）
 - **テスト**: Vitest + Testing Library
-- **デプロイ環境**: GitHub Pages
+- **デプロイ環境**: ロリポップ！デプロイナウ（静的サイト、GitHub 連携）
 - **カスタムドメイン**: nazo-drill.aruma256.dev
 
 ## ディレクトリ構成
@@ -42,7 +42,23 @@
   - `pages/` - ページコンポーネント
   - `test/` - テストセットアップ
   - `utils/` - ユーティリティ関数
-- `dist/` - ビルド成果物（GitHub Pages公開元）
+- `dist/` - ビルド成果物（静的サイトの公開ディレクトリ）
+
+## デプロイ
+
+- **本番 URL**: https://nazo-drill.aruma256.dev/
+- **自動デプロイ**: `main` ブランチへの push をデプロイナウの GitHub 連携が検知し、ビルドと公開を行う
+
+| 設定 | 値 |
+|------|----|
+| フレームワーク | `static` |
+| インストールコマンド | `npm ci` |
+| ビルドコマンド | `npm run build` |
+| 出力ディレクトリ | `dist` |
+
+ビルド設定・GitHub 連携・独自ドメインはデプロイナウのダッシュボードで管理する。
+
+詳細は[GitHub 連携](https://deploy.lolipop.jp/docs/integrations/github.md)と[独自ドメイン](https://deploy.lolipop.jp/docs/configuration/custom-domains.md)の公式ドキュメントを参照する。
 
 ## 対象となる変換パターン
 
