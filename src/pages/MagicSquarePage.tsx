@@ -1,15 +1,11 @@
-import { useCallback, useState } from 'react'
 import {
-  ChallengeCountdownModal,
-  ChallengeResult,
-  DrillHeader,
+  DrillPageLayout,
   DrillScreenLayout,
-  Layout,
   ModeButton,
   SectionHeader,
 } from '../components'
 import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
-import { useChallenge, useDrillSession, useDrillStorage } from '../hooks'
+import { useChallenge, useDrillSession, useDrillPage } from '../hooks'
 import type { HistoryEntry } from '../hooks'
 import {
   MAGIC_SQUARES,
@@ -17,7 +13,6 @@ import {
   useMagicSquareRound,
   type MagicSquareMode,
 } from '../drills/magicSquare'
-import type { Screen } from '../types/drill'
 
 const DRILL_NAME = 'magic-square'
 const CHALLENGE_MODE = 'two-clues-challenge'
@@ -129,16 +124,13 @@ function ChallengeScreen({
   const { score, history, recordAnswer } = useDrillSession({
     storage: { drillName: DRILL_NAME, mode: CHALLENGE_MODE },
   })
-  const { phase, question, cells } = round
+  const { question } = round
 
   const { remainingTime, isPenalized, isFinished, applyPenalty } = useChallenge(
     {
       score,
       history,
-      // 完成直後の正解表示中は、同じ盤面を時間切れとして二重に記録しない。
-      currentQuestion: phase === 'complete' ? null : question,
       onTimeUp,
-      userAnswer: cells.join(''),
     },
   )
 
@@ -163,158 +155,112 @@ function ChallengeScreen({
   )
 }
 
-function MagicSquareHistory({ history }: { history: HistoryEntry[] }) {
+function MagicSquareHistoryEntry({ entry }: { entry: HistoryEntry }) {
+  const givens = Array.from(entry.question.question, Number)
   return (
-    <section className="mt-8">
-      <SectionHeader>解答履歴</SectionHeader>
-      <ol className="space-y-3">
-        {history.map((entry) => {
-          const givens = Array.from(entry.question.question, Number)
-          return (
-            <li key={entry.id} className="rounded-2xl bg-white p-4 shadow-sm">
-              <p className="mb-3 text-sm font-bold text-gray-600">
-                {entry.id}問目
-                <span
-                  className={`ml-3 ${entry.isCorrect ? 'text-emerald-600' : 'text-rose-500'}`}
-                >
-                  {entry.isCorrect ? '○ 完成' : '時間切れ'}
-                </span>
-              </p>
-              <div className="flex justify-center gap-8">
-                <div>
-                  <p className="mb-2 text-center text-xs text-gray-500">
-                    あなたの回答
-                  </p>
-                  <MagicSquareBoard
-                    cells={Array.from(entry.userAnswer, Number)}
-                    givens={givens}
-                    size="small"
-                    label={`${entry.id}問目の回答`}
-                  />
-                </div>
-                <div>
-                  <p className="mb-2 text-center text-xs text-gray-500">正解</p>
-                  <MagicSquareBoard
-                    cells={Array.from(entry.question.answer, Number)}
-                    givens={givens}
-                    size="small"
-                    label={`${entry.id}問目の正解`}
-                  />
-                </div>
-              </div>
-            </li>
-          )
-        })}
-      </ol>
-    </section>
+    <div className="flex justify-center gap-8">
+      <div>
+        <p className="mb-2 text-center text-xs text-gray-500">あなたの回答</p>
+        <MagicSquareBoard
+          cells={Array.from(entry.userAnswer, Number)}
+          givens={givens}
+          size="small"
+          label={`${entry.id}問目の回答`}
+        />
+      </div>
+      <div>
+        <p className="mb-2 text-center text-xs text-gray-500">正解</p>
+        <MagicSquareBoard
+          cells={Array.from(entry.question.answer, Number)}
+          givens={givens}
+          size="small"
+          label={`${entry.id}問目の正解`}
+        />
+      </div>
+    </div>
+  )
+}
+
+function StartScreen({
+  onStartDrill,
+  onStartChallenge,
+}: {
+  onStartDrill: (mode: MagicSquareMode) => void
+  onStartChallenge: () => void
+}) {
+  return (
+    <>
+      <section className="mb-8">
+        <SectionHeader>ルール</SectionHeader>
+        <div className="space-y-3 pl-3 text-gray-700">
+          <p>1〜9を1回ずつ使い、たて・よこ・ななめの合計をすべて15にします。</p>
+          <MagicSquareBoard cells={MAGIC_SQUARES[0]} size="small" />
+          <p>
+            このドリルでは、2～3マスのみが埋まった状態の魔方陣を素早く完成させるトレーニングができます。
+          </p>
+        </div>
+      </section>
+      <section className="mb-6">
+        <SectionHeader>モードを選択</SectionHeader>
+        <div className="space-y-3">
+          <ModeButton
+            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            ariaLabel={`3×3魔方陣の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            drillName={DRILL_NAME}
+            mode={CHALLENGE_MODE}
+            icon="⏱️"
+            variant="challenge"
+            onClick={onStartChallenge}
+          />
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+          {PRACTICE_MODES.map(({ mode, label, icon }) => (
+            <ModeButton
+              key={mode}
+              label={label}
+              ariaLabel={`${label}魔方陣の練習`}
+              drillName={DRILL_NAME}
+              mode={mode}
+              icon={icon}
+              onClick={() => {
+                onStartDrill(mode)
+              }}
+            />
+          ))}
+        </div>
+      </section>
+    </>
   )
 }
 
 export function MagicSquarePage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [practiceMode, setPracticeMode] =
-    useState<MagicSquareMode>('first-three')
-  const [result, setResult] = useState<{
-    score: number
-    history: HistoryEntry[]
-  }>({ score: 0, history: [] })
-  const { updateHighScore } = useDrillStorage(DRILL_NAME)
-  const handleTimeUp = useCallback(
-    (score: number, history: HistoryEntry[]) => {
-      setResult({ score, history })
-      updateHighScore(CHALLENGE_MODE, score)
-      setScreen('challengeResult')
-    },
-    [updateHighScore],
-  )
-  const back = () => {
-    setScreen('start')
-  }
+  const page = useDrillPage<MagicSquareMode>(DRILL_NAME, {
+    challengeMode: CHALLENGE_MODE,
+  })
 
   return (
-    <Layout
-      maxWidth="2xl"
-      drillId="magic-square"
-      compact={screen === 'drill' || screen === 'challenge'}
-    >
-      {screen === 'start' && (
-        <>
-          <DrillHeader
-            title="3×3魔方陣"
-            description="数字を小さい順に置いて、魔方陣を完成させよう"
-          />
-          <section className="mb-8">
-            <SectionHeader>ルール</SectionHeader>
-            <div className="space-y-3 pl-3 text-gray-700">
-              <p>
-                1〜9を1回ずつ使い、たて・よこ・ななめの合計をすべて15にします。
-              </p>
-              <MagicSquareBoard cells={MAGIC_SQUARES[0]} size="small" />
-              <p>
-                このドリルでは、2～3マスのみが埋まった状態の魔方陣を素早く完成させるトレーニングができます。
-              </p>
-            </div>
-          </section>
-          <section className="mb-6">
-            <SectionHeader>モードを選択</SectionHeader>
-            <div className="space-y-3">
-              <ModeButton
-                label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-                ariaLabel={`3×3魔方陣の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-                drillName={DRILL_NAME}
-                mode={CHALLENGE_MODE}
-                icon="⏱️"
-                variant="challenge"
-                onClick={() => {
-                  setScreen('countdown')
-                }}
-              />
-              <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-              {PRACTICE_MODES.map(({ mode, label, icon }) => (
-                <ModeButton
-                  key={mode}
-                  label={label}
-                  ariaLabel={`${label}魔方陣の練習`}
-                  drillName={DRILL_NAME}
-                  mode={mode}
-                  icon={icon}
-                  onClick={() => {
-                    setPracticeMode(mode)
-                    setScreen('drill')
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
-      {screen === 'drill' && (
-        <PracticeScreen mode={practiceMode} onBack={back} />
-      )}
-      {screen === 'countdown' && (
-        <ChallengeCountdownModal
-          onComplete={() => {
-            setScreen('challenge')
-          }}
+    <DrillPageLayout
+      drillId={DRILL_NAME}
+      title="3×3魔方陣"
+      description="数字を小さい順に置いて、魔方陣を完成させよう"
+      controller={page}
+      startScreen={
+        <StartScreen
+          onStartDrill={page.startPractice}
+          onStartChallenge={page.startChallenge}
         />
+      }
+      renderPractice={(mode) => (
+        <PracticeScreen mode={mode} onBack={page.backToStart} />
       )}
-      {screen === 'challenge' && (
-        <ChallengeScreen onBack={back} onTimeUp={handleTimeUp} />
+      challengeScreen={
+        <ChallengeScreen
+          onBack={page.backToStart}
+          onTimeUp={page.finishChallenge}
+        />
+      }
+      historyEntryRenderer={(entry) => (
+        <MagicSquareHistoryEntry entry={entry} />
       )}
-      {screen === 'challengeResult' && (
-        <>
-          <ChallengeResult
-            score={result.score}
-            timeLimit={CHALLENGE_TIME_LIMIT}
-            drillName="3×3魔方陣"
-            onRetry={() => {
-              setScreen('countdown')
-            }}
-            onBack={back}
-          />
-          <MagicSquareHistory history={result.history} />
-        </>
-      )}
-    </Layout>
+    />
   )
 }

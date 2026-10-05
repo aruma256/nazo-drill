@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { HistoryEntry, Question } from '../hooks'
+import type { HistoryEntry, Question } from '../types/drill'
+import { ChallengeHistory } from './ChallengeHistory'
 
 interface ChallengeResultProps {
   /** 正答数 */
@@ -17,6 +18,8 @@ interface ChallengeResultProps {
   history?: HistoryEntry[]
   /** 問題列のカスタム表示（オプショナル） */
   questionRenderer?: (question: Question) => ReactNode
+  /** 盤面などの解答履歴カードの内容。 */
+  historyEntryRenderer?: (entry: HistoryEntry) => ReactNode
 }
 
 /**
@@ -51,97 +54,6 @@ function AnimatedScore({ target }: { target: number }) {
 }
 
 /**
- * 解答履歴テーブルコンポーネント
- */
-function HistoryTable({
-  history,
-  questionRenderer,
-}: {
-  history: HistoryEntry[]
-  questionRenderer?: (question: Question) => ReactNode
-}) {
-  if (history.length === 0) return null
-
-  return (
-    <div className="mt-8">
-      <h3 className="font-display mb-4 flex items-center gap-2 text-left text-sm font-bold text-gray-600">
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-          />
-        </svg>
-        解答履歴
-      </h3>
-      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                #
-              </th>
-              <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                問題
-              </th>
-              <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                回答
-              </th>
-              <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                正解
-              </th>
-              <th className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-                結果
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {history.map((entry) => (
-              <tr
-                key={entry.id}
-                className={`transition-colors ${entry.isCorrect ? 'bg-emerald-50/50' : 'bg-rose-50/50'}`}
-              >
-                <td className="px-3 py-3 text-center text-gray-400">
-                  {entry.id}
-                </td>
-                <td className="px-3 py-3 text-center font-mono">
-                  {questionRenderer
-                    ? questionRenderer(entry.question)
-                    : entry.question.question}
-                </td>
-                <td className="px-3 py-3 text-center font-mono">
-                  {entry.userAnswer || <span className="text-gray-300">-</span>}
-                </td>
-                <td className="px-3 py-3 text-center font-mono font-medium">
-                  {entry.question.answer}
-                </td>
-                <td className="px-3 py-3 text-center">
-                  {entry.isCorrect ? (
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                      ✓
-                    </span>
-                  ) : (
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-100 text-rose-600">
-                      ✗
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
-
-/**
  * 実力テスト結果表示コンポーネント
  */
 export function ChallengeResult({
@@ -152,6 +64,7 @@ export function ChallengeResult({
   onBack,
   history,
   questionRenderer,
+  historyEntryRenderer,
 }: ChallengeResultProps) {
   const handleShare = () => {
     const text = `#ナゾドリル 【${drillName}】実力テストで ${score}問 正解しました！\nhttps://nazo-drill.aruma256.dev/`
@@ -258,7 +171,11 @@ export function ChallengeResult({
 
       {/* History table */}
       {history && history.length > 0 && (
-        <HistoryTable history={history} questionRenderer={questionRenderer} />
+        <ChallengeHistory
+          history={history}
+          questionRenderer={questionRenderer}
+          entryRenderer={historyEntryRenderer}
+        />
       )}
     </div>
   )

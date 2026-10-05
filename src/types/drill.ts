@@ -1,18 +1,14 @@
-/**
- * ドリル画面の基本的な画面状態
- */
-export type BaseScreen =
-  'start' | 'drill' | 'countdown' | 'challenge' | 'challengeResult'
+/** 実力テストの結果。回答済みの問題だけを履歴に残す。 */
+export interface ChallengeResultData {
+  score: number
+  history: HistoryEntry[]
+}
 
-/**
- * 注釈画面を持つドリルの画面状態
- */
-export type ScreenWithNote = BaseScreen | 'note'
-
-/**
- * デフォルトの画面状態（noteなし）
- */
-export type Screen = BaseScreen
+/** 画面に必要なデータを、その画面の状態と一緒に保持する。 */
+export type DrillPageState<Mode extends string> =
+  | { screen: 'start' | 'countdown' | 'challenge' | 'note' }
+  | { screen: 'drill'; mode: Mode }
+  | { screen: 'challengeResult'; result: ChallengeResultData }
 
 /** ドリルの問題オブジェクト。 */
 export interface Question {

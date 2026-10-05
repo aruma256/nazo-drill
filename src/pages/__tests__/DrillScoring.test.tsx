@@ -115,6 +115,9 @@ describe('実力テストの得点・履歴・保存の整合性', () => {
       expect(screen.getByText('正解数').parentElement).toHaveTextContent(
         /^正解数\s*1$/,
       )
+      fireEvent.change(screen.getByRole('textbox'), {
+        target: { value: '送信前の入力' },
+      })
       act(() => {
         vi.advanceTimersByTime(CHALLENGE_TIME_LIMIT * 1000)
       })
@@ -128,14 +131,14 @@ describe('実力テストの得点・履歴・保存の整合性', () => {
       const rows = within(table)
         .getAllByRole('row')
         .filter((row) => row.closest('table') === table)
-      expect(rows).toHaveLength(5)
+      expect(rows).toHaveLength(4)
       expect(rows[1].children[2]).toHaveTextContent(value)
       expect(within(rows[1]).getByText('✓')).toBeInTheDocument()
       expect(within(rows[2]).getByText('間違い')).toBeInTheDocument()
       expect(within(rows[2]).getByText('✗')).toBeInTheDocument()
       expect(within(rows[3]).getByText('また間違い')).toBeInTheDocument()
       expect(within(rows[3]).getByText('✗')).toBeInTheDocument()
-      expect(within(rows[4]).getByText('-')).toBeInTheDocument()
+      expect(screen.queryByText('送信前の入力')).not.toBeInTheDocument()
     },
   )
 })

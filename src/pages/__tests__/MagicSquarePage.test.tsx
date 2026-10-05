@@ -188,12 +188,10 @@ describe('3×3魔方陣の画面', () => {
     expect(
       screen.getByRole('heading', { name: '結果発表' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('時間切れ')).toBeInTheDocument()
+    expect(screen.queryByText('解答履歴')).not.toBeInTheDocument()
     expect(
-      screen.getByRole('img', { name: /^1問目の回答/ }),
-    ).toHaveAccessibleName(
-      '1問目の回答：8、1、空欄、空欄、空欄、空欄、空欄、空欄、2',
-    )
+      screen.queryByRole('img', { name: /問目の回答/ }),
+    ).not.toBeInTheDocument()
     expect(
       localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
     ).toBeNull()
@@ -217,8 +215,8 @@ describe('3×3魔方陣の画面', () => {
     expect(
       localStorage.getItem('magic-square-two-clues-challenge-highScore'),
     ).toBe('1')
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
-    expect(screen.getByText('○ 完成')).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(1)
+    expect(screen.getByRole('img', { name: '正解' })).toBeInTheDocument()
   })
 
   it('連続誤答のペナルティで時間切れになったら操作を終了する', () => {
@@ -229,7 +227,7 @@ describe('3×3魔方陣の画面', () => {
       screen.getByRole('heading', { name: '結果発表' }),
     ).toBeInTheDocument()
     expect(screen.queryByRole('group')).not.toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(1)
+    expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
     expect(
       localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
     ).toBeNull()
@@ -243,7 +241,7 @@ describe('3×3魔方陣の画面', () => {
       localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
     ).toBe('1')
     advance(600)
-    fireEvent.click(cell(5)) // 次の盤面の1を置き、途中までの回答も記録する。
+    fireEvent.click(cell(5)) // 次の盤面を途中まで操作しても、履歴には残さない。
     expect(screen.getByRole('status')).toHaveTextContent('2を置こう')
     advance(45000)
     expect(
@@ -252,13 +250,11 @@ describe('3×3魔方陣の画面', () => {
     expect(
       localStorage.getItem('magic-square-two-clues-challenge-highScore'),
     ).toBe('1')
-    expect(screen.getByText('○ 完成')).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.getByRole('img', { name: '正解' })).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(1)
     expect(
-      screen.getByRole('img', { name: /^2問目の回答/ }),
-    ).toHaveAccessibleName(
-      '2問目の回答：4、3、空欄、空欄、空欄、1、空欄、空欄、空欄',
-    )
+      screen.queryByRole('img', { name: /^2問目の回答/ }),
+    ).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'もう一度チャレンジ' }))
     for (let i = 0; i < 3; i++) advance(1000)
     expect(screen.getByRole('status')).toHaveTextContent('2を置こう')

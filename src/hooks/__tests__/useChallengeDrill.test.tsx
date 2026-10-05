@@ -80,17 +80,13 @@ describe('useChallengeDrill', () => {
       { wrapper: StrictMode },
     )
     act(() => {
+      result.current.setUserAnswer('途中の入力')
+    })
+    act(() => {
       vi.advanceTimersByTime(CHALLENGE_TIME_LIMIT * 1000)
     })
     expect(result.current.isFinished).toBe(true)
-    expect(onTimeUp).toHaveBeenCalledExactlyOnceWith(0, [
-      {
-        id: 1,
-        question: { question: '1', answer: 'A' },
-        userAnswer: '',
-        isCorrect: false,
-      },
-    ])
+    expect(onTimeUp).toHaveBeenCalledExactlyOnceWith(0, [])
 
     act(() => {
       result.current.setUserAnswer('A')

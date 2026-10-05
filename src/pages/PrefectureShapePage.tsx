@@ -2,19 +2,16 @@ import { useCallback, useRef, useState } from 'react'
 import {
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
-  ChallengeCountdownModal,
-  ChallengeResult,
-  DrillHeader,
+  DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  Layout,
   ModeButton,
   SectionHeader,
 } from '../components'
 import {
   useChallengeDrill,
   usePracticeDrill,
-  useDrillStorage,
+  useDrillPage,
   type HistoryEntry,
   type Question,
 } from '../hooks'
@@ -26,7 +23,6 @@ import {
   type Prefecture,
 } from '../drills/prefectureShape'
 import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
-import type { Screen } from '../types/drill'
 
 const DRILL_NAME = 'prefecture-shape'
 // 都道府県名の練習・実力テストの保存済み記録を引き継ぐ。
@@ -211,134 +207,111 @@ function ChallengeScreen({
   )
 }
 
-export function PrefectureShapePage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [result, setResult] = useState<{
-    score: number
-    history: HistoryEntry[]
-  }>({ score: 0, history: [] })
-  const { updateHighScore } = useDrillStorage(DRILL_NAME)
-  const handleTimeUp = useCallback(
-    (score: number, history: HistoryEntry[]) => {
-      setResult({ score, history })
-      updateHighScore(CHALLENGE_MODE, score)
-      setScreen('challengeResult')
-    },
-    [updateHighScore],
+function StartScreen({
+  onStartDrill,
+  onStartChallenge,
+}: {
+  onStartDrill: () => void
+  onStartChallenge: () => void
+}) {
+  return (
+    <>
+      <section className="mb-8">
+        <SectionHeader>ルール</SectionHeader>
+        <div className="space-y-2 pl-3 text-gray-700">
+          <p>都道府県の形を見て、都道府県名を当てます。</p>
+          <div className="mt-3 flex items-center justify-center gap-4 rounded-lg bg-white/50 p-3 text-center">
+            <PrefectureShape
+              prefectureId={1}
+              label="例題：北海道の形"
+              className="w-24 shrink-0"
+            />
+            <span className="font-mono text-lg">→</span>
+            <span className="font-mono text-lg font-bold text-green-600">
+              北海道
+            </span>
+          </div>
+          <PrefectureAnswerGuide />
+        </div>
+      </section>
+      <section className="mb-6">
+        <SectionHeader>モードを選択</SectionHeader>
+        <div className="space-y-3">
+          <ModeButton
+            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            ariaLabel={`都道府県名の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
+            drillName={DRILL_NAME}
+            mode={CHALLENGE_MODE}
+            icon="⏱️"
+            variant="challenge"
+            onClick={onStartChallenge}
+          />
+          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
+          <ModeButton
+            label="練習モード"
+            ariaLabel="都道府県名の練習"
+            drillName={DRILL_NAME}
+            mode={PRACTICE_MODE}
+            icon="✏️"
+            onClick={onStartDrill}
+          />
+        </div>
+      </section>
+      <p className="mt-8 text-center text-xs text-gray-500">
+        出典：
+        <a
+          href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          国土地理院「地球地図日本」
+        </a>
+        （加工）
+      </p>
+    </>
   )
-  const back = () => {
-    setScreen('start')
-  }
+}
+
+export function PrefectureShapePage() {
+  const page = useDrillPage<typeof PRACTICE_MODE>(DRILL_NAME, {
+    challengeMode: CHALLENGE_MODE,
+  })
 
   return (
-    <Layout
-      maxWidth="2xl"
-      drillId="prefecture-shape"
-      compact={screen === 'drill' || screen === 'challenge'}
-    >
-      {screen === 'start' && (
-        <>
-          <DrillHeader
-            title="都道府県の形"
-            description="形から都道府県名を答えよう"
-          />
-          <section className="mb-8">
-            <SectionHeader>ルール</SectionHeader>
-            <div className="space-y-2 pl-3 text-gray-700">
-              <p>都道府県の形を見て、都道府県名を当てます。</p>
-              <div className="mt-3 flex items-center justify-center gap-4 rounded-lg bg-white/50 p-3 text-center">
-                <PrefectureShape
-                  prefectureId={1}
-                  label="例題：北海道の形"
-                  className="w-24 shrink-0"
-                />
-                <span className="font-mono text-lg">→</span>
-                <span className="font-mono text-lg font-bold text-green-600">
-                  北海道
-                </span>
-              </div>
-              <PrefectureAnswerGuide />
-            </div>
-          </section>
-          <section className="mb-6">
-            <SectionHeader>モードを選択</SectionHeader>
-            <div className="space-y-3">
-              <ModeButton
-                label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-                ariaLabel={`都道府県名の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-                drillName={DRILL_NAME}
-                mode={CHALLENGE_MODE}
-                icon="⏱️"
-                variant="challenge"
-                onClick={() => {
-                  setScreen('countdown')
-                }}
-              />
-              <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-              <ModeButton
-                label="練習モード"
-                ariaLabel="都道府県名の練習"
-                drillName={DRILL_NAME}
-                mode={PRACTICE_MODE}
-                icon="✏️"
-                onClick={() => {
-                  setScreen('drill')
-                }}
-              />
-            </div>
-          </section>
-          <p className="mt-8 text-center text-xs text-gray-500">
-            出典：
-            <a
-              href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              国土地理院「地球地図日本」
-            </a>
-            （加工）
-          </p>
-        </>
-      )}
-      {screen === 'drill' && <PracticeScreen onBack={back} />}
-      {screen === 'countdown' && (
-        <ChallengeCountdownModal
-          onComplete={() => {
-            setScreen('challenge')
+    <DrillPageLayout
+      drillId={DRILL_NAME}
+      title="都道府県の形"
+      description="形から都道府県名を答えよう"
+      controller={page}
+      startScreen={
+        <StartScreen
+          onStartDrill={() => {
+            page.startPractice(PRACTICE_MODE)
           }}
+          onStartChallenge={page.startChallenge}
         />
-      )}
-      {screen === 'challenge' && (
-        <ChallengeScreen onBack={back} onTimeUp={handleTimeUp} />
-      )}
-      {screen === 'challengeResult' && (
-        <ChallengeResult
-          score={result.score}
-          history={result.history}
-          timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="都道府県の形"
-          onRetry={() => {
-            setScreen('countdown')
-          }}
-          onBack={back}
-          questionRenderer={(question) => {
-            const prefecture = PREFECTURES.find(
-              (item) => item.id === Number(question.question),
-            )
-            return prefecture ? (
-              <div className="flex flex-col items-center gap-1">
-                <PrefectureShape
-                  prefectureId={prefecture.id}
-                  label={`${prefecture.name}の形`}
-                  className="w-12"
-                />
-                <span className="text-xs">{prefecture.name}</span>
-              </div>
-            ) : null
-          }}
+      }
+      renderPractice={() => <PracticeScreen onBack={page.backToStart} />}
+      challengeScreen={
+        <ChallengeScreen
+          onBack={page.backToStart}
+          onTimeUp={page.finishChallenge}
         />
-      )}
-    </Layout>
+      }
+      questionRenderer={(question) => {
+        const prefecture = getQuestionPrefecture(question)
+        return prefecture ? (
+          <div className="flex flex-col items-center gap-1">
+            <PrefectureShape
+              prefectureId={prefecture.id}
+              label={`${prefecture.name}の形`}
+              className="w-12"
+            />
+            <span className="text-xs">{prefecture.name}</span>
+          </div>
+        ) : null
+      }}
+    />
   )
 }

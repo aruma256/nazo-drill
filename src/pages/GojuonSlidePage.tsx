@@ -1,19 +1,16 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import {
-  Layout,
-  DrillHeader,
+  DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
-  ChallengeResult,
-  ChallengeCountdownModal,
   SectionHeader,
 } from '../components'
 import {
   usePracticeDrill,
   useChallengeDrill,
-  useDrillStorage,
+  useDrillPage,
   type HistoryEntry,
   type Question,
 } from '../hooks'
@@ -23,7 +20,6 @@ import {
   parseSlideQuestion,
 } from '../drills/gojuonSlide'
 import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
-import type { Screen } from '../types/drill'
 
 const DRILL_NAME = '50on-slide'
 
@@ -236,46 +232,7 @@ function ChallengeScreen({
  * 五十音表スライドページ
  */
 export function GojuonSlidePage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [mode, setMode] = useState<GojuonSlideMode>('practice')
-  const [challengeScore, setChallengeScore] = useState(0)
-  const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
-  const { updateHighScore } = useDrillStorage(DRILL_NAME)
-
-  const handleStartDrill = (selectedMode: GojuonSlideMode) => {
-    setMode(selectedMode)
-    setScreen('drill')
-  }
-
-  const handleStartChallenge = () => {
-    setScreen('countdown')
-  }
-
-  const handleCountdownComplete = () => {
-    setScreen('challenge')
-  }
-
-  const handleChallengeTimeUp = useCallback(
-    (score: number, history: HistoryEntry[]) => {
-      setChallengeScore(score)
-      setChallengeHistory(history)
-      updateHighScore('challenge', score)
-      setScreen('challengeResult')
-    },
-    [updateHighScore],
-  )
-
-  const handleRetryChallenge = () => {
-    setChallengeScore(0)
-    setChallengeHistory([])
-    setScreen('countdown')
-  }
-
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
-
-  // 問題列のカスタム表示
+  const page = useDrillPage<GojuonSlideMode>(DRILL_NAME)
   const renderQuestion = useCallback((question: Question) => {
     const { char, arrow } = parseSlideQuestion(question.question)
     return (
@@ -286,46 +243,27 @@ export function GojuonSlidePage() {
   }, [])
 
   return (
-    <Layout
-      maxWidth="2xl"
-      drillId="50on-slide"
-      compact={screen === 'drill' || screen === 'challenge'}
-    >
-      {screen === 'start' && (
-        <>
-          <DrillHeader
-            title="五十音表スライド"
-            description="矢印の方向に移動した文字を答えよう"
-          />
-          <StartScreen
-            onStartDrill={handleStartDrill}
-            onStartChallenge={handleStartChallenge}
-          />
-        </>
+    <DrillPageLayout
+      drillId={DRILL_NAME}
+      title="五十音表スライド"
+      description="矢印の方向に移動した文字を答えよう"
+      controller={page}
+      startScreen={
+        <StartScreen
+          onStartDrill={page.startPractice}
+          onStartChallenge={page.startChallenge}
+        />
+      }
+      renderPractice={(mode) => (
+        <DrillScreen mode={mode} onBack={page.backToStart} />
       )}
-      {screen === 'drill' && (
-        <DrillScreen mode={mode} onBack={handleBackToStart} />
-      )}
-      {screen === 'countdown' && (
-        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
-      )}
-      {screen === 'challenge' && (
+      challengeScreen={
         <ChallengeScreen
-          onTimeUp={handleChallengeTimeUp}
-          onBack={handleBackToStart}
+          onTimeUp={page.finishChallenge}
+          onBack={page.backToStart}
         />
-      )}
-      {screen === 'challengeResult' && (
-        <ChallengeResult
-          score={challengeScore}
-          timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="五十音表スライド"
-          history={challengeHistory}
-          questionRenderer={renderQuestion}
-          onRetry={handleRetryChallenge}
-          onBack={handleBackToStart}
-        />
-      )}
-    </Layout>
+      }
+      questionRenderer={renderQuestion}
+    />
   )
 }

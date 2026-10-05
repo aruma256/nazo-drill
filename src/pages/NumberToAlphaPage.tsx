@@ -1,20 +1,17 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import {
-  Layout,
-  DrillHeader,
+  DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
   DrillMiniHeader,
-  ChallengeResult,
-  ChallengeCountdownModal,
   SectionHeader,
 } from '../components'
 import {
   usePracticeDrill,
   useChallengeDrill,
-  useDrillStorage,
+  useDrillPage,
   type HistoryEntry,
 } from '../hooks'
 import {
@@ -24,7 +21,6 @@ import {
   generateWordQuestion,
 } from '../drills/numberToAlpha'
 import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
-import type { ScreenWithNote as Screen } from '../types/drill'
 
 const DRILL_NAME = '123-abc'
 
@@ -537,91 +533,31 @@ function ChallengeScreen({
  * 数字→アルファベットページ
  */
 export function NumberToAlphaPage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [mode, setMode] = useState<DrillMode>('single')
-  const [challengeScore, setChallengeScore] = useState(0)
-  const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
-  const { updateHighScore } = useDrillStorage(DRILL_NAME)
-
-  const handleStartDrill = (selectedMode: DrillMode) => {
-    setMode(selectedMode)
-    setScreen('drill')
-  }
-
-  const handleStartChallenge = () => {
-    setScreen('countdown')
-  }
-
-  const handleCountdownComplete = () => {
-    setScreen('challenge')
-  }
-
-  const handleOpenNote = () => {
-    setScreen('note')
-  }
-
-  const handleChallengeTimeUp = useCallback(
-    (score: number, history: HistoryEntry[]) => {
-      setChallengeScore(score)
-      setChallengeHistory(history)
-      updateHighScore('challenge', score)
-      setScreen('challengeResult')
-    },
-    [updateHighScore],
-  )
-
-  const handleRetryChallenge = () => {
-    setChallengeScore(0)
-    setChallengeHistory([])
-    setScreen('countdown')
-  }
-
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
+  const page = useDrillPage<DrillMode>(DRILL_NAME)
 
   return (
-    <Layout
-      maxWidth="2xl"
-      drillId="123-abc"
-      compact={screen === 'drill' || screen === 'challenge'}
-    >
-      {screen === 'start' && (
-        <>
-          <DrillHeader
-            title="数字→アルファベット"
-            description="1, 2, 3 ... を A, B, C ... に変換しよう"
-          />
-          <StartScreen
-            onStartDrill={handleStartDrill}
-            onStartChallenge={handleStartChallenge}
-            onOpenNote={handleOpenNote}
-          />
-        </>
+    <DrillPageLayout
+      drillId={DRILL_NAME}
+      title="数字→アルファベット"
+      description="1, 2, 3 ... を A, B, C ... に変換しよう"
+      controller={page}
+      startScreen={
+        <StartScreen
+          onStartDrill={page.startPractice}
+          onStartChallenge={page.startChallenge}
+          onOpenNote={page.openNote}
+        />
+      }
+      renderPractice={(mode) => (
+        <DrillScreen mode={mode} onBack={page.backToStart} />
       )}
-      {screen === 'drill' && (
-        <DrillScreen mode={mode} onBack={handleBackToStart} />
-      )}
-      {screen === 'countdown' && (
-        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
-      )}
-      {screen === 'challenge' && (
+      challengeScreen={
         <ChallengeScreen
-          onTimeUp={handleChallengeTimeUp}
-          onBack={handleBackToStart}
+          onTimeUp={page.finishChallenge}
+          onBack={page.backToStart}
         />
-      )}
-      {screen === 'challengeResult' && (
-        <ChallengeResult
-          score={challengeScore}
-          timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="数字→アルファベット"
-          history={challengeHistory}
-          onRetry={handleRetryChallenge}
-          onBack={handleBackToStart}
-        />
-      )}
-      {screen === 'note' && <NoteScreen onBack={handleBackToStart} />}
-    </Layout>
+      }
+      noteScreen={<NoteScreen onBack={page.backToStart} />}
+    />
   )
 }

@@ -231,7 +231,7 @@ describe('都道府県の形の画面', () => {
     ).toBeInTheDocument()
     expect(within(rows[1]).getByText('ホッカイドウ')).toBeInTheDocument()
     expect(within(rows[3]).getByText('✓')).toBeInTheDocument()
-    expect(rows).toHaveLength(5)
+    expect(rows).toHaveLength(4)
     fireEvent.click(screen.getByRole('button', { name: 'もう一度チャレンジ' }))
     for (let i = 0; i < 3; i++)
       act(() => {

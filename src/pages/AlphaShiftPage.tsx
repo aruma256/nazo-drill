@@ -1,19 +1,16 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import {
-  Layout,
-  DrillHeader,
+  DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
   SectionHeader,
-  ChallengeResult,
-  ChallengeCountdownModal,
 } from '../components'
 import {
   usePracticeDrill,
   useChallengeDrill,
-  useDrillStorage,
+  useDrillPage,
   type HistoryEntry,
 } from '../hooks'
 import {
@@ -22,7 +19,6 @@ import {
   type TrainingMode,
 } from '../drills/alphaShift'
 import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
-import type { Screen } from '../types/drill'
 
 const DRILL_NAME = 'abc-shift'
 
@@ -240,85 +236,29 @@ function ChallengeScreen({
  * アルファベットシフトページ
  */
 export function AlphaShiftPage() {
-  const [screen, setScreen] = useState<Screen>('start')
-  const [currentMode, setCurrentMode] = useState<TrainingMode>('plus-training')
-  const [challengeScore, setChallengeScore] = useState(0)
-  const [challengeHistory, setChallengeHistory] = useState<HistoryEntry[]>([])
-  const { updateHighScore } = useDrillStorage(DRILL_NAME)
-
-  const handleStartDrill = (mode: TrainingMode) => {
-    setCurrentMode(mode)
-    setScreen('drill')
-  }
-
-  const handleStartChallenge = () => {
-    setScreen('countdown')
-  }
-
-  const handleCountdownComplete = () => {
-    setScreen('challenge')
-  }
-
-  const handleChallengeTimeUp = useCallback(
-    (score: number, history: HistoryEntry[]) => {
-      setChallengeScore(score)
-      setChallengeHistory(history)
-      updateHighScore('challenge', score)
-      setScreen('challengeResult')
-    },
-    [updateHighScore],
-  )
-
-  const handleRetryChallenge = () => {
-    setChallengeScore(0)
-    setChallengeHistory([])
-    setScreen('countdown')
-  }
-
-  const handleBackToStart = () => {
-    setScreen('start')
-  }
+  const page = useDrillPage<TrainingMode>(DRILL_NAME)
 
   return (
-    <Layout
-      maxWidth="2xl"
-      drillId="abc-shift"
-      compact={screen === 'drill' || screen === 'challenge'}
-    >
-      {screen === 'start' && (
-        <>
-          <DrillHeader
-            title="アルファベットシフト"
-            description="アルファベットをずらして変換しよう"
-          />
-          <StartScreen
-            onStartDrill={handleStartDrill}
-            onStartChallenge={handleStartChallenge}
-          />
-        </>
+    <DrillPageLayout
+      drillId={DRILL_NAME}
+      title="アルファベットシフト"
+      description="アルファベットをずらして変換しよう"
+      controller={page}
+      startScreen={
+        <StartScreen
+          onStartDrill={page.startPractice}
+          onStartChallenge={page.startChallenge}
+        />
+      }
+      renderPractice={(mode) => (
+        <DrillScreen mode={mode} onBack={page.backToStart} />
       )}
-      {screen === 'drill' && (
-        <DrillScreen onBack={handleBackToStart} mode={currentMode} />
-      )}
-      {screen === 'countdown' && (
-        <ChallengeCountdownModal onComplete={handleCountdownComplete} />
-      )}
-      {screen === 'challenge' && (
+      challengeScreen={
         <ChallengeScreen
-          onTimeUp={handleChallengeTimeUp}
-          onBack={handleBackToStart}
+          onTimeUp={page.finishChallenge}
+          onBack={page.backToStart}
         />
-      )}
-      {screen === 'challengeResult' && (
-        <ChallengeResult
-          score={challengeScore}
-          timeLimit={CHALLENGE_TIME_LIMIT}
-          drillName="アルファベットシフト"
-          history={challengeHistory}
-          onRetry={handleRetryChallenge}
-          onBack={handleBackToStart}
-        />
-      )}
-    </Layout>
+      }
+    />
   )
 }
