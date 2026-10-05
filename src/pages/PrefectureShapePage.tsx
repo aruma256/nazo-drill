@@ -1,25 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   AnswerInputArea,
   ChallengeCountdownModal,
   ChallengeResult,
-  ChallengeTimer,
   DrillHeader,
-  DrillMiniHeader,
+  DrillScreenLayout,
   FeedbackModal,
   Layout,
   ModeButton,
-  PenaltyOverlay,
-  ScoreDisplay,
   SectionHeader,
 } from '../components'
 import {
-  useChallengeTimeUp,
-  useCountdownTimer,
-  useDrill,
+  useChallengeDrill,
+  usePracticeDrill,
   useDrillStorage,
-  usePenaltyTimeout,
-  type Feedback,
   type HistoryEntry,
   type Question,
 } from '../hooks'
@@ -30,10 +24,7 @@ import {
   PrefectureShape,
   type Prefecture,
 } from '../drills/prefectureShape'
-import {
-  CHALLENGE_TIME_LIMIT,
-  WRONG_ANSWER_PENALTY_SECONDS,
-} from '../constants/challenge'
+import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 import type { Screen } from '../types/drill'
 
 const DRILL_NAME = 'prefecture-shape'
@@ -41,36 +32,27 @@ const DRILL_NAME = 'prefecture-shape'
 const PRACTICE_MODE = 'prefecture'
 const CHALLENGE_MODE = 'prefecture-challenge'
 
-function useShapeDrill(mode: string) {
+function useShapeQuestionGenerator() {
   const previousId = useRef<number | null>(null)
-  const generateQuestion = useCallback(() => {
+  return useCallback(() => {
     const question = generateShapeQuestion(previousId.current)
     previousId.current = Number(question.question)
     return question
   }, [])
-  const validateAnswer = useCallback((answer: string, question: Question) => {
-    const prefecture = PREFECTURES.find(
-      (item) => item.id === Number(question.question),
-    )
-    return !!prefecture && checkShapeAnswer(answer, prefecture)
-  }, [])
-  const drill = useDrill(generateQuestion, {
-    validateAnswer,
-    storage: { drillName: DRILL_NAME, mode },
-  })
-  const { presentQuestion } = drill
-  useEffect(() => {
-    if (previousId.current === null) presentQuestion()
-  }, [presentQuestion])
-  const prefecture = PREFECTURES.find(
-    (item) => item.id === Number(drill.currentQuestion?.question),
-  )
-  return { ...drill, prefecture }
+}
+
+function getQuestionPrefecture(question: Question | null) {
+  return PREFECTURES.find((item) => item.id === Number(question?.question))
+}
+
+function validateShapeAnswer(answer: string, question: Question) {
+  const prefecture = getQuestionPrefecture(question)
+  return !!prefecture && checkShapeAnswer(answer, prefecture)
 }
 
 function ShapeQuestion({ prefecture }: { prefecture: Prefecture | undefined }) {
   return (
-    <div className="mb-4 text-center">
+    <div className="text-center">
       <div className="mx-auto max-w-[280px] rounded-2xl border-2 border-dashed border-drill-accent bg-drill-primary-light/40 sm:max-w-[320px]">
         {prefecture && (
           <PrefectureShape prefectureId={prefecture.id} className="w-full" />
@@ -84,34 +66,31 @@ function ShapeQuestion({ prefecture }: { prefecture: Prefecture | undefined }) {
 }
 
 function PracticeScreen({ onBack }: { onBack: () => void }) {
-  const { currentQuestion, presentQuestion, checkAnswer, prefecture } =
-    useShapeDrill(PRACTICE_MODE)
-  const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<Feedback | null>(null)
-  const [revealed, setRevealed] = useState(false)
+  const generateQuestion = useShapeQuestionGenerator()
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    feedback,
+    revealed,
+    submitAnswer,
+    nextQuestion,
+    revealAnswer,
+  } = usePracticeDrill(generateQuestion, {
+    validateAnswer: validateShapeAnswer,
+    storage: { drillName: DRILL_NAME, mode: PRACTICE_MODE },
+  })
+  const prefecture = getQuestionPrefecture(currentQuestion)
   const [hintLevel, setHintLevel] = useState(0)
 
-  const handleSubmit = () => {
-    if (!userAnswer.trim() || feedback || revealed || !currentQuestion) return
-    const correct = checkAnswer(userAnswer)
-    setFeedback({ type: correct ? 'correct' : 'retry' })
-    setUserAnswer('')
-  }
   const handleNext = () => {
-    if (feedback?.type === 'correct' || revealed) {
-      presentQuestion()
-      setHintLevel(0)
-    }
-    setFeedback(null)
-    setRevealed(false)
-    setUserAnswer('')
+    if (nextQuestion()) setHintLevel(0)
   }
   const explanation = prefecture?.name ?? ''
 
   return (
     <>
-      <DrillMiniHeader onBack={onBack} drillLabel="都道府県 (形)" />
-      <div className="rounded-lg bg-white/70 p-4">
+      <DrillScreenLayout onBack={onBack} drillLabel="都道府県 (形)">
         <ShapeQuestion prefecture={prefecture} />
         {revealed ? (
           <div className="text-center">
@@ -133,14 +112,14 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
             <AnswerInputArea
               value={userAnswer}
               onChange={setUserAnswer}
-              onSubmit={handleSubmit}
+              onSubmit={submitAnswer}
               onNext={handleNext}
               feedback={feedback}
               placeholder="答えを入力"
               maxLength={20}
             />
             {prefecture && (
-              <div className="mt-4 rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
+              <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
                 <div aria-live="polite" className="space-y-2 text-sm">
                   {hintLevel >= 1 && (
                     <p className="text-drill-primary-dark">
@@ -169,12 +148,9 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
                 )}
               </div>
             )}
-            <div className="mt-4 text-center">
+            <div className="text-center">
               <button
-                onClick={() => {
-                  setRevealed(true)
-                  setUserAnswer('')
-                }}
+                onClick={revealAnswer}
                 disabled={!!feedback}
                 className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary"
               >
@@ -183,7 +159,7 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
             </div>
           </>
         )}
-      </div>
+      </DrillScreenLayout>
       <FeedbackModal
         isOpen={!!feedback}
         type={feedback?.type ?? 'correct'}
@@ -201,53 +177,40 @@ function ChallengeScreen({
   onBack: () => void
   onTimeUp: (score: number, history: HistoryEntry[]) => void
 }) {
+  const generateQuestion = useShapeQuestionGenerator()
   const {
     currentQuestion,
-    presentQuestion,
-    checkAnswer,
-    prefecture,
+    userAnswer,
+    setUserAnswer,
+    submitAnswer,
     score,
-    history,
-  } = useShapeDrill(CHALLENGE_MODE)
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
-  const { isPenalized, activatePenalty } = usePenaltyTimeout()
-  const [userAnswer, setUserAnswer] = useState('')
-  useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim() || remainingTime === 0 || !currentQuestion) return
-    if (!checkAnswer(userAnswer)) {
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      activatePenalty()
-    }
-    presentQuestion()
-    setUserAnswer('')
-  }
+    remainingTime,
+    isPenalized,
+    isFinished,
+  } = useChallengeDrill(generateQuestion, {
+    onTimeUp,
+    validateAnswer: validateShapeAnswer,
+    storage: { drillName: DRILL_NAME, mode: CHALLENGE_MODE },
+  })
+  const prefecture = getQuestionPrefecture(currentQuestion)
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
-      <div className="relative rounded-lg bg-white/70 p-4">
-        <PenaltyOverlay isPenalized={isPenalized} />
-        <ChallengeTimer
-          remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
-          isPenalized={isPenalized}
-        />
-        <ScoreDisplay score={score} />
-        <ShapeQuestion prefecture={prefecture} />
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          placeholder="答えを入力"
-          maxLength={20}
-          disabled={remainingTime === 0}
-          instantMode
-        />
-      </div>
-    </>
+    <DrillScreenLayout
+      onBack={onBack}
+      drillLabel="実力テスト"
+      challenge={{ remainingTime, isPenalized, score }}
+    >
+      <ShapeQuestion prefecture={prefecture} />
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
+        placeholder="答えを入力"
+        maxLength={20}
+        disabled={isFinished}
+        instantMode
+      />
+    </DrillScreenLayout>
   )
 }
 
@@ -271,7 +234,11 @@ export function PrefectureShapePage() {
   }
 
   return (
-    <Layout maxWidth="2xl" drillId="prefecture-shape">
+    <Layout
+      maxWidth="2xl"
+      drillId="prefecture-shape"
+      compact={screen === 'drill' || screen === 'challenge'}
+    >
       {screen === 'start' && (
         <>
           <DrillHeader

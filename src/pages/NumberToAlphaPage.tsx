@@ -1,25 +1,20 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import {
   Layout,
   DrillHeader,
+  DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
   DrillMiniHeader,
-  ChallengeTimer,
   ChallengeResult,
   ChallengeCountdownModal,
   SectionHeader,
-  PenaltyOverlay,
-  ScoreDisplay,
 } from '../components'
 import {
-  useChallengeTimeUp,
-  useCountdownTimer,
-  useDrill,
+  usePracticeDrill,
+  useChallengeDrill,
   useDrillStorage,
-  usePenaltyTimeout,
-  type Feedback,
   type HistoryEntry,
 } from '../hooks'
 import {
@@ -28,10 +23,7 @@ import {
   generateSingleQuestion,
   generateWordQuestion,
 } from '../drills/numberToAlpha'
-import {
-  CHALLENGE_TIME_LIMIT,
-  WRONG_ANSWER_PENALTY_SECONDS,
-} from '../constants/challenge'
+import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 import type { ScreenWithNote as Screen } from '../types/drill'
 
 const DRILL_NAME = '123-abc'
@@ -41,7 +33,7 @@ const DRILL_NAME = '123-abc'
  */
 function AlphaTable() {
   return (
-    <div className="mb-4 flex justify-center">
+    <div className="flex justify-center">
       <table className="border-collapse border border-gray-300">
         <tbody>
           <tr>
@@ -109,7 +101,7 @@ function AlphaTable() {
  */
 function EjotyHint({ shouldFade }: { shouldFade: boolean }) {
   return (
-    <div className="mb-4 text-center">
+    <div className="text-center">
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
         <p
           className={`font-medium text-amber-800 transition-opacity duration-[8000ms] ${
@@ -383,15 +375,9 @@ function DrillScreen({
   mode: DrillMode
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<Feedback | null>(null)
-
   // 前回の問題を追跡するRef
   const lastNumberRef = useRef<number | null>(null)
   const lastWordRef = useRef<string | null>(null)
-
-  // EJOTYヒントのフェード用
-  const [questionCount, setQuestionCount] = useState(0)
 
   // 問題生成関数
   const generateQuestion = useCallback(() => {
@@ -415,49 +401,26 @@ function DrillScreen({
     }
   }, [mode])
 
-  const { currentQuestion, presentQuestion, checkAnswer } = useDrill(
-    generateQuestion,
-    { storage: { drillName: DRILL_NAME, mode } },
-  )
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim()) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (isCorrect) {
-      setFeedback({ type: 'correct' })
-    } else {
-      setFeedback({ type: 'retry' })
-    }
-    setUserAnswer('')
-  }
-
-  const handleNext = () => {
-    const wasCorrect = feedback?.type === 'correct'
-    setFeedback(null)
-    if (wasCorrect) {
-      setQuestionCount((c) => c + 1)
-      presentQuestion()
-    }
-    // リトライの場合は同じ問題を続ける
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    feedback,
+    submitAnswer,
+    nextQuestion,
+    totalQuestions,
+  } = usePracticeDrill(generateQuestion, {
+    storage: { drillName: DRILL_NAME, mode },
+  })
 
   // EJOTYモードで6問目以降にヒントをフェードアウト
-  const shouldFadeEjotyHint = mode === 'ejoty' && questionCount >= 5
+  const shouldFadeEjotyHint = mode === 'ejoty' && totalQuestions >= 6
 
   return (
     <>
-      <DrillMiniHeader onBack={onBack} drillLabel="数字→ABC" />
-
-      {/* 問題エリア */}
-      <div className="rounded-lg bg-white/70 p-4">
+      <DrillScreenLayout onBack={onBack} drillLabel="数字→ABC">
         {/* 問題表示 */}
-        <div className="mb-4 text-center">
+        <div className="text-center">
           <div className="text-5xl font-bold text-drill-primary-dark">
             {currentQuestion?.question ?? '--'}
           </div>
@@ -477,15 +440,15 @@ function DrillScreen({
         <AnswerInputArea
           value={userAnswer}
           onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          onNext={handleNext}
+          onSubmit={submitAnswer}
+          onNext={nextQuestion}
           feedback={feedback}
           placeholder="答えを入力"
           maxLength={10}
           inputTransform={(value) => value.toUpperCase()}
           inputClassName="uppercase"
         />
-      </div>
+      </DrillScreenLayout>
 
       {/* フィードバックモーダル */}
       <FeedbackModal
@@ -496,7 +459,7 @@ function DrillScreen({
             ? `${currentQuestion.answer} = ${currentQuestion.question}`
             : undefined
         }
-        onNext={handleNext}
+        onNext={nextQuestion}
       />
     </>
   )
@@ -512,11 +475,6 @@ function ChallengeScreen({
   onTimeUp: (score: number, history: HistoryEntry[]) => void
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const { isPenalized, activatePenalty } = usePenaltyTimeout()
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
-
   // 前回の問題を追跡するRef
   const lastWordRef = useRef<string | null>(null)
 
@@ -527,76 +485,51 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer, score, history } =
-    useDrill(generateQuestion, {
-      storage: { drillName: DRILL_NAME, mode: 'challenge' },
-    })
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  // タイムアップ時の処理
-  useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim() || remainingTime === 0) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (!isCorrect) {
-      // 不正解ペナルティ
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      activatePenalty()
-    }
-    presentQuestion()
-    setUserAnswer('')
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    submitAnswer,
+    remainingTime,
+    isPenalized,
+    isFinished,
+    score,
+  } = useChallengeDrill(generateQuestion, {
+    onTimeUp,
+    storage: { drillName: DRILL_NAME, mode: 'challenge' },
+  })
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
-
-      {/* 問題エリア */}
-      <div className="relative rounded-lg bg-white/70 p-4">
-        {/* ペナルティ表示オーバーレイ */}
-        <PenaltyOverlay isPenalized={isPenalized} />
-
-        {/* タイマー */}
-        <ChallengeTimer
-          remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
-          isPenalized={isPenalized}
-        />
-
-        {/* スコア表示 */}
-        <ScoreDisplay score={score} />
-
-        {/* 問題表示 */}
-        <div className="mb-4 text-center">
-          <div className="text-5xl font-bold text-drill-primary-dark">
-            {currentQuestion?.question ?? '--'}
-          </div>
-          {currentQuestion?.subtext && (
-            <div className="mt-1 text-sm text-gray-500">
-              {currentQuestion.subtext}
-            </div>
-          )}
+    <DrillScreenLayout
+      onBack={onBack}
+      drillLabel="実力テスト"
+      challenge={{ remainingTime, isPenalized, score }}
+    >
+      {/* 問題表示 */}
+      <div className="text-center">
+        <div className="text-5xl font-bold text-drill-primary-dark">
+          {currentQuestion?.question ?? '--'}
         </div>
-
-        {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          placeholder="答えを入力"
-          maxLength={10}
-          inputTransform={(value) => value.toUpperCase()}
-          inputClassName="uppercase"
-          instantMode
-        />
+        {currentQuestion?.subtext && (
+          <div className="mt-1 text-sm text-gray-500">
+            {currentQuestion.subtext}
+          </div>
+        )}
       </div>
-    </>
+
+      {/* 回答入力エリア（フィードバックなし、即時次問題） */}
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
+        placeholder="答えを入力"
+        maxLength={10}
+        inputTransform={(value) => value.toUpperCase()}
+        inputClassName="uppercase"
+        disabled={isFinished}
+        instantMode
+      />
+    </DrillScreenLayout>
   )
 }
 
@@ -648,7 +581,11 @@ export function NumberToAlphaPage() {
   }
 
   return (
-    <Layout maxWidth="2xl" drillId="123-abc">
+    <Layout
+      maxWidth="2xl"
+      drillId="123-abc"
+      compact={screen === 'drill' || screen === 'challenge'}
+    >
       {screen === 'start' && (
         <>
           <DrillHeader

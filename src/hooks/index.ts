@@ -1,6 +1,9 @@
 export { useChallengeTimeUp } from './useChallengeTimeUp'
 export { useCountdownTimer } from './useCountdownTimer'
 export { useDrill } from './useDrill'
+export { usePracticeDrill } from './usePracticeDrill'
+export { useChallenge } from './useChallenge'
+export { useChallengeDrill } from './useChallengeDrill'
 export type {
   Feedback,
   HistoryEntry,

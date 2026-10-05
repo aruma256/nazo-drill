@@ -1,25 +1,20 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import {
   Layout,
   DrillHeader,
+  DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
   DrillMiniHeader,
   SectionHeader,
-  ChallengeTimer,
   ChallengeResult,
   ChallengeCountdownModal,
-  PenaltyOverlay,
-  ScoreDisplay,
 } from '../components'
 import {
-  useChallengeTimeUp,
-  useCountdownTimer,
-  useDrill,
+  usePracticeDrill,
+  useChallengeDrill,
   useDrillStorage,
-  usePenaltyTimeout,
-  type Feedback,
   type HistoryEntry,
   type Question,
 } from '../hooks'
@@ -31,10 +26,7 @@ import {
   SINGLE_PREFECTURE_CHARS,
   DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
-import {
-  CHALLENGE_TIME_LIMIT,
-  WRONG_ANSWER_PENALTY_SECONDS,
-} from '../constants/challenge'
+import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 import type { ScreenWithNote as Screen } from '../types/drill'
 
 const DRILL_NAME = 'prefecture-fill'
@@ -328,9 +320,6 @@ function DrillScreen({
   mode: DrillMode
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<Feedback | null>(null)
-
   // 前回の問題を追跡するRef
   const lastNormalRef = useRef<string | null>(null)
   const lastCharRef = useRef<string | null>(null)
@@ -352,39 +341,17 @@ function DrillScreen({
     }
   }, [mode])
 
-  const { currentQuestion, presentQuestion, checkAnswer } = useDrill(
-    generateQuestion,
-    {
-      validateAnswer: checkPrefectureFillAnswer,
-      storage: { drillName: DRILL_NAME, mode },
-    },
-  )
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim()) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (isCorrect) {
-      setFeedback({ type: 'correct' })
-    } else {
-      setFeedback({ type: 'retry' })
-    }
-    setUserAnswer('')
-  }
-
-  const handleNext = () => {
-    const wasCorrect = feedback?.type === 'correct'
-    setFeedback(null)
-    if (wasCorrect) {
-      presentQuestion()
-    }
-    // リトライの場合は同じ問題を続ける
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    feedback,
+    submitAnswer,
+    nextQuestion,
+  } = usePracticeDrill(generateQuestion, {
+    validateAnswer: checkPrefectureFillAnswer,
+    storage: { drillName: DRILL_NAME, mode },
+  })
 
   // モード名を取得
   const getModeName = () => {
@@ -405,15 +372,12 @@ function DrillScreen({
 
   return (
     <>
-      <DrillMiniHeader
+      <DrillScreenLayout
         onBack={onBack}
         drillLabel={`都道府県 (${getModeName()})`}
-      />
-
-      {/* 問題エリア */}
-      <div className="rounded-lg bg-white/70 p-4">
+      >
         {/* 問題表示 */}
-        <div className="mb-6 text-center">
+        <div className="text-center">
           <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
             {currentQuestion?.question ?? '--'}
           </div>
@@ -425,8 +389,8 @@ function DrillScreen({
         <AnswerInputArea
           value={userAnswer}
           onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          onNext={handleNext}
+          onSubmit={submitAnswer}
+          onNext={nextQuestion}
           feedback={feedback}
           inputPrefix={
             revealedPrefecture && (
@@ -443,13 +407,13 @@ function DrillScreen({
           }
           maxLength={10}
         />
-      </div>
+      </DrillScreenLayout>
 
       {/* フィードバックモーダル */}
       <FeedbackModal
         isOpen={!!feedback}
         type={feedback?.type ?? 'correct'}
-        onNext={handleNext}
+        onNext={nextQuestion}
       />
     </>
   )
@@ -466,11 +430,6 @@ function ChallengeScreen({
   onTimeUp: (score: number, history: HistoryEntry[]) => void
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const { isPenalized, activatePenalty } = usePenaltyTimeout()
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
-
   // 前回の問題を追跡するRef
   const lastPrefectureRef = useRef<string | null>(null)
 
@@ -481,70 +440,45 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer, score, history } =
-    useDrill(generateQuestion, {
-      validateAnswer: checkPrefectureFillAnswer,
-      storage: { drillName: DRILL_NAME, mode: 'challenge' },
-    })
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  // タイムアップ時の処理
-  useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim() || remainingTime === 0) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (!isCorrect) {
-      // 不正解ペナルティ
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      activatePenalty()
-    }
-    presentQuestion()
-    setUserAnswer('')
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    submitAnswer,
+    remainingTime,
+    isPenalized,
+    isFinished,
+    score,
+  } = useChallengeDrill(generateQuestion, {
+    onTimeUp,
+    validateAnswer: checkPrefectureFillAnswer,
+    storage: { drillName: DRILL_NAME, mode: 'challenge' },
+  })
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
-
-      {/* 問題エリア */}
-      <div className="relative rounded-lg bg-white/70 p-4">
-        {/* ペナルティ表示オーバーレイ */}
-        <PenaltyOverlay isPenalized={isPenalized} />
-
-        {/* タイマー */}
-        <ChallengeTimer
-          remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
-          isPenalized={isPenalized}
-        />
-
-        {/* スコア表示 */}
-        <ScoreDisplay score={score} />
-
-        {/* 問題表示 */}
-        <div className="mb-4 text-center">
-          <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
-            {currentQuestion?.question ?? '--'}
-          </div>
+    <DrillScreenLayout
+      onBack={onBack}
+      drillLabel="実力テスト"
+      challenge={{ remainingTime, isPenalized, score }}
+    >
+      {/* 問題表示 */}
+      <div className="text-center">
+        <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
+          {currentQuestion?.question ?? '--'}
         </div>
-
-        {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          placeholder="ひらがなで入力"
-          maxLength={10}
-          instantMode
-        />
       </div>
-    </>
+
+      {/* 回答入力エリア（フィードバックなし、即時次問題） */}
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
+        placeholder="ひらがなで入力"
+        maxLength={10}
+        disabled={isFinished}
+        instantMode
+      />
+    </DrillScreenLayout>
   )
 }
 
@@ -596,7 +530,11 @@ export function PrefectureFillPage() {
   }
 
   return (
-    <Layout maxWidth="2xl" drillId="prefecture-fill">
+    <Layout
+      maxWidth="2xl"
+      drillId="prefecture-fill"
+      compact={screen === 'drill' || screen === 'challenge'}
+    >
       {screen === 'start' && (
         <>
           <DrillHeader

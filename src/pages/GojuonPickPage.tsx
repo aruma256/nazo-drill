@@ -1,26 +1,20 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import {
   Layout,
   DrillHeader,
+  DrillScreenLayout,
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
-  DrillMiniHeader,
   GojuonTable,
-  ChallengeTimer,
   ChallengeResult,
   ChallengeCountdownModal,
   SectionHeader,
-  PenaltyOverlay,
-  ScoreDisplay,
 } from '../components'
 import {
-  useChallengeTimeUp,
-  useCountdownTimer,
-  useDrill,
+  usePracticeDrill,
+  useChallengeDrill,
   useDrillStorage,
-  usePenaltyTimeout,
-  type Feedback,
   type HistoryEntry,
   type Question,
 } from '../hooks'
@@ -31,10 +25,7 @@ import {
   generateTaMoQuestion,
   parseMarkedCells,
 } from '../drills/gojuonPick'
-import {
-  CHALLENGE_TIME_LIMIT,
-  WRONG_ANSWER_PENALTY_SECONDS,
-} from '../constants/challenge'
+import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 import type { Screen } from '../types/drill'
 
 const DRILL_NAME = '50on-pick'
@@ -140,9 +131,6 @@ function DrillScreen({
   mode: DrillMode
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const [feedback, setFeedback] = useState<Feedback | null>(null)
-
   // 前回の問題を追跡するRef
   const lastWordRef = useRef<string | null>(null)
   const lastColRef = useRef<number | null>(null)
@@ -169,36 +157,16 @@ function DrillScreen({
     }
   }, [mode])
 
-  const { currentQuestion, presentQuestion, checkAnswer } = useDrill(
-    generateQuestion,
-    { storage: { drillName: DRILL_NAME, mode } },
-  )
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim()) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (isCorrect) {
-      setFeedback({ type: 'correct' })
-    } else {
-      setFeedback({ type: 'retry' })
-    }
-    setUserAnswer('')
-  }
-
-  const handleNext = () => {
-    const wasCorrect = feedback?.type === 'correct'
-    setFeedback(null)
-    if (wasCorrect) {
-      presentQuestion()
-    }
-    // リトライの場合は同じ問題を続ける
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    feedback,
+    submitAnswer,
+    nextQuestion,
+  } = usePracticeDrill(generateQuestion, {
+    storage: { drillName: DRILL_NAME, mode },
+  })
 
   // 現在の問題のマークされたセル
   const markedCells = currentQuestion
@@ -207,32 +175,30 @@ function DrillScreen({
 
   return (
     <>
-      <DrillMiniHeader onBack={onBack} drillLabel="文字拾い" />
-
-      {/* 問題エリア */}
-      <div className="rounded-lg bg-white/70 p-4">
+      <DrillScreenLayout onBack={onBack} drillLabel="文字拾い">
         <GojuonTable
           markedCells={markedCells}
           size="large"
+          className=""
           isTaMoMode={mode === 'ta-mo'}
         />
 
         <AnswerInputArea
           value={userAnswer}
           onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          onNext={handleNext}
+          onSubmit={submitAnswer}
+          onNext={nextQuestion}
           feedback={feedback}
           placeholder="ひらがなで入力"
           maxLength={10}
         />
-      </div>
+      </DrillScreenLayout>
 
       {/* フィードバックモーダル */}
       <FeedbackModal
         isOpen={!!feedback}
         type={feedback?.type ?? 'correct'}
-        onNext={handleNext}
+        onNext={nextQuestion}
       />
     </>
   )
@@ -248,11 +214,6 @@ function ChallengeScreen({
   onTimeUp: (score: number, history: HistoryEntry[]) => void
   onBack: () => void
 }) {
-  const [userAnswer, setUserAnswer] = useState('')
-  const { isPenalized, activatePenalty } = usePenaltyTimeout()
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
-
   // 前回の問題を追跡するRef
   const lastWordRef = useRef<string | null>(null)
 
@@ -263,31 +224,19 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer, score, history } =
-    useDrill(generateQuestion, {
-      storage: { drillName: DRILL_NAME, mode: 'challenge' },
-    })
-
-  // ドリル開始時に最初の問題を出題
-  useEffect(() => {
-    presentQuestion()
-  }, [presentQuestion])
-
-  // タイムアップ時の処理
-  useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
-
-  const handleSubmit = () => {
-    if (!userAnswer.trim() || remainingTime === 0) return
-
-    const isCorrect = checkAnswer(userAnswer)
-    if (!isCorrect) {
-      // 不正解ペナルティ
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      activatePenalty()
-    }
-    presentQuestion()
-    setUserAnswer('')
-  }
+  const {
+    currentQuestion,
+    userAnswer,
+    setUserAnswer,
+    submitAnswer,
+    remainingTime,
+    isPenalized,
+    isFinished,
+    score,
+  } = useChallengeDrill(generateQuestion, {
+    onTimeUp,
+    storage: { drillName: DRILL_NAME, mode: 'challenge' },
+  })
 
   // 現在の問題のマークされたセル
   const markedCells = currentQuestion
@@ -295,39 +244,25 @@ function ChallengeScreen({
     : []
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
+    <DrillScreenLayout
+      onBack={onBack}
+      drillLabel="実力テスト"
+      challenge={{ remainingTime, isPenalized, score }}
+    >
+      {/* 問題表示 */}
+      <GojuonTable markedCells={markedCells} size="large" className="" />
 
-      {/* 問題エリア */}
-      <div className="relative rounded-lg bg-white/70 p-4">
-        {/* ペナルティ表示オーバーレイ */}
-        <PenaltyOverlay isPenalized={isPenalized} />
-
-        {/* タイマー */}
-        <ChallengeTimer
-          remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
-          isPenalized={isPenalized}
-        />
-
-        {/* スコア表示 */}
-        <ScoreDisplay score={score} />
-
-        {/* 問題表示 */}
-        <GojuonTable markedCells={markedCells} size="large" />
-
-        {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          placeholder="ひらがなで入力"
-          maxLength={10}
-          className="mt-4"
-          instantMode
-        />
-      </div>
-    </>
+      {/* 回答入力エリア（フィードバックなし、即時次問題） */}
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
+        placeholder="ひらがなで入力"
+        maxLength={10}
+        disabled={isFinished}
+        instantMode
+      />
+    </DrillScreenLayout>
   )
 }
 
@@ -381,7 +316,11 @@ export function GojuonPickPage() {
   }, [])
 
   return (
-    <Layout maxWidth="2xl" drillId="50on-pick">
+    <Layout
+      maxWidth="2xl"
+      drillId="50on-pick"
+      compact={screen === 'drill' || screen === 'challenge'}
+    >
       {screen === 'start' && (
         <>
           <DrillHeader

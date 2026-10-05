@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { NumberToAlphaPage } from '../NumberToAlphaPage'
 import { AlphaShiftPage } from '../AlphaShiftPage'
@@ -79,9 +80,11 @@ describe('実力テストの得点・履歴・保存の整合性', () => {
     '%sの正誤を得点・履歴・累計・最高記録に反映する',
     (_name, { Page, drillName, mode, answer: correctAnswer }) => {
       render(
-        <MemoryRouter>
-          <Page />
-        </MemoryRouter>,
+        <StrictMode>
+          <MemoryRouter>
+            <Page />
+          </MemoryRouter>
+        </StrictMode>,
       )
       fireEvent.click(screen.getByRole('button', { name: /実力テスト/ }))
       for (let i = 0; i < 3; i++) {

@@ -8,6 +8,8 @@ interface LayoutProps {
   maxWidth?: MaxWidth
   className?: string
   drillId?: DrillId
+  /** 問題画面では上下の余白を抑え、モバイルの表示領域を確保する。 */
+  compact?: boolean
 }
 
 const maxWidthClasses: Record<MaxWidth, string> = {
@@ -31,6 +33,7 @@ export function Layout({
   maxWidth = '4xl',
   className = '',
   drillId,
+  compact = false,
 }: LayoutProps) {
   useEffect(() => {
     const theme = drillId ? DRILL_THEMES[drillId] : DEFAULT_THEME
@@ -43,7 +46,7 @@ export function Layout({
 
   return (
     <div
-      className={`container relative z-10 mx-auto px-4 py-8 ${maxWidthClasses[maxWidth]} ${className}`}
+      className={`container relative z-10 mx-auto px-4 ${compact ? 'py-4' : 'py-8'} ${maxWidthClasses[maxWidth]} ${className}`}
     >
       {children}
     </div>

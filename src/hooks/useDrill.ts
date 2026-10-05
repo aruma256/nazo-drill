@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDrillSession, type DrillSessionOptions } from './useDrillSession'
 import type { Question, QuestionGenerator, ScoreStats } from '../types/drill'
 
@@ -20,7 +20,13 @@ const MAX_RETRIES = 100
  */
 export function useDrill(
   generateQuestion: QuestionGenerator,
-  options: DrillSessionOptions = {},
+  {
+    autoStart = false,
+    ...options
+  }: DrillSessionOptions & {
+    /** 初回出題を自動で行う。StrictModeでも1問だけ出題する。 */
+    autoStart?: boolean
+  } = {},
 ) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
   const [totalQuestions, setTotalQuestions] = useState(0)
@@ -44,11 +50,18 @@ export function useDrill(
       retries < MAX_RETRIES
     )
 
+    // 生成関数は前問を保持するrefを更新するため、初回もマウント後に出題する。
+    // eslint-disable-next-line react-x/set-state-in-effect -- autoStartによる初回出題はrefで1回に制限する
     setCurrentQuestion(newQuestion)
     previousQuestionRef.current = newQuestion
+    // eslint-disable-next-line react-x/set-state-in-effect -- 問題の更新と出題数を同じ操作で記録する
     setTotalQuestions((prev) => prev + 1)
     return newQuestion
   }, [generateQuestion])
+
+  useEffect(() => {
+    if (autoStart && previousQuestionRef.current === null) presentQuestion()
+  }, [autoStart, presentQuestion, currentQuestion])
 
   /**
    * 回答をチェックする

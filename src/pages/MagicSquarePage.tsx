@@ -2,26 +2,14 @@ import { useCallback, useState } from 'react'
 import {
   ChallengeCountdownModal,
   ChallengeResult,
-  ChallengeTimer,
   DrillHeader,
-  DrillMiniHeader,
+  DrillScreenLayout,
   Layout,
   ModeButton,
-  PenaltyOverlay,
-  ScoreDisplay,
   SectionHeader,
 } from '../components'
-import {
-  CHALLENGE_TIME_LIMIT,
-  WRONG_ANSWER_PENALTY_SECONDS,
-} from '../constants/challenge'
-import {
-  useChallengeTimeUp,
-  useCountdownTimer,
-  useDrillSession,
-  useDrillStorage,
-  usePenaltyTimeout,
-} from '../hooks'
+import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
+import { useChallenge, useDrillSession, useDrillStorage } from '../hooks'
 import type { HistoryEntry } from '../hooks'
 import {
   MAGIC_SQUARES,
@@ -56,7 +44,7 @@ function RoundView({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        className="font-display mb-4 flex h-16 items-center justify-center text-2xl font-bold"
+        className="font-display flex h-16 items-center justify-center text-2xl font-bold"
       >
         {round.phase === 'complete' ? (
           <span className="text-emerald-600">○ 正解！</span>
@@ -104,32 +92,29 @@ function PracticeScreen({
   }
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="3×3魔方陣" />
-      <div className="rounded-2xl bg-white/70 p-4">
-        <RoundView round={round} onSelect={handleSelect} />
-        <div className="mt-4 text-center">
-          {round.phase === 'revealed' ? (
-            <button
-              type="button"
-              onClick={round.nextQuestion}
-              className="rounded-xl bg-drill-primary px-6 py-3 font-bold text-white"
-            >
-              次の問題へ
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={round.revealAnswer}
-              disabled={!round.canPlaceNumber}
-              className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary disabled:opacity-40"
-            >
-              わからないので答えを見る
-            </button>
-          )}
-        </div>
+    <DrillScreenLayout onBack={onBack} drillLabel="3×3魔方陣">
+      <RoundView round={round} onSelect={handleSelect} />
+      <div className="text-center">
+        {round.phase === 'revealed' ? (
+          <button
+            type="button"
+            onClick={round.nextQuestion}
+            className="rounded-xl bg-drill-primary px-6 py-3 font-bold text-white"
+          >
+            次の問題へ
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={round.revealAnswer}
+            disabled={!round.canPlaceNumber}
+            className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary disabled:opacity-40"
+          >
+            わからないので答えを見る
+          </button>
+        )}
       </div>
-    </>
+    </DrillScreenLayout>
   )
 }
 
@@ -144,50 +129,37 @@ function ChallengeScreen({
   const { score, history, recordAnswer } = useDrillSession({
     storage: { drillName: DRILL_NAME, mode: CHALLENGE_MODE },
   })
-  const { remainingTime, subtractTime } =
-    useCountdownTimer(CHALLENGE_TIME_LIMIT)
-  const { isPenalized, activatePenalty } = usePenaltyTimeout()
   const { phase, question, cells } = round
 
-  useChallengeTimeUp(
-    remainingTime,
-    score,
-    history,
-    // 完成直後の正解表示中は、同じ盤面を時間切れとして二重に記録しない。
-    phase === 'complete' ? null : question,
-    onTimeUp,
-    cells.join(''),
+  const { remainingTime, isPenalized, isFinished, applyPenalty } = useChallenge(
+    {
+      score,
+      history,
+      // 完成直後の正解表示中は、同じ盤面を時間切れとして二重に記録しない。
+      currentQuestion: phase === 'complete' ? null : question,
+      onTimeUp,
+      userAnswer: cells.join(''),
+    },
   )
 
   const handleSelect = (index: number) => {
-    if (remainingTime === 0) return
+    if (isFinished) return
     const result = round.placeNumber(index)
     if (result === 'wrong') {
-      subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
-      activatePenalty()
+      applyPenalty()
     } else if (result === 'complete') {
       recordAnswer({ question, userAnswer: question.answer, isCorrect: true })
     }
   }
 
   return (
-    <>
-      <DrillMiniHeader onBack={onBack} drillLabel="実力テスト" />
-      <div className="relative rounded-2xl bg-white/70 p-4">
-        <PenaltyOverlay isPenalized={isPenalized} />
-        <ChallengeTimer
-          remainingSeconds={remainingTime}
-          totalSeconds={CHALLENGE_TIME_LIMIT}
-          isPenalized={isPenalized}
-        />
-        <ScoreDisplay score={score} />
-        <RoundView
-          round={round}
-          onSelect={handleSelect}
-          disabled={remainingTime === 0}
-        />
-      </div>
-    </>
+    <DrillScreenLayout
+      onBack={onBack}
+      drillLabel="実力テスト"
+      challenge={{ remainingTime, isPenalized, score }}
+    >
+      <RoundView round={round} onSelect={handleSelect} disabled={isFinished} />
+    </DrillScreenLayout>
   )
 }
 
@@ -263,7 +235,7 @@ export function MagicSquarePage() {
     <Layout
       maxWidth="2xl"
       drillId="magic-square"
-      className={screen === 'start' ? '' : 'py-4!'}
+      compact={screen === 'drill' || screen === 'challenge'}
     >
       {screen === 'start' && (
         <>

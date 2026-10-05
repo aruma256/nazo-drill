@@ -74,7 +74,7 @@ export function AnswerInputArea({
   }
 
   return (
-    <div className={`mb-2 ${className}`}>
+    <div className={className}>
       <label htmlFor="answer-input" className="sr-only">
         あなたの答え:
       </label>
