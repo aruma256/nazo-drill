@@ -46,6 +46,13 @@ export const KANJI_TO_HIRAGANA: Record<string, string> = Object.fromEntries(
   ]),
 )
 
+const HIRAGANA_TO_KANJI: Record<string, string> = Object.fromEntries(
+  PREFECTURE_DATA.map((prefecture) => [
+    prefecture.shortReading,
+    prefecture.shortName,
+  ]),
+)
+
 /**
  * 文字列の指定位置を◯に置換
  */
@@ -131,27 +138,6 @@ export function normalizeAnswer(answer: string): string {
 }
 
 /**
- * 2県確定モードの回答チェック（順序不問）
- */
-export function checkTwoPrefecturesAnswer(
-  userAnswer: string,
-  correctAnswer: string,
-): boolean {
-  const normalized = normalizeAnswer(userAnswer)
-  // スペース、カンマ、読点、全角スペース(\u3000)で分割
-  const userParts = normalized
-    .split(/[\s,、\u3000]+/)
-    .filter((s) => s)
-    .sort()
-  const answerParts = correctAnswer.split(' ').sort()
-
-  return (
-    userParts.length === answerParts.length &&
-    userParts.every((part, i) => part === answerParts[i])
-  )
-}
-
-/**
  * 通常モードの問題を生成する
  */
 export function generateNormalQuestion(lastPrefecture: string | null): {
@@ -207,7 +193,7 @@ export function generateOnePrefectureQuestion(lastChar: string | null): {
 }
 
 /**
- * 2県確定特訓モードの問題を生成する
+ * 2県確定特訓モードの問題を生成する（片方を公開し、もう片方を答える）
  */
 export function generateTwoPrefecturesQuestion(lastChar: string | null): {
   question: Question
@@ -216,13 +202,13 @@ export function generateTwoPrefecturesQuestion(lastChar: string | null): {
   const chars = Object.keys(DOUBLE_PREFECTURE_CHARS)
   const char = getRandomElementExcluding(chars, lastChar)
   const prefectures = DOUBLE_PREFECTURE_CHARS[char]
-  const answer = prefectures.toSorted().join(' ')
+  const revealedIndex = getRandomInt(0, 1)
 
   return {
     question: {
       question: `「${char}」を含む`,
-      answer,
-      subtext: '都道府県',
+      answer: prefectures[1 - revealedIndex],
+      subtext: HIRAGANA_TO_KANJI[prefectures[revealedIndex]],
     },
     lastChar: char,
   }

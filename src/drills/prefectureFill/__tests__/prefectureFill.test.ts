@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   PREFECTURES,
   SINGLE_PREFECTURE_CHARS,
@@ -10,7 +10,6 @@ import {
   generateOnePrefectureQuestion,
   generateTwoPrefecturesQuestion,
   normalizeAnswer,
-  checkTwoPrefecturesAnswer,
   KANJI_TO_HIRAGANA,
 } from '../prefectureFill'
 
@@ -118,20 +117,40 @@ describe('prefectureFill', () => {
   })
 
   describe('generateTwoPrefecturesQuestion', () => {
-    it('2県確定の問題を生成する', () => {
-      const result = generateTwoPrefecturesQuestion(null)
-      expect(result.question.question).toMatch(/「.」を含む/)
-      expect(result.question.subtext).toBe('都道府県')
-
-      // 回答が2つの都道府県であることを確認
-      const answers = result.question.answer.split(' ')
-      expect(answers).toHaveLength(2)
+    afterEach(() => {
+      vi.restoreAllMocks()
     })
 
-    it('回答はソートされている', () => {
-      const result = generateTwoPrefecturesQuestion(null)
-      const answers = result.question.answer.split(' ')
-      expect(answers).toEqual(answers.toSorted())
+    it.each([0, 1])(
+      '各文字で候補の%i番目を公開し、もう片方だけを正解にする',
+      (revealedIndex) => {
+        const random = vi.spyOn(Math, 'random')
+        const entries = Object.entries(DOUBLE_PREFECTURE_CHARS)
+
+        entries.forEach(([char, prefectures], charIndex) => {
+          random
+            .mockReturnValueOnce((charIndex + 0.5) / entries.length)
+            .mockReturnValueOnce((revealedIndex + 0.5) / 2)
+          const { question, lastChar } = generateTwoPrefecturesQuestion(null)
+          const revealedPrefecture = prefectures[revealedIndex]
+          const remainingPrefectures = prefectures.filter(
+            (prefecture) => prefecture !== revealedPrefecture,
+          )
+
+          expect(question.question).toBe(`「${char}」を含む`)
+          expect(lastChar).toBe(char)
+          expect(question.subtext).toMatch(/^\p{Script=Han}+$/u)
+          expect(normalizeAnswer(question.subtext!)).toBe(revealedPrefecture)
+          expect(remainingPrefectures).toEqual([question.answer])
+          expect(question.subtext).not.toContain(question.answer)
+        })
+      },
+    )
+
+    it('前回と異なる文字を出題する', () => {
+      const first = generateTwoPrefecturesQuestion(null)
+      const second = generateTwoPrefecturesQuestion(first.lastChar)
+      expect(second.lastChar).not.toBe(first.lastChar)
     })
   })
 
@@ -151,40 +170,6 @@ describe('prefectureFill', () => {
 
     it('ひらがなはそのまま', () => {
       expect(normalizeAnswer('とうきょう')).toBe('とうきょう')
-    })
-  })
-
-  describe('checkTwoPrefecturesAnswer', () => {
-    it('正しい順序で回答した場合', () => {
-      expect(checkTwoPrefecturesAnswer('えひめ みえ', 'えひめ みえ')).toBe(true)
-    })
-
-    it('逆順で回答した場合もOK', () => {
-      expect(checkTwoPrefecturesAnswer('みえ えひめ', 'えひめ みえ')).toBe(true)
-    })
-
-    it('カンマ区切りでもOK', () => {
-      expect(checkTwoPrefecturesAnswer('えひめ,みえ', 'えひめ みえ')).toBe(true)
-    })
-
-    it('読点区切りでもOK', () => {
-      const result = checkTwoPrefecturesAnswer('えひめ、みえ', 'えひめ みえ')
-      expect(result).toBe(true)
-    })
-
-    it('全角スペース区切りでもOK', () => {
-      // 全角スペース(\u3000)を使った区切り
-      const result = checkTwoPrefecturesAnswer(
-        'えひめ\u3000みえ',
-        'えひめ みえ',
-      )
-      expect(result).toBe(true)
-    })
-
-    it('間違った回答は不正解', () => {
-      expect(checkTwoPrefecturesAnswer('えひめ なら', 'えひめ みえ')).toBe(
-        false,
-      )
     })
   })
 

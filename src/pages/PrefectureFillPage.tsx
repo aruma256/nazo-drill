@@ -28,7 +28,6 @@ import {
   generateOnePrefectureQuestion,
   generateTwoPrefecturesQuestion,
   normalizeAnswer,
-  checkTwoPrefecturesAnswer,
   SINGLE_PREFECTURE_CHARS,
   DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
@@ -331,8 +330,6 @@ function DrillScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
-  // 2県確定モード用: 1つ目の回答を保持
-  const [firstAnswer, setFirstAnswer] = useState<string | null>(null)
   const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
@@ -363,48 +360,21 @@ function DrillScreen({
     presentQuestion()
   }, [presentQuestion])
 
-  // 回答チェック（2県確定モードは特別処理）
+  // 回答チェック
   const checkUserAnswer = useCallback(
     (userAns: string): boolean => {
       if (!currentQuestion) return false
 
-      if (mode === 'two-prefectures') {
-        return checkTwoPrefecturesAnswer(userAns, currentQuestion.answer)
-      } else {
-        return (
-          normalizeAnswer(userAns) === normalizeAnswer(currentQuestion.answer)
-        )
-      }
+      return (
+        normalizeAnswer(userAns) === normalizeAnswer(currentQuestion.answer)
+      )
     },
-    [currentQuestion, mode],
+    [currentQuestion],
   )
 
   const handleSubmit = () => {
     if (!userAnswer.trim()) return
 
-    // 2県確定モードの場合、2段階で回答
-    if (mode === 'two-prefectures') {
-      if (firstAnswer === null) {
-        // 1つ目の回答を保存
-        setFirstAnswer(userAnswer.trim())
-        setUserAnswer('')
-        return
-      }
-      // 2つ目の回答 → 結合して判定
-      const combinedAnswer = `${firstAnswer} ${userAnswer.trim()}`
-      const isCorrect = checkUserAnswer(combinedAnswer)
-      if (isCorrect) {
-        incrementCorrectCount(mode)
-        setFeedback({ type: 'correct' })
-      } else {
-        setFeedback({ type: 'retry' })
-      }
-      setUserAnswer('')
-      setFirstAnswer(null)
-      return
-    }
-
-    // 通常モード・1県確定モード
     const isCorrect = checkUserAnswer(userAnswer)
     if (isCorrect) {
       incrementCorrectCount(mode)
@@ -418,7 +388,6 @@ function DrillScreen({
   const handleNext = () => {
     const wasCorrect = feedback?.type === 'correct'
     setFeedback(null)
-    setFirstAnswer(null)
     if (wasCorrect) {
       presentQuestion()
     }
@@ -437,13 +406,10 @@ function DrillScreen({
     }
   }
 
-  // プレースホルダーを取得
-  const getPlaceholder = () => {
-    if (mode === 'two-prefectures') {
-      return firstAnswer === null ? '県名を1つ入力' : 'もう1つ入力'
-    }
-    return 'ひらがなで入力'
-  }
+  const revealedPrefecture =
+    mode === 'two-prefectures' ? currentQuestion?.subtext : undefined
+  const questionSubtext =
+    mode === 'two-prefectures' ? '都道府県' : currentQuestion?.subtext
 
   return (
     <>
@@ -459,21 +425,10 @@ function DrillScreen({
           <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
             {currentQuestion?.question ?? '--'}
           </div>
-          {currentQuestion?.subtext && (
-            <div className="mt-1 text-sm text-gray-500">
-              {currentQuestion.subtext}
-            </div>
+          {questionSubtext && (
+            <div className="mt-1 text-sm text-gray-500">{questionSubtext}</div>
           )}
         </div>
-
-        {/* 2県確定モード: 回答済みの県を表示 */}
-        {mode === 'two-prefectures' && firstAnswer && (
-          <div className="mb-3 flex items-center justify-center gap-2">
-            <span className="rounded-full bg-drill-primary/20 px-3 py-1 text-sm font-medium text-drill-primary-dark">
-              {firstAnswer} ✓
-            </span>
-          </div>
-        )}
 
         <AnswerInputArea
           value={userAnswer}
@@ -481,7 +436,19 @@ function DrillScreen({
           onSubmit={handleSubmit}
           onNext={handleNext}
           feedback={feedback}
-          placeholder={getPlaceholder()}
+          inputPrefix={
+            revealedPrefecture && (
+              <span className="flex items-center justify-center gap-3 whitespace-nowrap">
+                <span className="font-display text-2xl font-bold text-drill-primary-dark">
+                  {revealedPrefecture}
+                </span>
+                <span className="text-xl font-bold text-gray-600">と</span>
+              </span>
+            )
+          }
+          placeholder={
+            mode === 'two-prefectures' ? '県名を入力' : 'ひらがなで入力'
+          }
           maxLength={10}
         />
       </div>

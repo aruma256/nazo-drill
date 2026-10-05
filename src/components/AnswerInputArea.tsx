@@ -4,7 +4,7 @@
  * 回答入力フィールドと送信/次へボタン、Enterキーのハンドリングを提供します。
  */
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, type ReactNode } from 'react'
 import type { Feedback } from '../hooks'
 
 interface AnswerInputAreaProps {
@@ -21,6 +21,8 @@ interface AnswerInputAreaProps {
   /** input要素に適用するクラス（uppercase等） */
   inputClassName?: string
   inputTransform?: (value: string) => string
+  /** 入力欄の上に表示する内容。 */
+  inputPrefix?: ReactNode
   /** 即時モード: フィードバックなしで常に送信ボタンのみ表示（実力テスト用） */
   instantMode?: boolean
 }
@@ -41,6 +43,7 @@ export function AnswerInputArea({
   className = '',
   inputClassName = '',
   inputTransform,
+  inputPrefix,
   instantMode = false,
 }: AnswerInputAreaProps) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -75,7 +78,12 @@ export function AnswerInputArea({
       <label htmlFor="answer-input" className="sr-only">
         あなたの答え:
       </label>
-      <div className="flex items-stretch gap-3">
+      <div className="flex flex-wrap items-stretch gap-3">
+        {inputPrefix && (
+          <div className="w-full shrink-0 self-center text-center">
+            {inputPrefix}
+          </div>
+        )}
         <div className="relative min-w-0 flex-1">
           <input
             ref={inputRef}
