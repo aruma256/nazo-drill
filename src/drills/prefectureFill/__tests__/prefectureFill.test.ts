@@ -9,9 +9,8 @@ import {
   generateNormalQuestion,
   generateOnePrefectureQuestion,
   generateTwoPrefecturesQuestion,
-  normalizeAnswer,
-  KANJI_TO_HIRAGANA,
 } from '../prefectureFill'
+import { checkPrefectureAnswer } from '../../../utils/prefectureAnswer'
 
 describe('prefectureFill', () => {
   describe('PREFECTURES', () => {
@@ -140,7 +139,9 @@ describe('prefectureFill', () => {
           expect(question.question).toBe(`「${char}」を含む`)
           expect(lastChar).toBe(char)
           expect(question.subtext).toMatch(/^\p{Script=Han}+$/u)
-          expect(normalizeAnswer(question.subtext!)).toBe(revealedPrefecture)
+          expect(
+            checkPrefectureAnswer(question.subtext!, revealedPrefecture),
+          ).toBe(true)
           expect(remainingPrefectures).toEqual([question.answer])
           expect(question.subtext).not.toContain(question.answer)
         })
@@ -151,31 +152,6 @@ describe('prefectureFill', () => {
       const first = generateTwoPrefecturesQuestion(null)
       const second = generateTwoPrefecturesQuestion(first.lastChar)
       expect(second.lastChar).not.toBe(first.lastChar)
-    })
-  })
-
-  describe('normalizeAnswer', () => {
-    it('カタカナをひらがなに変換する', () => {
-      expect(normalizeAnswer('トウキョウ')).toBe('とうきょう')
-    })
-
-    it('漢字をひらがなに変換する', () => {
-      expect(normalizeAnswer('東京')).toBe('とうきょう')
-      expect(normalizeAnswer('北海道')).toBe('ほっかいどう')
-    })
-
-    it('前後の空白を削除する', () => {
-      expect(normalizeAnswer(' とうきょう ')).toBe('とうきょう')
-    })
-
-    it('ひらがなはそのまま', () => {
-      expect(normalizeAnswer('とうきょう')).toBe('とうきょう')
-    })
-  })
-
-  describe('KANJI_TO_HIRAGANA', () => {
-    it('47都道府県分のマッピングがある', () => {
-      expect(Object.keys(KANJI_TO_HIRAGANA)).toHaveLength(47)
     })
   })
 

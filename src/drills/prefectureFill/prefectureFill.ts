@@ -1,8 +1,5 @@
-import {
-  getRandomInt,
-  getRandomElementExcluding,
-  katakanaToHiragana,
-} from '../../utils'
+import { getRandomInt, getRandomElementExcluding } from '../../utils'
+import { checkPrefectureAnswer } from '../../utils/prefectureAnswer'
 import type { Question } from '../../hooks/useDrill'
 import { PREFECTURES as PREFECTURE_DATA } from '../../constants/prefectures'
 
@@ -35,16 +32,6 @@ export const SINGLE_PREFECTURE_CHARS =
  */
 export const DOUBLE_PREFECTURE_CHARS =
   getPrefecturesContaining('えっぐもばごりら')
-
-/**
- * 漢字→ひらがなのマッピング
- */
-export const KANJI_TO_HIRAGANA: Record<string, string> = Object.fromEntries(
-  PREFECTURE_DATA.map((prefecture) => [
-    prefecture.shortName,
-    prefecture.shortReading,
-  ]),
-)
 
 const HIRAGANA_TO_KANJI: Record<string, string> = Object.fromEntries(
   PREFECTURE_DATA.map((prefecture) => [
@@ -122,26 +109,11 @@ export function generateQuestionString(prefecture: string): string | null {
   return replaceWithCircle(prefecture, indices)
 }
 
-/**
- * 回答を正規化する（漢字・カタカナをひらがなに変換）
- */
-export function normalizeAnswer(answer: string): string {
-  const trimmed = answer.trim()
-
-  // 漢字の都道府県名をひらがなに変換
-  if (KANJI_TO_HIRAGANA[trimmed]) {
-    return KANJI_TO_HIRAGANA[trimmed]
-  }
-
-  // カタカナをひらがなに変換
-  return katakanaToHiragana(trimmed)
-}
-
 export function checkPrefectureFillAnswer(
   userAnswer: string,
   question: Question,
 ): boolean {
-  return normalizeAnswer(userAnswer) === normalizeAnswer(question.answer)
+  return checkPrefectureAnswer(userAnswer, question.answer)
 }
 
 /**

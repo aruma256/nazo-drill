@@ -5,7 +5,8 @@ import {
   DrillScreenLayout,
   FeedbackModal,
   ModeButton,
-  AnswerInputArea,
+  PrefectureAnswerGuide,
+  PrefectureAnswerInput,
   DrillMiniHeader,
   SectionHeader,
   ChallengeResult,
@@ -245,9 +246,7 @@ function StartScreen({
               <span className="font-bold text-green-600">とうきょう</span>
             </p>
           </div>
-          <p className="mt-2 text-sm text-gray-500">
-            答えは全てひらがなで入力してください
-          </p>
+          <PrefectureAnswerGuide />
         </div>
       </section>
 
@@ -386,7 +385,7 @@ function DrillScreen({
           )}
         </div>
 
-        <AnswerInputArea
+        <PrefectureAnswerInput
           value={userAnswer}
           onChange={setUserAnswer}
           onSubmit={submitAnswer}
@@ -402,10 +401,6 @@ function DrillScreen({
               </span>
             )
           }
-          placeholder={
-            mode === 'two-prefectures' ? '県名を入力' : 'ひらがなで入力'
-          }
-          maxLength={10}
         />
       </DrillScreenLayout>
 
@@ -469,12 +464,10 @@ function ChallengeScreen({
       </div>
 
       {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-      <AnswerInputArea
+      <PrefectureAnswerInput
         value={userAnswer}
         onChange={setUserAnswer}
         onSubmit={submitAnswer}
-        placeholder="ひらがなで入力"
-        maxLength={10}
         disabled={isFinished}
         instantMode
       />

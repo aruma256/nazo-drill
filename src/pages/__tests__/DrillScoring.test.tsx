@@ -43,7 +43,7 @@ const cases = [
     mode: 'challenge',
     answer: () => generateSlideQuestion(null).question.answer,
   },
-  ...['ほっかいどう', 'ホッカイドウ', '北海道'].map((answer) => ({
+  ...['ほっかいどう', 'ホッカイドウ', 'ﾎｯｶｲﾄﾞｳ', '北海道'].map((answer) => ({
     name: `都道府県の穴埋め（${answer}）`,
     Page: PrefectureFillPage,
     drillName: 'prefecture-fill',

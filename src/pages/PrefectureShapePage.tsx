@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import {
-  AnswerInputArea,
+  PrefectureAnswerGuide,
+  PrefectureAnswerInput,
   ChallengeCountdownModal,
   ChallengeResult,
   DrillHeader,
@@ -109,14 +110,12 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
           </div>
         ) : (
           <>
-            <AnswerInputArea
+            <PrefectureAnswerInput
               value={userAnswer}
               onChange={setUserAnswer}
               onSubmit={submitAnswer}
               onNext={handleNext}
               feedback={feedback}
-              placeholder="答えを入力"
-              maxLength={20}
             />
             {prefecture && (
               <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
@@ -201,12 +200,10 @@ function ChallengeScreen({
       challenge={{ remainingTime, isPenalized, score }}
     >
       <ShapeQuestion prefecture={prefecture} />
-      <AnswerInputArea
+      <PrefectureAnswerInput
         value={userAnswer}
         onChange={setUserAnswer}
         onSubmit={submitAnswer}
-        placeholder="答えを入力"
-        maxLength={20}
         disabled={isFinished}
         instantMode
       />
@@ -260,6 +257,7 @@ export function PrefectureShapePage() {
                   北海道
                 </span>
               </div>
+              <PrefectureAnswerGuide />
             </div>
           </section>
           <section className="mb-6">

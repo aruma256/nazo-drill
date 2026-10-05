@@ -1,5 +1,6 @@
 import type { Question } from '../../hooks/useDrill'
-import { getRandomElementExcluding, katakanaToHiragana } from '../../utils'
+import { getRandomElementExcluding } from '../../utils'
+import { checkPrefectureAnswer } from '../../utils/prefectureAnswer'
 import { PREFECTURES, type Prefecture } from '../../constants/prefectures'
 
 export function generateShapeQuestion(
@@ -16,17 +17,9 @@ export function generateShapeQuestion(
   }
 }
 
-function normalize(answer: string): string {
-  return katakanaToHiragana(answer.normalize('NFKC')).replace(/\s/g, '')
-}
-
 export function checkShapeAnswer(
   answer: string,
   prefecture: Prefecture,
 ): boolean {
-  const { name, reading, shortName, shortReading } = prefecture
-  const accepted = [name, reading, shortName, shortReading]
-  return accepted.some(
-    (candidate) => normalize(candidate) === normalize(answer),
-  )
+  return checkPrefectureAnswer(answer, prefecture.name)
 }

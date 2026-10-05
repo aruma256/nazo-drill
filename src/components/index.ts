@@ -11,6 +11,10 @@ export { GojuonTable } from './GojuonTable'
 export { Layout } from './Layout'
 export { ModeButton } from './ModeButton'
 export { PenaltyOverlay } from './PenaltyOverlay'
+export {
+  PrefectureAnswerGuide,
+  PrefectureAnswerInput,
+} from './PrefectureAnswerInput'
 export { ScoreDisplay } from './ScoreDisplay'
 export { ScrollToTop } from './ScrollToTop'
 export { SectionHeader } from './SectionHeader'
