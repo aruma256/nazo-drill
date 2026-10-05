@@ -11,6 +11,21 @@ function getHighScoreKey(drillName: string, mode: string): string {
   return `${drillName}-${mode}-highScore`
 }
 
+function getStoredCorrectCount(drillName: string, mode: string): number {
+  const value = localStorage.getItem(getCorrectCountKey(drillName, mode))
+  return value ? parseInt(value, 10) : 0
+}
+
+/** Reactの状態更新の外で累計正答数を保存する。 */
+export function incrementStoredCorrectCount(
+  drillName: string,
+  mode: string,
+): number {
+  const count = getStoredCorrectCount(drillName, mode) + 1
+  localStorage.setItem(getCorrectCountKey(drillName, mode), count.toString())
+  return count
+}
+
 /**
  * ドリルの累計正答数をlocalStorageで管理するカスタムフック
  */
@@ -20,9 +35,7 @@ export function useDrillStorage(drillName: string) {
    */
   const getCorrectCount = useCallback(
     (mode: string): number => {
-      const key = getCorrectCountKey(drillName, mode)
-      const value = localStorage.getItem(key)
-      return value ? parseInt(value, 10) : 0
+      return getStoredCorrectCount(drillName, mode)
     },
     [drillName],
   )
@@ -32,13 +45,9 @@ export function useDrillStorage(drillName: string) {
    */
   const incrementCorrectCount = useCallback(
     (mode: string): number => {
-      const key = getCorrectCountKey(drillName, mode)
-      const currentCount = getCorrectCount(mode)
-      const newCount = currentCount + 1
-      localStorage.setItem(key, newCount.toString())
-      return newCount
+      return incrementStoredCorrectCount(drillName, mode)
     },
-    [drillName, getCorrectCount],
+    [drillName],
   )
 
   /**

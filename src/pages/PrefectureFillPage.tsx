@@ -27,7 +27,7 @@ import {
   generateNormalQuestion,
   generateOnePrefectureQuestion,
   generateTwoPrefecturesQuestion,
-  normalizeAnswer,
+  checkPrefectureFillAnswer,
   SINGLE_PREFECTURE_CHARS,
   DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
@@ -330,7 +330,6 @@ function DrillScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastNormalRef = useRef<string | null>(null)
@@ -353,31 +352,24 @@ function DrillScreen({
     }
   }, [mode])
 
-  const { currentQuestion, presentQuestion } = useDrill(generateQuestion)
+  const { currentQuestion, presentQuestion, checkAnswer } = useDrill(
+    generateQuestion,
+    {
+      validateAnswer: checkPrefectureFillAnswer,
+      storage: { drillName: DRILL_NAME, mode },
+    },
+  )
 
   // ドリル開始時に最初の問題を出題
   useEffect(() => {
     presentQuestion()
   }, [presentQuestion])
 
-  // 回答チェック
-  const checkUserAnswer = useCallback(
-    (userAns: string): boolean => {
-      if (!currentQuestion) return false
-
-      return (
-        normalizeAnswer(userAns) === normalizeAnswer(currentQuestion.answer)
-      )
-    },
-    [currentQuestion],
-  )
-
   const handleSubmit = () => {
     if (!userAnswer.trim()) return
 
-    const isCorrect = checkUserAnswer(userAnswer)
+    const isCorrect = checkAnswer(userAnswer)
     if (isCorrect) {
-      incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({ type: 'retry' })
@@ -475,11 +467,9 @@ function ChallengeScreen({
   onBack: () => void
 }) {
   const [userAnswer, setUserAnswer] = useState('')
-  const [score, setScore] = useState(0)
   const { isPenalized, activatePenalty } = usePenaltyTimeout()
   const { remainingTime, subtractTime } =
     useCountdownTimer(CHALLENGE_TIME_LIMIT)
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastPrefectureRef = useRef<string | null>(null)
@@ -491,8 +481,11 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer, history } =
-    useDrill(generateQuestion)
+  const { currentQuestion, presentQuestion, checkAnswer, score, history } =
+    useDrill(generateQuestion, {
+      validateAnswer: checkPrefectureFillAnswer,
+      storage: { drillName: DRILL_NAME, mode: 'challenge' },
+    })
 
   // ドリル開始時に最初の問題を出題
   useEffect(() => {
@@ -502,27 +495,11 @@ function ChallengeScreen({
   // タイムアップ時の処理
   useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
 
-  // 回答チェック（normalizeAnswerを使用）
-  const checkUserAnswer = useCallback(
-    (userAns: string): boolean => {
-      if (!currentQuestion) return false
-      return (
-        normalizeAnswer(userAns) === normalizeAnswer(currentQuestion.answer)
-      )
-    },
-    [currentQuestion],
-  )
-
   const handleSubmit = () => {
     if (!userAnswer.trim() || remainingTime === 0) return
 
-    const isCorrect = checkUserAnswer(userAnswer)
-    // 履歴に記録
-    checkAnswer(userAnswer)
-    if (isCorrect) {
-      setScore((prev) => prev + 1)
-      incrementCorrectCount('challenge')
-    } else {
+    const isCorrect = checkAnswer(userAnswer)
+    if (!isCorrect) {
       // 不正解ペナルティ
       subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
       activatePenalty()

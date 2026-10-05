@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   ChallengeCountdownModal,
   ChallengeResult,
@@ -15,7 +15,13 @@ import {
   CHALLENGE_TIME_LIMIT,
   WRONG_ANSWER_PENALTY_SECONDS,
 } from '../constants/challenge'
-import { useCountdownTimer, useDrillStorage, usePenaltyTimeout } from '../hooks'
+import {
+  useChallengeTimeUp,
+  useCountdownTimer,
+  useDrillSession,
+  useDrillStorage,
+  usePenaltyTimeout,
+} from '../hooks'
 import type { HistoryEntry } from '../hooks'
 import {
   MAGIC_SQUARES,
@@ -70,9 +76,7 @@ function RoundView({
         givens={round.question.cells}
         onSelect={onSelect}
         wrongIndex={round.wrongIndex}
-        disabled={
-          disabled || round.phase !== 'playing' || round.wrongIndex !== null
-        }
+        disabled={disabled || !round.canPlaceNumber}
       />
     </>
   )
@@ -86,9 +90,17 @@ function PracticeScreen({
   onBack: () => void
 }) {
   const round = useMagicSquareRound(mode)
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+  const { recordAnswer } = useDrillSession({
+    storage: { drillName: DRILL_NAME, mode },
+  })
   const handleSelect = (index: number) => {
-    if (round.placeNumber(index) === 'complete') incrementCorrectCount(mode)
+    if (round.placeNumber(index) === 'complete') {
+      recordAnswer({
+        question: round.question,
+        userAnswer: round.question.answer,
+        isCorrect: true,
+      })
+    }
   }
 
   return (
@@ -109,7 +121,7 @@ function PracticeScreen({
             <button
               type="button"
               onClick={round.revealAnswer}
-              disabled={round.phase !== 'playing' || round.wrongIndex !== null}
+              disabled={!round.canPlaceNumber}
               className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary disabled:opacity-40"
             >
               わからないので答えを見る
@@ -128,51 +140,33 @@ function ChallengeScreen({
   onBack: () => void
   onTimeUp: (score: number, history: HistoryEntry[]) => void
 }) {
-  const round = useMagicSquareRound('two-clues')
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+  const round = useMagicSquareRound('two-clues', { allowImmediateRetry: true })
+  const { score, history, recordAnswer } = useDrillSession({
+    storage: { drillName: DRILL_NAME, mode: CHALLENGE_MODE },
+  })
   const { remainingTime, subtractTime } =
     useCountdownTimer(CHALLENGE_TIME_LIMIT)
   const { isPenalized, activatePenalty } = usePenaltyTimeout()
-  const [score, setScore] = useState(0)
-  const [history, setHistory] = useState<HistoryEntry[]>([])
   const { phase, question, cells } = round
 
-  useEffect(() => {
-    if (remainingTime !== 0) return
-    // 完成直後の正解表示中なら、同じ盤面を時間切れとして二重に記録しない。
-    const finalHistory =
-      phase === 'complete'
-        ? history
-        : [
-            ...history,
-            {
-              id: history.length + 1,
-              question,
-              userAnswer: cells.join(''),
-              isCorrect: false,
-            },
-          ]
-    onTimeUp(score, finalHistory)
-  }, [remainingTime, phase, question, cells, score, history, onTimeUp])
+  useChallengeTimeUp(
+    remainingTime,
+    score,
+    history,
+    // 完成直後の正解表示中は、同じ盤面を時間切れとして二重に記録しない。
+    phase === 'complete' ? null : question,
+    onTimeUp,
+    cells.join(''),
+  )
 
   const handleSelect = (index: number) => {
-    if (remainingTime === 0 || isPenalized) return
+    if (remainingTime === 0) return
     const result = round.placeNumber(index)
     if (result === 'wrong') {
       subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
       activatePenalty()
     } else if (result === 'complete') {
-      incrementCorrectCount(CHALLENGE_MODE)
-      setScore((previous) => previous + 1)
-      setHistory((previous) => [
-        ...previous,
-        {
-          id: previous.length + 1,
-          question,
-          userAnswer: question.answer,
-          isCorrect: true,
-        },
-      ])
+      recordAnswer({ question, userAnswer: question.answer, isCorrect: true })
     }
   }
 
@@ -190,7 +184,7 @@ function ChallengeScreen({
         <RoundView
           round={round}
           onSelect={handleSelect}
-          disabled={isPenalized || remainingTime === 0}
+          disabled={remainingTime === 0}
         />
       </div>
     </>

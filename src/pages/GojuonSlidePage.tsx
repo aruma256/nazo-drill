@@ -131,7 +131,6 @@ function DrillScreen({
 }) {
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastQuestionRef = useRef<string | null>(null)
@@ -143,8 +142,10 @@ function DrillScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer } =
-    useDrill(generateQuestion)
+  const { currentQuestion, presentQuestion, checkAnswer } = useDrill(
+    generateQuestion,
+    { storage: { drillName: DRILL_NAME, mode } },
+  )
 
   // ドリル開始時に最初の問題を出題
   useEffect(() => {
@@ -156,7 +157,6 @@ function DrillScreen({
 
     const isCorrect = checkAnswer(userAnswer)
     if (isCorrect) {
-      incrementCorrectCount(mode)
       setFeedback({ type: 'correct' })
     } else {
       setFeedback({ type: 'retry' })
@@ -217,11 +217,9 @@ function ChallengeScreen({
   onBack: () => void
 }) {
   const [userAnswer, setUserAnswer] = useState('')
-  const [score, setScore] = useState(0)
   const { isPenalized, activatePenalty } = usePenaltyTimeout()
   const { remainingTime, subtractTime } =
     useCountdownTimer(CHALLENGE_TIME_LIMIT)
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
 
   // 前回の問題を追跡するRef
   const lastQuestionRef = useRef<string | null>(null)
@@ -233,8 +231,10 @@ function ChallengeScreen({
     return result.question
   }, [])
 
-  const { currentQuestion, presentQuestion, checkAnswer, history } =
-    useDrill(generateQuestion)
+  const { currentQuestion, presentQuestion, checkAnswer, score, history } =
+    useDrill(generateQuestion, {
+      storage: { drillName: DRILL_NAME, mode: 'challenge' },
+    })
 
   // ドリル開始時に最初の問題を出題
   useEffect(() => {
@@ -248,10 +248,7 @@ function ChallengeScreen({
     if (!userAnswer.trim() || remainingTime === 0) return
 
     const isCorrect = checkAnswer(userAnswer)
-    if (isCorrect) {
-      setScore((prev) => prev + 1)
-      incrementCorrectCount('challenge')
-    } else {
+    if (!isCorrect) {
       // 不正解ペナルティ
       subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
       activatePenalty()

@@ -137,6 +137,13 @@ export function normalizeAnswer(answer: string): string {
   return katakanaToHiragana(trimmed)
 }
 
+export function checkPrefectureFillAnswer(
+  userAnswer: string,
+  question: Question,
+): boolean {
+  return normalizeAnswer(userAnswer) === normalizeAnswer(question.answer)
+}
+
 /**
  * 通常モードの問題を生成する
  */

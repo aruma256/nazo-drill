@@ -10,4 +10,5 @@ export {
   generateOnePrefectureQuestion,
   generateTwoPrefecturesQuestion,
   normalizeAnswer,
+  checkPrefectureFillAnswer,
 } from './prefectureFill'

@@ -165,7 +165,7 @@ describe('3×3魔方陣の画面', () => {
     expect(cell(0)).toHaveAccessibleName('1行1列、空欄')
   })
 
-  it('実力テストは2マス提示で、誤答のペナルティ後も同じ盤面を続ける', () => {
+  it('実力テストは2マス提示で、ペナルティ表示中も同じ盤面に再回答できる', () => {
     renderPage()
     startChallenge()
     expect(cell(0)).toHaveTextContent('8')
@@ -177,12 +177,13 @@ describe('3×3魔方陣の画面', () => {
     fireEvent.click(cell(2))
     expect(screen.getByText('-5秒')).toBeInTheDocument()
     expect(screen.getByText('40')).toBeInTheDocument()
-    expect(cell(8)).toBeDisabled()
-    advance(800)
+    expect(cell(8)).toBeEnabled()
     expect(cell(0)).toHaveTextContent('8')
     expect(screen.getByRole('status')).toHaveTextContent('2を置こう')
     fireEvent.click(cell(8))
     expect(screen.getByRole('status')).toHaveTextContent('3を置こう')
+    expect(cell(2)).not.toHaveTextContent('×')
+    expect(screen.getByText('-5秒')).toBeInTheDocument()
     advance(40000)
     expect(
       screen.getByRole('heading', { name: '結果発表' }),
@@ -193,6 +194,42 @@ describe('3×3魔方陣の画面', () => {
     ).toHaveAccessibleName(
       '1問目の回答：8、1、空欄、空欄、空欄、空欄、空欄、空欄、2',
     )
+    expect(
+      localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
+    ).toBeNull()
+  })
+
+  it('ペナルティ表示中の連続誤答でも残り時間を5秒ずつ減らし、すぐに盤面を完成できる', () => {
+    renderPage()
+    startChallenge()
+    fireEvent.click(cell(2))
+    expect(screen.getByText('40')).toBeInTheDocument()
+    expect(cell(2)).toBeEnabled()
+    fireEvent.click(cell(2))
+    expect(screen.getByText('35')).toBeInTheDocument()
+    completeFirstBoard([8, 1])
+    expect(screen.getByRole('status')).toHaveTextContent('正解！')
+    expect(screen.getByText('-5秒')).toBeInTheDocument()
+    expect(
+      localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
+    ).toBe('1')
+    advance(35000)
+    expect(
+      localStorage.getItem('magic-square-two-clues-challenge-highScore'),
+    ).toBe('1')
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.getByText('○ 完成')).toBeInTheDocument()
+  })
+
+  it('連続誤答のペナルティで時間切れになったら操作を終了する', () => {
+    renderPage()
+    startChallenge()
+    for (let i = 0; i < 9; i++) fireEvent.click(cell(2))
+    expect(
+      screen.getByRole('heading', { name: '結果発表' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('group')).not.toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(1)
     expect(
       localStorage.getItem('magic-square-two-clues-challenge-correctCount'),
     ).toBeNull()

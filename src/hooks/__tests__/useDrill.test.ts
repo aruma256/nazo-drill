@@ -76,7 +76,9 @@ describe('useDrill', () => {
     it('uses a custom validator and preserves the original answer in history', () => {
       const question = { question: '13', answer: '東京都' }
       const validator = vi.fn((answer: string) => answer === 'とうきょう')
-      const { result } = renderHook(() => useDrill(() => question, validator))
+      const { result } = renderHook(() =>
+        useDrill(() => question, { validateAnswer: validator }),
+      )
       act(() => {
         result.current.presentQuestion()
       })

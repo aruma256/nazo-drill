@@ -23,9 +23,16 @@ function createRound(
   return { question, cells: question.cells, phase: 'playing', wrongIndex: null }
 }
 
-export function useMagicSquareRound(mode: MagicSquareMode) {
+export function useMagicSquareRound(
+  mode: MagicSquareMode,
+  { allowImmediateRetry = false }: { allowImmediateRetry?: boolean } = {},
+) {
   const [round, setRound] = useState(() => createRound(mode))
   const nextNumber = getNextNumber(round.cells)
+  const canPlaceNumber =
+    round.phase === 'playing' &&
+    nextNumber !== null &&
+    (allowImmediateRetry || round.wrongIndex === null)
   const nextQuestion = useCallback(() => {
     setRound(createRound(mode, round.question.answer))
   }, [mode, round.question.answer])
@@ -49,13 +56,7 @@ export function useMagicSquareRound(mode: MagicSquareMode) {
   }, [round.wrongIndex])
 
   const placeNumber = (index: number) => {
-    if (
-      round.phase !== 'playing' ||
-      round.wrongIndex !== null ||
-      round.cells[index] !== 0 ||
-      nextNumber === null
-    )
-      return 'ignored'
+    if (!canPlaceNumber || round.cells[index] !== 0) return 'ignored'
     if (round.question.solution[index] !== nextNumber) {
       setRound({ ...round, wrongIndex: index })
       return 'wrong'
@@ -68,6 +69,7 @@ export function useMagicSquareRound(mode: MagicSquareMode) {
       ...round,
       cells,
       phase: complete ? 'complete' : 'playing',
+      wrongIndex: null,
     })
     return complete ? 'complete' : 'correct'
   }
@@ -81,5 +83,12 @@ export function useMagicSquareRound(mode: MagicSquareMode) {
     })
   }
 
-  return { ...round, nextNumber, placeNumber, nextQuestion, revealAnswer }
+  return {
+    ...round,
+    nextNumber,
+    canPlaceNumber,
+    placeNumber,
+    nextQuestion,
+    revealAnswer,
+  }
 }

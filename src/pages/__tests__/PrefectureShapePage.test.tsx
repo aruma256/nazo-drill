@@ -205,8 +205,17 @@ describe('都道府県の形の画面', () => {
     ).toBe('1')
     expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
     answer('間違い')
-    expect(screen.getByRole('textbox')).toBeDisabled()
+    expect(screen.getByRole('textbox')).toBeEnabled()
     expect(screen.getByRole('button', { name: '回答する' })).toBeDisabled()
+    expect(screen.getByText('-5秒')).toBeInTheDocument()
+    // ペナルティ表示が終わる前に、次の問題に正答できる。
+    answer('北海道')
+    expect(
+      localStorage.getItem(
+        'prefecture-shape-prefecture-challenge-correctCount',
+      ),
+    ).toBe('2')
+    expect(screen.getByText('-5秒')).toBeInTheDocument()
     act(() => {
       vi.advanceTimersByTime((CHALLENGE_TIME_LIMIT - 5) * 1000)
     })
@@ -215,13 +224,14 @@ describe('都道府県の形の画面', () => {
     ).toBeInTheDocument()
     expect(
       localStorage.getItem('prefecture-shape-prefecture-challenge-highScore'),
-    ).toBe('1')
+    ).toBe('2')
     const rows = screen.getAllByRole('row')
     expect(
       within(rows[1]).getByRole('img', { name: '北海道の形' }),
     ).toBeInTheDocument()
     expect(within(rows[1]).getByText('ホッカイドウ')).toBeInTheDocument()
-    expect(rows).toHaveLength(4)
+    expect(within(rows[3]).getByText('✓')).toBeInTheDocument()
+    expect(rows).toHaveLength(5)
     fireEvent.click(screen.getByRole('button', { name: 'もう一度チャレンジ' }))
     for (let i = 0; i < 3; i++)
       act(() => {
@@ -236,6 +246,6 @@ describe('都道府県の形の画面', () => {
       screen.getByRole('button', {
         name: /都道府県名の実力テスト/,
       }),
-    ).toHaveTextContent('最高1問')
+    ).toHaveTextContent('最高2問')
   })
 })

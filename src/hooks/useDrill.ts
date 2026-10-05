@@ -1,78 +1,31 @@
 import { useCallback, useRef, useState } from 'react'
-import { toHalfWidthAlpha } from '../utils'
+import { useDrillSession, type DrillSessionOptions } from './useDrillSession'
+import type { Question, QuestionGenerator, ScoreStats } from '../types/drill'
 
-/**
- * ドリルの問題オブジェクト
- */
-export interface Question {
-  /** 問題文 */
-  question: string
-  /** 正解 */
-  answer: string
-  /** 補助テキスト（例: "/26"） */
-  subtext?: string
-}
-
-/**
- * スコア統計
- */
-export interface ScoreStats {
-  /** 正答数 */
-  score: number
-  /** 出題数 */
-  total: number
-  /** 正答率（パーセント） */
-  percentage: number
-}
-
-/**
- * フィードバック情報
- */
-export interface Feedback {
-  /** フィードバックの種類 */
-  type: 'correct' | 'retry'
-}
-
-/**
- * 履歴エントリ（1問分の記録）
- */
-export interface HistoryEntry {
-  /** 一意の識別子 */
-  id: number
-  /** 問題オブジェクト */
-  question: Question
-  /** ユーザーの回答 */
-  userAnswer: string
-  /** 正解かどうか */
-  isCorrect: boolean
-}
-
-/** 問題生成関数の型 */
-export type QuestionGenerator = () => Question
+export type {
+  Feedback,
+  HistoryEntry,
+  Question,
+  QuestionGenerator,
+  ScoreStats,
+} from '../types/drill'
 
 /** 連続同一問題防止の最大リトライ回数 */
 const MAX_RETRIES = 100
 
 /**
- * 回答を正規化する（大文字小文字、空白、全角/半角などを統一）
- */
-function normalizeAnswer(answer: string): string {
-  return toHalfWidthAlpha(answer).trim().toUpperCase()
-}
-
-/**
  * ドリルのコアロジックを提供するカスタムフック
  * @param generateQuestion - 問題を生成する関数
- * @param validateAnswer - ドリル独自の回答判定（省略時は文字列を正規化して比較）
+ * @param options - ドリル独自の回答判定と累計正答数の保存先
  */
 export function useDrill(
   generateQuestion: QuestionGenerator,
-  validateAnswer?: (userAnswer: string, question: Question) => boolean,
+  options: DrillSessionOptions = {},
 ) {
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
-  const [score, setScore] = useState(0)
   const [totalQuestions, setTotalQuestions] = useState(0)
-  const [history, setHistory] = useState<HistoryEntry[]>([])
+  const { score, history, submitAnswer, resetSession, clearHistory } =
+    useDrillSession(options)
   const previousQuestionRef = useRef<Question | null>(null)
 
   /**
@@ -106,29 +59,9 @@ export function useDrill(
         throw new Error('No question has been presented')
       }
 
-      const isCorrect = validateAnswer
-        ? validateAnswer(userAnswer, currentQuestion)
-        : normalizeAnswer(userAnswer) ===
-          normalizeAnswer(currentQuestion.answer)
-
-      if (isCorrect) {
-        setScore((prev) => prev + 1)
-      }
-
-      // 履歴に記録
-      setHistory((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          question: currentQuestion,
-          userAnswer,
-          isCorrect,
-        },
-      ])
-
-      return isCorrect
+      return submitAnswer(currentQuestion, userAnswer)
     },
-    [currentQuestion, validateAnswer],
+    [currentQuestion, submitAnswer],
   )
 
   /**
@@ -147,19 +80,11 @@ export function useDrill(
    * スコアをリセット
    */
   const resetScore = useCallback(() => {
-    setScore(0)
+    resetSession()
     setTotalQuestions(0)
     setCurrentQuestion(null)
     previousQuestionRef.current = null
-    setHistory([])
-  }, [])
-
-  /**
-   * 履歴をクリア
-   */
-  const clearHistory = useCallback(() => {
-    setHistory([])
-  }, [])
+  }, [resetSession])
 
   return {
     currentQuestion,

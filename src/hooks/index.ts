@@ -7,6 +7,8 @@ export type {
   Question,
   QuestionGenerator,
   ScoreStats,
-} from './useDrill'
+} from '../types/drill'
 export { useDrillStorage } from './useDrillStorage'
+export { useDrillSession } from './useDrillSession'
+export type { DrillSessionOptions } from './useDrillSession'
 export { usePenaltyTimeout } from './usePenaltyTimeout'

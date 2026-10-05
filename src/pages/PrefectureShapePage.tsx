@@ -41,7 +41,7 @@ const DRILL_NAME = 'prefecture-shape'
 const PRACTICE_MODE = 'prefecture'
 const CHALLENGE_MODE = 'prefecture-challenge'
 
-function useShapeDrill() {
+function useShapeDrill(mode: string) {
   const previousId = useRef<number | null>(null)
   const generateQuestion = useCallback(() => {
     const question = generateShapeQuestion(previousId.current)
@@ -54,7 +54,10 @@ function useShapeDrill() {
     )
     return !!prefecture && checkShapeAnswer(answer, prefecture)
   }, [])
-  const drill = useDrill(generateQuestion, validateAnswer)
+  const drill = useDrill(generateQuestion, {
+    validateAnswer,
+    storage: { drillName: DRILL_NAME, mode },
+  })
   const { presentQuestion } = drill
   useEffect(() => {
     if (previousId.current === null) presentQuestion()
@@ -82,8 +85,7 @@ function ShapeQuestion({ prefecture }: { prefecture: Prefecture | undefined }) {
 
 function PracticeScreen({ onBack }: { onBack: () => void }) {
   const { currentQuestion, presentQuestion, checkAnswer, prefecture } =
-    useShapeDrill()
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+    useShapeDrill(PRACTICE_MODE)
   const [userAnswer, setUserAnswer] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
   const [revealed, setRevealed] = useState(false)
@@ -92,7 +94,6 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
   const handleSubmit = () => {
     if (!userAnswer.trim() || feedback || revealed || !currentQuestion) return
     const correct = checkAnswer(userAnswer)
-    if (correct) incrementCorrectCount(PRACTICE_MODE)
     setFeedback({ type: correct ? 'correct' : 'retry' })
     setUserAnswer('')
   }
@@ -207,8 +208,7 @@ function ChallengeScreen({
     prefecture,
     score,
     history,
-  } = useShapeDrill()
-  const { incrementCorrectCount } = useDrillStorage(DRILL_NAME)
+  } = useShapeDrill(CHALLENGE_MODE)
   const { remainingTime, subtractTime } =
     useCountdownTimer(CHALLENGE_TIME_LIMIT)
   const { isPenalized, activatePenalty } = usePenaltyTimeout()
@@ -216,16 +216,8 @@ function ChallengeScreen({
   useChallengeTimeUp(remainingTime, score, history, currentQuestion, onTimeUp)
 
   const handleSubmit = () => {
-    if (
-      !userAnswer.trim() ||
-      remainingTime === 0 ||
-      isPenalized ||
-      !currentQuestion
-    )
-      return
-    if (checkAnswer(userAnswer)) {
-      incrementCorrectCount(CHALLENGE_MODE)
-    } else {
+    if (!userAnswer.trim() || remainingTime === 0 || !currentQuestion) return
+    if (!checkAnswer(userAnswer)) {
       subtractTime(WRONG_ANSWER_PENALTY_SECONDS)
       activatePenalty()
     }
@@ -251,7 +243,7 @@ function ChallengeScreen({
           onSubmit={handleSubmit}
           placeholder="答えを入力"
           maxLength={20}
-          disabled={isPenalized || remainingTime === 0}
+          disabled={remainingTime === 0}
           instantMode
         />
       </div>
