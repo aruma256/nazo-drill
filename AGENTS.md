@@ -172,4 +172,4 @@ npm run test:coverage  # カバレッジ付きテスト
 
 ### 動作確認
 
-Chrome DevTools MCPで開発サーバーのURLを開いて確認する。
+Playwright CLI が利用可能な場合は、それを使って開発サーバーのURLを開き、表示や操作を確認する。
