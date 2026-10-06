@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AlphaShiftPage } from '../AlphaShiftPage'
 import { GojuonPickPage } from '../GojuonPickPage'
@@ -147,6 +147,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks()
+  vi.useRealTimers()
 })
 
 describe('練習モードの共通進行', () => {
@@ -228,6 +229,7 @@ describe('練習モードの共通進行', () => {
   it.each(cases)(
     '$drillName / $mode は誤答後に同じ問題を続け、正答後に次問へ進む',
     ({ Page, drillName, mode, label, answer: correctAnswer }) => {
+      vi.useFakeTimers()
       render(
         <StrictMode>
           <MemoryRouter>
@@ -241,6 +243,21 @@ describe('練習モードの共通進行', () => {
       const key = `${drillName}-${mode}-correctCount`
       const value = correctAnswer()
 
+      if (
+        ['abc-shift', '123-abc', '50on-pick', '50on-slide'].includes(drillName)
+      ) {
+        expect(screen.getByRole('textbox')).toHaveAttribute(
+          'maxlength',
+          mode === 'word' ? '10' : '1',
+        )
+        expect(screen.getByRole('textbox')).toHaveAttribute(
+          'placeholder',
+          drillName === 'abc-shift' || drillName === '123-abc'
+            ? '答えを入力'
+            : 'ひらがなで入力',
+        )
+      }
+
       fireEvent.change(screen.getByRole('textbox'), { target: { value: ' ' } })
       fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter' })
       expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
@@ -248,6 +265,7 @@ describe('練習モードの共通進行', () => {
 
       answer('?')
       expect(screen.getByText('もう一度！')).toBeInTheDocument()
+      expect(screen.queryByTestId('modal-hint')).not.toBeInTheDocument()
       expect(screen.getByRole('textbox')).toBeDisabled()
       expect(localStorage.getItem(key)).toBeNull()
       fireEvent.click(screen.getByTestId('feedback-modal'))
@@ -256,9 +274,18 @@ describe('練習モードの共通進行', () => {
 
       answer(value)
       expect(screen.getByText('正解！')).toBeInTheDocument()
+      expect(screen.getByTestId('modal-hint').textContent).toBe(value)
+      expect(localStorage.getItem(key)).toBe('1')
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      expect(screen.getByTestId('modal-hint').textContent).toBe(value)
+      expect(screen.getByRole('button', { name: '答えを見る' })).toBeDisabled()
       expect(localStorage.getItem(key)).toBe('1')
       vi.mocked(Math.random).mockReturnValue(0.5)
-      fireEvent.click(screen.getByTestId('feedback-modal'))
+      fireEvent.keyDown(document, { key: 'Enter' })
+      expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toHaveFocus()
 
       // 同じ答えで再度正解してしまわないことから、次問への切り替えも確認する。
       answer(value)

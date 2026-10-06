@@ -86,7 +86,7 @@ describe('3×3魔方陣の画面', () => {
     ['3マス埋まっている', 'three-clues', [8, 1, 6]],
     ['2マス埋まっている', 'two-clues', [8, 1]],
   ] as const)(
-    '%s練習では数字を飛ばしながら昇順に置き、完成時だけ1問加算する',
+    '%s練習では完成時だけ1問加算し、正解の盤面を確認してから次問へ進む',
     (label, mode, givens) => {
       renderPage()
       fireEvent.click(
@@ -103,6 +103,10 @@ describe('3×3魔方陣の画面', () => {
       ).toBeNull()
       completeFirstBoard(givens)
       expect(screen.getByRole('status')).toHaveTextContent('正解！')
+      expect(screen.getByText('正解！', { exact: true })).toBeInTheDocument()
+      expect(
+        within(screen.getByTestId('modal-hint')).getByRole('img'),
+      ).toHaveAccessibleName('正解の魔方陣：8、1、6、3、5、7、4、9、2')
       expect(localStorage.getItem(`magic-square-${mode}-correctCount`)).toBe(
         '1',
       )
@@ -110,9 +114,21 @@ describe('3×3魔方陣の画面', () => {
       expect(localStorage.getItem(`magic-square-${mode}-correctCount`)).toBe(
         '1',
       )
-      advance(600)
+      advance(2000)
+      expect(screen.getByTestId('feedback-modal')).toBeInTheDocument()
+      expect(cell(7)).toHaveTextContent('9')
+      expect(localStorage.getItem(`magic-square-${mode}-correctCount`)).toBe(
+        '1',
+      )
+      fireEvent.keyDown(document, { key: 'Enter' })
+      expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
       expect(screen.getByRole('status')).toHaveTextContent('を置こう')
       expect(cell(7)).not.toHaveTextContent('9')
+      expect(
+        within(screen.getByRole('group'))
+          .getAllByRole('button')
+          .find((button) => !button.hasAttribute('disabled')),
+      ).toHaveFocus()
       fireEvent.click(screen.getByRole('button', { name: 'やめる' }))
       expect(
         screen.getByRole('button', { name: `3×3魔方陣：${label}` }),
@@ -120,7 +136,7 @@ describe('3×3魔方陣の画面', () => {
     },
   )
 
-  it('間違えたマスに×を表示し、盤面と置く数字を維持して再回答できる', () => {
+  it('誤答の確認後は盤面と置く数字を維持して再回答でき、答えを漏らさない', () => {
     renderPage()
     fireEvent.click(
       screen.getByRole('button', { name: /1・2・3が埋まっている/ }),
@@ -128,13 +144,21 @@ describe('3×3魔方陣の画面', () => {
     fireEvent.click(cell(2))
     expect(cell(2)).toHaveTextContent('×')
     expect(cell(2)).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('もう一度！')).toBeInTheDocument()
+    expect(screen.queryByTestId('modal-hint')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '答えを見る' })).toBeDisabled()
     expect(screen.getByRole('status')).toHaveTextContent('4を置こう')
     expect(cell(6)).toBeDisabled()
     expect(
       localStorage.getItem('magic-square-first-three-correctCount'),
     ).toBeNull()
-    advance(350)
+    advance(2000)
+    expect(cell(2)).toHaveTextContent('×')
+    expect(cell(6)).toBeDisabled()
+    fireEvent.keyDown(document, { key: 'Enter' })
+    expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
     expect(cell(2)).not.toHaveTextContent('×')
+    expect(screen.getByRole('button', { name: '答えを見る' })).toBeEnabled()
     fireEvent.click(cell(6))
     expect(cell(6)).toHaveTextContent('4')
     expect(screen.getByRole('status')).toHaveTextContent('5を置こう')
@@ -161,20 +185,30 @@ describe('3×3魔方陣の画面', () => {
       )
       fireEvent.click(cell(solution.indexOf(nextNumber)))
       fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
-      expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
-      solution.forEach((number, index) => {
-        expect(cell(index)).toHaveTextContent(String(number))
-        expect(cell(index)).toBeDisabled()
-      })
+      expect(screen.getByText('答えを確認しよう')).toBeInTheDocument()
+      expect(screen.queryByRole('group')).not.toBeInTheDocument()
+      const solutionBoard = within(screen.getByRole('status')).getByRole('img')
+      expect(solutionBoard).toHaveAccessibleName(
+        '正解の魔方陣：8、1、6、3、5、7、4、9、2',
+      )
+      expect(
+        within(solutionBoard).queryByRole('button'),
+      ).not.toBeInTheDocument()
+      expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
       expect(screen.getByRole('button', { name: '次の問題へ' })).toHaveFocus()
       advance(1000)
-      expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
+      expect(screen.getByText('答えを確認しよう')).toBeInTheDocument()
       expect(
         localStorage.getItem(`magic-square-${mode}-correctCount`),
       ).toBeNull()
       fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
       expect(screen.getByRole('status')).toHaveTextContent('を置こう')
       expect(screen.getByRole('button', { name: '答えを見る' })).toBeEnabled()
+      expect(
+        within(screen.getByRole('group'))
+          .getAllByRole('button')
+          .find((button) => !button.hasAttribute('disabled')),
+      ).toHaveFocus()
       expect(
         within(screen.getByRole('group'))
           .getAllByRole('button')
@@ -299,7 +333,7 @@ describe('3×3魔方陣の画面', () => {
     ).toBe('1')
   })
 
-  it('やめた後に正解表示のタイマーが動いても開始画面を維持する', () => {
+  it('正解確認中にやめても開始画面へ戻り、フィードバックを閉じる', () => {
     renderPage()
     fireEvent.click(
       screen.getByRole('button', { name: /1・2・3が埋まっている/ }),
@@ -311,5 +345,6 @@ describe('3×3魔方陣の画面', () => {
       screen.getByRole('heading', { name: '3×3魔方陣' }),
     ).toBeInTheDocument()
     expect(screen.queryByRole('group')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
   })
 })

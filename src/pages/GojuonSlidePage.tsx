@@ -2,10 +2,10 @@ import { useCallback, useRef } from 'react'
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
+  TextQuestion,
   DrillStartScreen,
   AnswerInputArea,
-  PracticeAnswerArea,
 } from '../components'
 import {
   usePracticeDrill,
@@ -31,10 +31,8 @@ function QuestionDisplay({ question }: { question: string }) {
   const { char, arrow } = parseSlideQuestion(question)
   return (
     <div className="text-center">
-      <div className="font-display mb-4 text-7xl font-bold text-drill-primary">
-        {char}
-      </div>
-      <div className="text-6xl text-gray-700">{arrow}</div>
+      <TextQuestion text={char} />
+      <div className="mt-4 text-4xl text-gray-700 sm:text-5xl">{arrow}</div>
     </div>
   )
 }
@@ -114,40 +112,33 @@ function DrillScreen({
   })
 
   return (
-    <>
-      <DrillScreenLayout onBack={onBack} drillLabel="スライド">
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="スライド"
+      question={
         <div>
           {currentQuestion && (
             <QuestionDisplay question={currentQuestion.question} />
           )}
         </div>
-
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={currentQuestion?.answer}
-          onReveal={revealAnswer}
-          onNext={nextQuestion}
-          disabled={!!feedback}
-        >
-          <AnswerInputArea
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={nextQuestion}
-            feedback={feedback}
-            placeholder="ひらがなで入力"
-            maxLength={1}
-          />
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
-
-      {/* フィードバックモーダル */}
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
+      }
+      answer={currentQuestion?.answer}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={nextQuestion}
+      disabled={!currentQuestion}
+    >
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={nextQuestion}
+        feedback={feedback}
+        placeholder="ひらがなで入力"
+        maxLength={1}
       />
-    </>
+    </PracticeScreenLayout>
   )
 }
 

@@ -2,11 +2,11 @@ import { useCallback, useRef } from 'react'
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
+  TextQuestion,
   DrillStartScreen,
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
-  PracticeAnswerArea,
   DrillMiniHeader,
   SectionHeader,
 } from '../components'
@@ -319,55 +319,40 @@ function DrillScreen({
     mode === 'two-prefectures' ? '都道府県' : currentQuestion?.subtext
 
   return (
-    <>
-      <DrillScreenLayout
-        onBack={onBack}
-        drillLabel={`都道府県 (${getModeName()})`}
-      >
-        {/* 問題表示 */}
-        <div className="text-center">
-          <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
-            {currentQuestion?.question ?? '--'}
-          </div>
-          {questionSubtext && (
-            <div className="mt-1 text-sm text-gray-500">{questionSubtext}</div>
-          )}
-        </div>
-
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={currentQuestion?.answer}
-          onReveal={revealAnswer}
-          onNext={nextQuestion}
-          disabled={!!feedback}
-        >
-          <PrefectureAnswerInput
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={nextQuestion}
-            feedback={feedback}
-            inputPrefix={
-              revealedPrefecture && (
-                <span className="flex items-center justify-center gap-3 whitespace-nowrap">
-                  <span className="font-display text-2xl font-bold text-drill-primary-dark">
-                    {revealedPrefecture}
-                  </span>
-                  <span className="text-xl font-bold text-gray-600">と</span>
-                </span>
-              )
-            }
-          />
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
-
-      {/* フィードバックモーダル */}
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel={`都道府県 (${getModeName()})`}
+      question={
+        <TextQuestion
+          text={currentQuestion?.question}
+          subtext={questionSubtext}
+        />
+      }
+      answer={currentQuestion?.answer}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={nextQuestion}
+      disabled={!currentQuestion}
+    >
+      <PrefectureAnswerInput
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={nextQuestion}
+        feedback={feedback}
+        inputPrefix={
+          revealedPrefecture && (
+            <span className="flex items-center justify-center gap-3 whitespace-nowrap">
+              <span className="font-display text-2xl font-bold text-drill-primary-dark">
+                {revealedPrefecture}
+              </span>
+              <span className="text-xl font-bold text-gray-600">と</span>
+            </span>
+          )
+        }
       />
-    </>
+    </PracticeScreenLayout>
   )
 }
 
@@ -414,11 +399,7 @@ function ChallengeScreen({
       challenge={{ remainingTime, isPenalized, score }}
     >
       {/* 問題表示 */}
-      <div className="text-center">
-        <div className="text-4xl font-bold tracking-widest text-drill-primary-dark md:text-5xl">
-          {currentQuestion?.question ?? '--'}
-        </div>
-      </div>
+      <TextQuestion text={currentQuestion?.question} />
 
       {/* 回答入力エリア（フィードバックなし、即時次問題） */}
       <PrefectureAnswerInput

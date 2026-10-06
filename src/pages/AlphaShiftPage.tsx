@@ -2,10 +2,10 @@ import { useCallback, useRef } from 'react'
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
+  TextQuestion,
   DrillStartScreen,
-  AnswerInputArea,
-  PracticeAnswerArea,
+  AlphabetAnswerInput,
 } from '../components'
 import {
   usePracticeDrill,
@@ -100,43 +100,26 @@ function DrillScreen({
   })
 
   return (
-    <>
-      <DrillScreenLayout onBack={onBack} drillLabel="ABCシフト">
-        {/* 問題表示 */}
-        <div className="text-center">
-          <div className="text-5xl font-bold text-drill-primary-dark">
-            {currentQuestion?.question ?? '--'}
-          </div>
-        </div>
-
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={currentQuestion?.answer}
-          onReveal={revealAnswer}
-          onNext={nextQuestion}
-          disabled={!!feedback}
-        >
-          <AnswerInputArea
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={nextQuestion}
-            feedback={feedback}
-            placeholder="答えを入力"
-            maxLength={1}
-            inputTransform={(value) => value.toUpperCase()}
-            inputClassName="uppercase"
-          />
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
-
-      {/* フィードバックモーダル */}
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="ABCシフト"
+      question={<TextQuestion text={currentQuestion?.question} />}
+      answer={currentQuestion?.answer}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={nextQuestion}
+      disabled={!currentQuestion}
+    >
+      <AlphabetAnswerInput
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={nextQuestion}
+        feedback={feedback}
+        maxLength={1}
       />
-    </>
+    </PracticeScreenLayout>
   )
 }
 
@@ -188,21 +171,14 @@ function ChallengeScreen({
       challenge={{ remainingTime, isPenalized, score }}
     >
       {/* 問題表示 */}
-      <div className="text-center">
-        <div className="text-5xl font-bold text-drill-primary-dark">
-          {currentQuestion?.question ?? '--'}
-        </div>
-      </div>
+      <TextQuestion text={currentQuestion?.question} />
 
       {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-      <AnswerInputArea
+      <AlphabetAnswerInput
         value={userAnswer}
         onChange={setUserAnswer}
         onSubmit={submitAnswer}
-        placeholder="答えを入力"
         maxLength={1}
-        inputTransform={(value) => value.toUpperCase()}
-        inputClassName="uppercase"
         disabled={isFinished}
         instantMode
       />

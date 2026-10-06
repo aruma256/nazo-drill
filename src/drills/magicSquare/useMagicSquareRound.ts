@@ -25,7 +25,15 @@ function createRound(
 
 export function useMagicSquareRound(
   mode: MagicSquareMode,
-  { allowImmediateRetry = false }: { allowImmediateRetry?: boolean } = {},
+  {
+    allowImmediateRetry = false,
+    autoAdvance = false,
+  }: {
+    /** 実力テストは誤答の表示中も操作を受け付ける。 */
+    allowImmediateRetry?: boolean
+    /** 実力テストは完成した盤面を確認後、自動で次問へ進む。 */
+    autoAdvance?: boolean
+  } = {},
 ) {
   const [round, setRound] = useState(() => createRound(mode))
   const nextNumber = getNextNumber(round.cells)
@@ -38,22 +46,27 @@ export function useMagicSquareRound(
   }, [mode, round.question.answer])
 
   useEffect(() => {
-    if (round.phase !== 'complete') return
+    if (!autoAdvance || round.phase !== 'complete') return
     const timer = window.setTimeout(nextQuestion, 600)
     return () => {
       clearTimeout(timer)
     }
-  }, [round.phase, nextQuestion])
+  }, [autoAdvance, round.phase, nextQuestion])
 
   useEffect(() => {
-    if (round.wrongIndex === null) return
+    if (!allowImmediateRetry || round.wrongIndex === null) return
     const timer = window.setTimeout(() => {
       setRound((previous) => ({ ...previous, wrongIndex: null }))
     }, 350)
     return () => {
       clearTimeout(timer)
     }
-  }, [round.wrongIndex])
+  }, [allowImmediateRetry, round.wrongIndex])
+
+  /** 練習は正誤確認を閉じてから、同じ盤面で再回答する。 */
+  const retry = () => {
+    setRound((previous) => ({ ...previous, wrongIndex: null }))
+  }
 
   const placeNumber = (index: number) => {
     if (!canPlaceNumber || round.cells[index] !== 0) return 'ignored'
@@ -75,6 +88,7 @@ export function useMagicSquareRound(
   }
 
   const revealAnswer = () => {
+    if (!canPlaceNumber) return
     setRound({
       ...round,
       cells: round.question.solution,
@@ -90,5 +104,6 @@ export function useMagicSquareRound(
     placeNumber,
     nextQuestion,
     revealAnswer,
+    retry,
   }
 }

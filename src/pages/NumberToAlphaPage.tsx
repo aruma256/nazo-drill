@@ -2,10 +2,10 @@ import { useCallback, useRef } from 'react'
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
+  TextQuestion,
   DrillStartScreen,
-  AnswerInputArea,
-  PracticeAnswerArea,
+  AlphabetAnswerInput,
   DrillMiniHeader,
   SectionHeader,
 } from '../components'
@@ -366,59 +366,40 @@ function DrillScreen({
   const shouldFadeEjotyHint = mode === 'ejoty' && totalQuestions >= 6
 
   return (
-    <>
-      <DrillScreenLayout onBack={onBack} drillLabel="数字→ABC">
-        {/* 問題表示 */}
-        <div className="text-center">
-          <div className="text-5xl font-bold text-drill-primary-dark">
-            {currentQuestion?.question ?? '--'}
-          </div>
-          {currentQuestion?.subtext && (
-            <div className="mt-1 text-sm text-gray-500">
-              {currentQuestion.subtext}
-            </div>
-          )}
-        </div>
-
-        {/* EJOTY特訓モード用ヒントメッセージ */}
-        {mode === 'ejoty' && <EjotyHint shouldFade={shouldFadeEjotyHint} />}
-
-        {/* アルファベット参照表（1文字モードのみ） */}
-        {mode === 'single' && <AlphaTable />}
-
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={currentQuestion?.answer}
-          onReveal={revealAnswer}
-          onNext={nextQuestion}
-          disabled={!!feedback}
-        >
-          <AnswerInputArea
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={nextQuestion}
-            feedback={feedback}
-            placeholder="答えを入力"
-            maxLength={10}
-            inputTransform={(value) => value.toUpperCase()}
-            inputClassName="uppercase"
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="数字→ABC"
+      question={
+        <>
+          {/* 問題表示 */}
+          <TextQuestion
+            text={currentQuestion?.question}
+            subtext={currentQuestion?.subtext}
           />
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
 
-      {/* フィードバックモーダル */}
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
-        hintContent={
-          feedback?.type === 'correct' && currentQuestion
-            ? `${currentQuestion.answer} = ${currentQuestion.question}`
-            : undefined
-        }
+          {/* EJOTY特訓モード用ヒントメッセージ */}
+          {mode === 'ejoty' && <EjotyHint shouldFade={shouldFadeEjotyHint} />}
+
+          {/* アルファベット参照表（1文字モードのみ） */}
+          {mode === 'single' && <AlphaTable />}
+        </>
+      }
+      answer={currentQuestion?.answer}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={nextQuestion}
+      disabled={!currentQuestion}
+    >
+      <AlphabetAnswerInput
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={nextQuestion}
+        feedback={feedback}
+        maxLength={mode === 'ejoty' || mode === 'single' ? 1 : 10}
       />
-    </>
+    </PracticeScreenLayout>
   )
 }
 
@@ -463,26 +444,17 @@ function ChallengeScreen({
       challenge={{ remainingTime, isPenalized, score }}
     >
       {/* 問題表示 */}
-      <div className="text-center">
-        <div className="text-5xl font-bold text-drill-primary-dark">
-          {currentQuestion?.question ?? '--'}
-        </div>
-        {currentQuestion?.subtext && (
-          <div className="mt-1 text-sm text-gray-500">
-            {currentQuestion.subtext}
-          </div>
-        )}
-      </div>
+      <TextQuestion
+        text={currentQuestion?.question}
+        subtext={currentQuestion?.subtext}
+      />
 
       {/* 回答入力エリア（フィードバックなし、即時次問題） */}
-      <AnswerInputArea
+      <AlphabetAnswerInput
         value={userAnswer}
         onChange={setUserAnswer}
         onSubmit={submitAnswer}
-        placeholder="答えを入力"
         maxLength={10}
-        inputTransform={(value) => value.toUpperCase()}
-        inputClassName="uppercase"
         disabled={isFinished}
         instantMode
       />

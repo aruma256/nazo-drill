@@ -19,22 +19,31 @@ export function PracticeAnswerArea({
   children,
 }: PracticeAnswerAreaProps) {
   const nextButtonRef = useRef<HTMLButtonElement>(null)
+  const answerAreaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (revealed) nextButtonRef.current?.focus()
-  }, [revealed])
+    if (revealed) {
+      nextButtonRef.current?.focus()
+    } else if (!disabled) {
+      answerAreaRef.current
+        ?.querySelector<HTMLInputElement | HTMLButtonElement>(
+          'input:not(:disabled), button:not(:disabled)',
+        )
+        ?.focus()
+    }
+  }, [revealed, disabled])
 
   return (
-    <div className="space-y-4">
+    <div ref={answerAreaRef} className="space-y-4">
       {revealed ? (
         <div className="text-center">
           {answer && (
-            <p
+            <div
               role="status"
               className="rounded-xl bg-drill-primary-light p-4 text-2xl font-bold text-drill-primary-dark"
             >
               {answer}
-            </p>
+            </div>
           )}
           <button
             ref={nextButtonRef}

@@ -1,4 +1,5 @@
 export { AnswerInputArea } from './AnswerInputArea'
+export { AlphabetAnswerInput } from './AlphabetAnswerInput'
 export { ChallengeCountdownModal } from './ChallengeCountdownModal'
 export { ChallengeResult } from './ChallengeResult'
 export { ChallengeTimer } from './ChallengeTimer'
@@ -14,6 +15,7 @@ export { Layout } from './Layout'
 export { ModeButton } from './ModeButton'
 export { PenaltyOverlay } from './PenaltyOverlay'
 export { PracticeAnswerArea } from './PracticeAnswerArea'
+export { PracticeScreenLayout } from './PracticeScreenLayout'
 export {
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
@@ -21,3 +23,4 @@ export {
 export { ScoreDisplay } from './ScoreDisplay'
 export { ScrollToTop } from './ScrollToTop'
 export { SectionHeader } from './SectionHeader'
+export { TextQuestion } from './TextQuestion'

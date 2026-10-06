@@ -2,10 +2,9 @@ import { useCallback, useRef } from 'react'
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
   DrillStartScreen,
   AnswerInputArea,
-  PracticeAnswerArea,
   GojuonTable,
 } from '../components'
 import {
@@ -132,41 +131,34 @@ function DrillScreen({
     : []
 
   return (
-    <>
-      <DrillScreenLayout onBack={onBack} drillLabel="文字拾い">
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="文字拾い"
+      question={
         <GojuonTable
           markedCells={markedCells}
           size="large"
           className=""
           isTaMoMode={mode === 'ta-mo'}
         />
-
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={currentQuestion?.answer}
-          onReveal={revealAnswer}
-          onNext={nextQuestion}
-          disabled={!!feedback}
-        >
-          <AnswerInputArea
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={nextQuestion}
-            feedback={feedback}
-            placeholder="ひらがなで入力"
-            maxLength={10}
-          />
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
-
-      {/* フィードバックモーダル */}
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
+      }
+      answer={currentQuestion?.answer}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={nextQuestion}
+      disabled={!currentQuestion}
+    >
+      <AnswerInputArea
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={nextQuestion}
+        feedback={feedback}
+        placeholder="ひらがなで入力"
+        maxLength={mode === 'single' || mode === 'ta-mo' ? 1 : 10}
       />
-    </>
+    </PracticeScreenLayout>
   )
 }
 

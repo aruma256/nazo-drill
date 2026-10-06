@@ -1,11 +1,11 @@
 import {
   DrillPageLayout,
   DrillScreenLayout,
-  PracticeAnswerArea,
+  PracticeScreenLayout,
   DrillStartScreen,
 } from '../components'
 import { useChallenge, useDrillSession, useDrillPage } from '../hooks'
-import type { HistoryEntry } from '../hooks'
+import type { Feedback, HistoryEntry } from '../hooks'
 import {
   MAGIC_SQUARES,
   MagicSquareBoard,
@@ -24,6 +24,30 @@ const PRACTICE_MODES = [
 
 type MagicSquareRound = ReturnType<typeof useMagicSquareRound>
 
+function RoundPrompt({ round }: { round: MagicSquareRound }) {
+  return (
+    <div
+      role={round.phase === 'revealed' ? undefined : 'status'}
+      aria-live="polite"
+      aria-atomic="true"
+      className="font-display flex h-16 items-center justify-center text-2xl font-bold"
+    >
+      {round.phase === 'complete' ? (
+        <span className="text-emerald-600">○ 正解！</span>
+      ) : round.phase === 'revealed' ? (
+        <span className="text-drill-primary-dark">答えを確認しよう</span>
+      ) : (
+        <span className="text-drill-primary-dark">
+          <span className="mr-2 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-drill-primary font-mono text-4xl text-white shadow-md">
+            {round.nextNumber}
+          </span>
+          を置こう
+        </span>
+      )}
+    </div>
+  )
+}
+
 function RoundView({
   round,
   onSelect,
@@ -35,25 +59,7 @@ function RoundView({
 }) {
   return (
     <>
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="font-display flex h-16 items-center justify-center text-2xl font-bold"
-      >
-        {round.phase === 'complete' ? (
-          <span className="text-emerald-600">○ 正解！</span>
-        ) : round.phase === 'revealed' ? (
-          <span className="text-drill-primary-dark">答えを確認しよう</span>
-        ) : (
-          <span className="text-drill-primary-dark">
-            <span className="mr-2 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-drill-primary font-mono text-4xl text-white shadow-md">
-              {round.nextNumber}
-            </span>
-            を置こう
-          </span>
-        )}
-      </div>
+      <RoundPrompt round={round} />
       <MagicSquareBoard
         cells={round.cells}
         givens={round.question.cells}
@@ -76,6 +82,12 @@ function PracticeScreen({
   const { recordAnswer } = useDrillSession({
     storage: { drillName: DRILL_NAME, mode },
   })
+  const feedback: Feedback | null =
+    round.phase === 'complete'
+      ? { type: 'correct' }
+      : round.wrongIndex !== null
+        ? { type: 'retry' }
+        : null
   const handleSelect = (index: number) => {
     if (round.placeNumber(index) === 'complete') {
       recordAnswer({
@@ -85,17 +97,40 @@ function PracticeScreen({
       })
     }
   }
+  const handleNext = () => {
+    if (round.phase === 'complete' || round.phase === 'revealed') {
+      round.nextQuestion()
+    } else {
+      round.retry()
+    }
+  }
 
   return (
-    <DrillScreenLayout onBack={onBack} drillLabel="3×3魔方陣">
-      <RoundView round={round} onSelect={handleSelect} />
-      <PracticeAnswerArea
-        revealed={round.phase === 'revealed'}
-        onReveal={round.revealAnswer}
-        onNext={round.nextQuestion}
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="3×3魔方陣"
+      question={<RoundPrompt round={round} />}
+      answer={
+        <MagicSquareBoard
+          cells={round.question.solution}
+          givens={round.question.cells}
+          label="正解の魔方陣"
+        />
+      }
+      feedback={feedback}
+      revealed={round.phase === 'revealed'}
+      onReveal={round.revealAnswer}
+      onNext={handleNext}
+      disabled={!round.canPlaceNumber}
+    >
+      <MagicSquareBoard
+        cells={round.cells}
+        givens={round.question.cells}
+        onSelect={handleSelect}
+        wrongIndex={round.wrongIndex}
         disabled={!round.canPlaceNumber}
       />
-    </DrillScreenLayout>
+    </PracticeScreenLayout>
   )
 }
 
@@ -106,7 +141,10 @@ function ChallengeScreen({
   onBack: () => void
   onTimeUp: (score: number, history: HistoryEntry[]) => void
 }) {
-  const round = useMagicSquareRound('two-clues', { allowImmediateRetry: true })
+  const round = useMagicSquareRound('two-clues', {
+    allowImmediateRetry: true,
+    autoAdvance: true,
+  })
   const { score, history, recordAnswer } = useDrillSession({
     storage: { drillName: DRILL_NAME, mode: CHALLENGE_MODE },
   })

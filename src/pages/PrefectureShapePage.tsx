@@ -2,10 +2,9 @@ import { useCallback, useRef, useState } from 'react'
 import {
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
-  PracticeAnswerArea,
   DrillPageLayout,
   DrillScreenLayout,
-  FeedbackModal,
+  PracticeScreenLayout,
   DrillStartScreen,
 } from '../components'
 import {
@@ -87,62 +86,55 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
   const explanation = prefecture?.name ?? ''
 
   return (
-    <>
-      <DrillScreenLayout onBack={onBack} drillLabel="都道府県 (形)">
-        <ShapeQuestion prefecture={prefecture} />
-        <PracticeAnswerArea
-          revealed={revealed}
-          answer={explanation}
-          onReveal={revealAnswer}
-          onNext={handleNext}
-          disabled={!!feedback}
-        >
-          <PrefectureAnswerInput
-            value={userAnswer}
-            onChange={setUserAnswer}
-            onSubmit={submitAnswer}
-            onNext={handleNext}
-            feedback={feedback}
-          />
-          {prefecture && (
-            <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
-              <div aria-live="polite" className="space-y-2 text-sm">
-                {hintLevel >= 1 && (
-                  <p className="text-drill-primary-dark">
-                    <span className="font-bold">ヒント1：</span>
-                    {prefecture.region}
-                  </p>
-                )}
-                {hintLevel >= 2 && (
-                  <p className="text-drill-primary-dark">
-                    <span className="font-bold">ヒント2：</span>
-                    頭文字は「{prefecture.reading[0]}」
-                  </p>
-                )}
-              </div>
-              {hintLevel < 2 && (
-                <button
-                  onClick={() => {
-                    setHintLevel((level) => level + 1)
-                  }}
-                  disabled={!!feedback}
-                  className={`w-full cursor-pointer rounded-lg border-2 border-dashed border-drill-accent bg-white px-4 py-3 text-sm font-bold text-drill-primary-dark transition-colors hover:bg-drill-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${hintLevel > 0 ? 'mt-3' : ''}`}
-                >
-                  <span aria-hidden="true">💡 </span>
-                  ヒント{hintLevel + 1}を見る
-                </button>
-              )}
-            </div>
-          )}
-        </PracticeAnswerArea>
-      </DrillScreenLayout>
-      <FeedbackModal
-        isOpen={!!feedback}
-        type={feedback?.type ?? 'correct'}
-        hintContent={feedback?.type === 'correct' ? explanation : undefined}
+    <PracticeScreenLayout
+      onBack={onBack}
+      drillLabel="都道府県 (形)"
+      question={<ShapeQuestion prefecture={prefecture} />}
+      answer={explanation}
+      feedback={feedback}
+      revealed={revealed}
+      onReveal={revealAnswer}
+      onNext={handleNext}
+      disabled={!currentQuestion}
+    >
+      <PrefectureAnswerInput
+        value={userAnswer}
+        onChange={setUserAnswer}
+        onSubmit={submitAnswer}
         onNext={handleNext}
+        feedback={feedback}
       />
-    </>
+      {prefecture && (
+        <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
+          <div aria-live="polite" className="space-y-2 text-sm">
+            {hintLevel >= 1 && (
+              <p className="text-drill-primary-dark">
+                <span className="font-bold">ヒント1：</span>
+                {prefecture.region}
+              </p>
+            )}
+            {hintLevel >= 2 && (
+              <p className="text-drill-primary-dark">
+                <span className="font-bold">ヒント2：</span>
+                頭文字は「{prefecture.reading[0]}」
+              </p>
+            )}
+          </div>
+          {hintLevel < 2 && (
+            <button
+              onClick={() => {
+                setHintLevel((level) => level + 1)
+              }}
+              disabled={!!feedback}
+              className={`w-full cursor-pointer rounded-lg border-2 border-dashed border-drill-accent bg-white px-4 py-3 text-sm font-bold text-drill-primary-dark transition-colors hover:bg-drill-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${hintLevel > 0 ? 'mt-3' : ''}`}
+            >
+              <span aria-hidden="true">💡 </span>
+              ヒント{hintLevel + 1}を見る
+            </button>
+          )}
+        </div>
+      )}
+    </PracticeScreenLayout>
   )
 }
 

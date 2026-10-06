@@ -1,9 +1,9 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, type ReactNode } from 'react'
 
 interface FeedbackModalProps {
   isOpen: boolean
   type: 'correct' | 'retry'
-  hintContent?: string
+  hintContent?: ReactNode
   onNext: () => void
 }
 
@@ -140,7 +140,7 @@ export function FeedbackModal({
           {hintContent && (
             <div
               data-testid="modal-hint"
-              className="mt-4 rounded-2xl bg-indigo-50 p-4 text-lg font-medium text-indigo-900"
+              className="mt-4 break-words rounded-2xl bg-drill-primary-light p-4 text-lg font-medium text-drill-primary-dark"
             >
               {hintContent}
             </div>
