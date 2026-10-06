@@ -31,7 +31,7 @@ afterEach(() => {
 })
 
 describe('都道府県の形の画面', () => {
-  it('都道府県名の練習・実力テストだけを選べ、保存済みの記録を表示する', () => {
+  it('練習・実力テストだけを選べ、保存済みの記録を表示する', () => {
     localStorage.setItem('prefecture-shape-prefecture-correctCount', '7')
     localStorage.setItem('prefecture-shape-prefecture-challenge-highScore', '3')
     renderPage()
@@ -40,10 +40,10 @@ describe('都道府県の形の画面', () => {
     ).toBeInTheDocument()
     expect(screen.getAllByRole('button')).toHaveLength(2)
     expect(
-      screen.getByRole('button', { name: /都道府県名の練習/ }),
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
     ).toHaveTextContent('累計7問')
     expect(
-      screen.getByRole('button', { name: /都道府県名の実力テスト/ }),
+      screen.getByRole('button', { name: /都道府県の形：実力テスト/ }),
     ).toHaveTextContent('最高3問')
     expect(document.body).not.toHaveTextContent('県庁所在地')
     expect(
@@ -53,7 +53,9 @@ describe('都道府県の形の画面', () => {
 
   it('不正解時は形を維持し、正解してから次の問題へ進む', () => {
     renderPage()
-    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
+    )
     const path = () =>
       screen.getByRole('img').querySelector('path')!.getAttribute('d')
     const firstShape = path()
@@ -77,14 +79,16 @@ describe('都道府県の形の画面', () => {
     expect(path()).not.toBe(firstShape)
     fireEvent.click(screen.getByRole('button', { name: 'やめる' }))
     expect(
-      screen.getByRole('button', { name: /都道府県名の練習/ }),
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
     ).toHaveTextContent('累計1問')
   })
 
   it('地方名、読みの頭文字の順にヒントを表示し、入力と出題を維持する', () => {
     vi.mocked(Math.random).mockReturnValue(12.5 / 47)
     renderPage()
-    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
+    )
     const firstShape = screen
       .getByRole('img')
       .querySelector('path')!
@@ -119,7 +123,9 @@ describe('都道府県の形の画面', () => {
 
   it('不正解時はヒントを維持し、正解して次の問題に進むとリセットする', () => {
     renderPage()
-    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
+    )
     fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
     answer('間違い')
     expect(screen.getByRole('button', { name: 'ヒント2を見る' })).toBeDisabled()
@@ -145,7 +151,9 @@ describe('都道府県の形の画面', () => {
 
   it('答えを見ると都道府県名を表示し、ポイントを加算しない', () => {
     renderPage()
-    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
+    )
     fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
     fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
     fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
@@ -167,7 +175,9 @@ describe('都道府県の形の画面', () => {
 
   it('日本語変換中のEnterでは送信しない', () => {
     renderPage()
-    fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
+    fireEvent.click(
+      screen.getByRole('button', { name: /都道府県の形：練習モード/ }),
+    )
     const input = screen.getByRole('textbox')
     fireEvent.change(input, { target: { value: '北海道' } })
     fireEvent.keyDown(input, { key: 'Enter', isComposing: true })
@@ -181,7 +191,7 @@ describe('都道府県の形の画面', () => {
     renderPage()
     fireEvent.click(
       screen.getByRole('button', {
-        name: /都道府県名の実力テスト/,
+        name: /都道府県の形：実力テスト/,
       }),
     )
     for (let i = 0; i < 3; i++)
@@ -240,7 +250,7 @@ describe('都道府県の形の画面', () => {
     fireEvent.click(screen.getByRole('button', { name: 'やめる' }))
     expect(
       screen.getByRole('button', {
-        name: /都道府県名の実力テスト/,
+        name: /都道府県の形：実力テスト/,
       }),
     ).toHaveTextContent('最高2問')
   })

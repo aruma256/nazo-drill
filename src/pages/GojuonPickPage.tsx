@@ -3,11 +3,10 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
+  DrillStartScreen,
   AnswerInputArea,
   PracticeAnswerArea,
   GojuonTable,
-  SectionHeader,
 } from '../components'
 import {
   usePracticeDrill,
@@ -23,9 +22,14 @@ import {
   generateTaMoQuestion,
   parseMarkedCells,
 } from '../drills/gojuonPick'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = '50on-pick'
+const DRILL_TITLE = '五十音表の文字拾い'
+const PRACTICE_MODES = [
+  { mode: 'ta-mo', label: '「た」〜「も」特訓モード' },
+  { mode: 'single', label: '1文字モード' },
+  { mode: 'word', label: '単語モード' },
+] as const
 
 /**
  * スタート画面
@@ -38,83 +42,38 @@ function StartScreen({
   onStartChallenge: () => void
 }) {
   return (
-    <>
-      {/* ルール説明 */}
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>五十音表の中に数字が書かれたマスがあります。</p>
-          <p>
-            数字を
-            <span className="font-bold text-drill-primary">1, 2, 3...</span>
-            の順に拾い、そのマスに対応するひらがなを読み取ります。
-          </p>
-          <div className="mt-3 rounded-lg bg-white/50 p-3">
-            <p className="mb-3 text-center text-sm text-gray-500">例：</p>
-            <GojuonTable
-              markedCells={[
-                { row: 2, col: 9, number: 1 }, // く
-                { row: 2, col: 2, number: 2 }, // る
-                { row: 0, col: 4, number: 3 }, // ま
-              ]}
-              size="medium"
-              className=""
-            />
-            <p className="mb-1 mt-3 text-center text-sm text-gray-600">
-              1→「く」、2→「る」、3→「ま」
-            </p>
-            <p className="text-center text-xl font-bold text-green-600">
-              答え：くるま
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* モードを選択 */}
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            mode="challenge"
-            drillName={DRILL_NAME}
-            onClick={onStartChallenge}
-            icon="⏱️"
-            variant="challenge"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="「た」〜「も」特訓モード"
-            mode="ta-mo"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('ta-mo')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="1文字モード"
-            mode="single"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('single')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="単語モード"
-            mode="word"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('word')
-            }}
-            icon="✏️"
-          />
-        </div>
-      </section>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+    >
+      <p>五十音表の中に数字が書かれたマスがあります。</p>
+      <p>
+        数字を
+        <span className="font-bold text-drill-primary">1, 2, 3...</span>
+        の順に拾い、そのマスに対応するひらがなを読み取ります。
+      </p>
+      <div className="mt-3 rounded-lg bg-white/50 p-3">
+        <p className="mb-3 text-center text-sm text-gray-500">例：</p>
+        <GojuonTable
+          markedCells={[
+            { row: 2, col: 9, number: 1 }, // く
+            { row: 2, col: 2, number: 2 }, // る
+            { row: 0, col: 4, number: 3 }, // ま
+          ]}
+          size="medium"
+          className=""
+        />
+        <p className="mb-1 mt-3 text-center text-sm text-gray-600">
+          1→「く」、2→「る」、3→「ま」
+        </p>
+        <p className="text-center text-xl font-bold text-green-600">
+          答え：くるま
+        </p>
+      </div>
+    </DrillStartScreen>
   )
 }
 
@@ -286,7 +245,7 @@ export function GojuonPickPage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="五十音表の文字拾い"
+      title={DRILL_TITLE}
       description="数字の順に文字を読み取ろう"
       controller={page}
       startScreen={

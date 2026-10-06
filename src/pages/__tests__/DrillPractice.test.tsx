@@ -124,7 +124,11 @@ const cases = [
     Page: PrefectureShapePage,
     drillName: 'prefecture-shape',
     modes: [
-      { mode: 'prefecture', label: '都道府県名の練習', answer: () => '北海道' },
+      {
+        mode: 'prefecture',
+        label: '都道府県の形：練習モード',
+        answer: () => '北海道',
+      },
     ],
   },
 ].flatMap(({ Page, drillName, modes }) =>

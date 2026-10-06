@@ -3,7 +3,7 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
+  DrillStartScreen,
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
   PracticeAnswerArea,
@@ -25,9 +25,14 @@ import {
   SINGLE_PREFECTURE_CHARS,
   DOUBLE_PREFECTURE_CHARS,
 } from '../drills/prefectureFill'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = 'prefecture-fill'
+const DRILL_TITLE = '都道府県名の穴埋め'
+const PRACTICE_MODES = [
+  { mode: 'normal', label: '穴埋めモード' },
+  { mode: 'one-prefecture', label: '1県確定特訓' },
+  { mode: 'two-prefectures', label: '2県確定特訓' },
+] as const
 
 type DrillMode = 'normal' | 'one-prefecture' | 'two-prefectures' | 'challenge'
 
@@ -231,78 +236,23 @@ function StartScreen({
   onOpenNote: () => void
 }) {
   return (
-    <>
-      {/* ルール説明 */}
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>◯で隠された文字を推測し、都道府県名を当てます。</p>
-          <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">◯うき◯◯</span> →{' '}
-              <span className="font-bold text-green-600">とうきょう</span>
-            </p>
-          </div>
-          <PrefectureAnswerGuide />
-        </div>
-      </section>
-
-      {/* モード選択 */}
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            mode="challenge"
-            drillName={DRILL_NAME}
-            onClick={onStartChallenge}
-            icon="⏱️"
-            variant="challenge"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="穴埋めモード"
-            mode="normal"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('normal')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="1県確定特訓"
-            mode="one-prefecture"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('one-prefecture')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="2県確定特訓"
-            mode="two-prefectures"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('two-prefectures')
-            }}
-            icon="✏️"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="暗記ノート"
-            mode="note"
-            drillName={DRILL_NAME}
-            onClick={onOpenNote}
-            icon="📖"
-            hidePoints
-          />
-        </div>
-      </section>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+      onOpenNote={onOpenNote}
+    >
+      <p>◯で隠された文字を推測し、都道府県名を当てます。</p>
+      <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">◯うき◯◯</span> →{' '}
+          <span className="font-bold text-green-600">とうきょう</span>
+        </p>
+      </div>
+      <PrefectureAnswerGuide />
+    </DrillStartScreen>
   )
 }
 
@@ -491,7 +441,7 @@ export function PrefectureFillPage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="都道府県名の穴埋め"
+      title={DRILL_TITLE}
       description="◯で隠された都道府県名を当てよう"
       controller={page}
       startScreen={

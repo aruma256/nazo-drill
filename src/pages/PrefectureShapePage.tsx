@@ -6,8 +6,7 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
-  SectionHeader,
+  DrillStartScreen,
 } from '../components'
 import {
   useChallengeDrill,
@@ -23,12 +22,13 @@ import {
   PrefectureShape,
   type Prefecture,
 } from '../drills/prefectureShape'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = 'prefecture-shape'
+const DRILL_TITLE = '都道府県の形'
 // 都道府県名の練習・実力テストの保存済み記録を引き継ぐ。
 const PRACTICE_MODE = 'prefecture'
 const CHALLENGE_MODE = 'prefecture-challenge'
+const PRACTICE_MODES = [{ mode: PRACTICE_MODE, label: '練習モード' }] as const
 
 function useShapeQuestionGenerator() {
   const previousId = useRef<number | null>(null)
@@ -192,65 +192,46 @@ function StartScreen({
   onStartDrill,
   onStartChallenge,
 }: {
-  onStartDrill: () => void
+  onStartDrill: (mode: typeof PRACTICE_MODE) => void
   onStartChallenge: () => void
 }) {
   return (
-    <>
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>都道府県の形を見て、都道府県名を当てます。</p>
-          <div className="mt-3 flex items-center justify-center gap-4 rounded-lg bg-white/50 p-3 text-center">
-            <PrefectureShape
-              prefectureId={1}
-              label="例題：北海道の形"
-              className="w-24 shrink-0"
-            />
-            <span className="font-mono text-lg">→</span>
-            <span className="font-mono text-lg font-bold text-green-600">
-              北海道
-            </span>
-          </div>
-          <PrefectureAnswerGuide />
-        </div>
-      </section>
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            ariaLabel={`都道府県名の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            drillName={DRILL_NAME}
-            mode={CHALLENGE_MODE}
-            icon="⏱️"
-            variant="challenge"
-            onClick={onStartChallenge}
-          />
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-          <ModeButton
-            label="練習モード"
-            ariaLabel="都道府県名の練習"
-            drillName={DRILL_NAME}
-            mode={PRACTICE_MODE}
-            icon="✏️"
-            onClick={onStartDrill}
-          />
-        </div>
-      </section>
-      <p className="mt-8 text-center text-xs text-gray-500">
-        出典：
-        <a
-          href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          国土地理院「地球地図日本」
-        </a>
-        （加工）
-      </p>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+      challengeMode={CHALLENGE_MODE}
+      footer={
+        <p className="mt-8 text-center text-xs text-gray-500">
+          出典：
+          <a
+            href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            国土地理院「地球地図日本」
+          </a>
+          （加工）
+        </p>
+      }
+    >
+      <p>都道府県の形を見て、都道府県名を当てます。</p>
+      <div className="mt-3 flex items-center justify-center gap-4 rounded-lg bg-white/50 p-3 text-center">
+        <PrefectureShape
+          prefectureId={1}
+          label="例題：北海道の形"
+          className="w-24 shrink-0"
+        />
+        <span className="font-mono text-lg">→</span>
+        <span className="font-mono text-lg font-bold text-green-600">
+          北海道
+        </span>
+      </div>
+      <PrefectureAnswerGuide />
+    </DrillStartScreen>
   )
 }
 
@@ -262,14 +243,12 @@ export function PrefectureShapePage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="都道府県の形"
+      title={DRILL_TITLE}
       description="形から都道府県名を答えよう"
       controller={page}
       startScreen={
         <StartScreen
-          onStartDrill={() => {
-            page.startPractice(PRACTICE_MODE)
-          }}
+          onStartDrill={page.startPractice}
           onStartChallenge={page.startChallenge}
         />
       }

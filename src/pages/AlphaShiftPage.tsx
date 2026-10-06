@@ -3,10 +3,9 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
+  DrillStartScreen,
   AnswerInputArea,
   PracticeAnswerArea,
-  SectionHeader,
 } from '../components'
 import {
   usePracticeDrill,
@@ -19,9 +18,13 @@ import {
   generateChallengeQuestion,
   type TrainingMode,
 } from '../drills/alphaShift'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = 'abc-shift'
+const DRILL_TITLE = 'アルファベットシフト'
+const PRACTICE_MODES = [
+  { mode: 'plus-training', label: '+1～+3 特訓' },
+  { mode: 'minus-training', label: '-1～-3 特訓' },
+] as const
 
 /**
  * スタート画面
@@ -34,68 +37,32 @@ function StartScreen({
   onStartChallenge: () => void
 }) {
   return (
-    <>
-      {/* ルール説明 */}
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>アルファベットを指定された数だけずらして答えます。</p>
-          <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">A+1</span> →{' '}
-              <span className="font-bold text-green-600">B</span>
-            </p>
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">D-2</span> →{' '}
-              <span className="font-bold text-green-600">B</span>
-            </p>
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">X+3</span> →{' '}
-              <span className="font-bold text-green-600">?</span>
-            </p>
-          </div>
-          <p className="mt-2 text-sm text-gray-500">
-            循環する問題（Z+1など）は出題されません
-          </p>
-        </div>
-      </section>
-
-      {/* モード選択 */}
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            mode="challenge"
-            drillName={DRILL_NAME}
-            onClick={onStartChallenge}
-            icon="⏱️"
-            variant="challenge"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="+1～+3 特訓"
-            mode="plus-training"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('plus-training')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="-1～-3 特訓"
-            mode="minus-training"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('minus-training')
-            }}
-            icon="✏️"
-          />
-        </div>
-      </section>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+    >
+      <p>アルファベットを指定された数だけずらして答えます。</p>
+      <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">A+1</span> →{' '}
+          <span className="font-bold text-green-600">B</span>
+        </p>
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">D-2</span> →{' '}
+          <span className="font-bold text-green-600">B</span>
+        </p>
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">X+3</span> →{' '}
+          <span className="font-bold text-green-600">?</span>
+        </p>
+      </div>
+      <p className="mt-2 text-sm text-gray-500">
+        循環する問題（Z+1など）は出題されません
+      </p>
+    </DrillStartScreen>
   )
 }
 
@@ -252,7 +219,7 @@ export function AlphaShiftPage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="アルファベットシフト"
+      title={DRILL_TITLE}
       description="アルファベットをずらして変換しよう"
       controller={page}
       startScreen={

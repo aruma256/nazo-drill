@@ -3,7 +3,7 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
+  DrillStartScreen,
   AnswerInputArea,
   PracticeAnswerArea,
   DrillMiniHeader,
@@ -21,9 +21,14 @@ import {
   generateSingleQuestion,
   generateWordQuestion,
 } from '../drills/numberToAlpha'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = '123-abc'
+const DRILL_TITLE = '数字→アルファベット'
+const PRACTICE_MODES = [
+  { mode: 'ejoty', label: '"EJOTY"特訓モード' },
+  { mode: 'single', label: '1文字モード' },
+  { mode: 'word', label: '単語モード' },
+] as const
 
 /**
  * アルファベット参照表（EJOTYのみ表示）
@@ -276,89 +281,34 @@ function StartScreen({
   onOpenNote: () => void
 }) {
   return (
-    <>
-      {/* ルール説明 */}
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>
-            1, 2, 3 ...
-            を、アルファベットのAから順に対応させて変換します。1はA、2はB ...
-            26はZ となります。
-          </p>
-          <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">1</span> →{' '}
-              <span className="font-bold text-green-600">A</span>
-            </p>
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">5</span> →{' '}
-              <span className="font-bold text-green-600">E</span>
-            </p>
-            <p className="font-mono text-lg">
-              <span className="text-drill-primary">26</span> →{' '}
-              <span className="font-bold text-green-600">Z</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* モードを選択 */}
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            mode="challenge"
-            drillName={DRILL_NAME}
-            onClick={onStartChallenge}
-            icon="⏱️"
-            variant="challenge"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label={'"EJOTY"特訓モード'}
-            mode="ejoty"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('ejoty')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="1文字モード"
-            mode="single"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('single')
-            }}
-            icon="✏️"
-          />
-          <ModeButton
-            label="単語モード"
-            mode="word"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('word')
-            }}
-            icon="✏️"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="暗記ノート"
-            mode="note"
-            drillName={DRILL_NAME}
-            onClick={onOpenNote}
-            icon="📖"
-            hidePoints
-          />
-        </div>
-      </section>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+      onOpenNote={onOpenNote}
+    >
+      <p>
+        1, 2, 3 ...
+        を、アルファベットのAから順に対応させて変換します。1はA、2はB ... 26はZ
+        となります。
+      </p>
+      <div className="mt-3 rounded-lg bg-white/50 p-3 text-center">
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">1</span> →{' '}
+          <span className="font-bold text-green-600">A</span>
+        </p>
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">5</span> →{' '}
+          <span className="font-bold text-green-600">E</span>
+        </p>
+        <p className="font-mono text-lg">
+          <span className="text-drill-primary">26</span> →{' '}
+          <span className="font-bold text-green-600">Z</span>
+        </p>
+      </div>
+    </DrillStartScreen>
   )
 }
 
@@ -549,7 +499,7 @@ export function NumberToAlphaPage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="数字→アルファベット"
+      title={DRILL_TITLE}
       description="1, 2, 3 ... を A, B, C ... に変換しよう"
       controller={page}
       startScreen={

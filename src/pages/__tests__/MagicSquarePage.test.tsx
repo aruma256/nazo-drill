@@ -30,7 +30,7 @@ function advance(milliseconds: number) {
 }
 
 function startChallenge() {
-  fireEvent.click(screen.getByRole('button', { name: /魔方陣の実力テスト/ }))
+  fireEvent.click(screen.getByRole('button', { name: /3×3魔方陣：実力テスト/ }))
   for (let i = 0; i < 3; i++) advance(1000)
 }
 
@@ -71,13 +71,13 @@ describe('3×3魔方陣の画面', () => {
       screen.getByRole('button', { name: /1・2・3が埋まっている/ }),
     ).toHaveTextContent('累計2問')
     expect(
-      screen.getByRole('button', { name: /3マス埋まっている魔方陣の練習/ }),
+      screen.getByRole('button', { name: /3×3魔方陣：3マス埋まっている/ }),
     ).toHaveTextContent('累計3問')
     expect(
-      screen.getByRole('button', { name: /2マス埋まっている魔方陣の練習/ }),
+      screen.getByRole('button', { name: /3×3魔方陣：2マス埋まっている/ }),
     ).toHaveTextContent('累計4問')
     expect(
-      screen.getByRole('button', { name: /魔方陣の実力テスト/ }),
+      screen.getByRole('button', { name: /3×3魔方陣：実力テスト/ }),
     ).toHaveTextContent('最高5問')
   })
 
@@ -90,7 +90,7 @@ describe('3×3魔方陣の画面', () => {
     (label, mode, givens) => {
       renderPage()
       fireEvent.click(
-        screen.getByRole('button', { name: `${label}魔方陣の練習` }),
+        screen.getByRole('button', { name: `3×3魔方陣：${label}` }),
       )
       expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
       expect(
@@ -115,7 +115,7 @@ describe('3×3魔方陣の画面', () => {
       expect(cell(7)).not.toHaveTextContent('9')
       fireEvent.click(screen.getByRole('button', { name: 'やめる' }))
       expect(
-        screen.getByRole('button', { name: `${label}魔方陣の練習` }),
+        screen.getByRole('button', { name: `3×3魔方陣：${label}` }),
       ).toHaveTextContent('累計1問')
     },
   )
@@ -152,7 +152,7 @@ describe('3×3魔方陣の画面', () => {
     (label, mode, givens) => {
       renderPage()
       fireEvent.click(
-        screen.getByRole('button', { name: `${label}魔方陣の練習` }),
+        screen.getByRole('button', { name: `3×3魔方陣：${label}` }),
       )
       const solution = [8, 1, 6, 3, 5, 7, 4, 9, 2]
       const clueNumbers: readonly number[] = givens
@@ -279,7 +279,7 @@ describe('3×3魔方陣の画面', () => {
     expect(cell(8)).toHaveAccessibleName('3行3列、空欄')
     fireEvent.click(screen.getByRole('button', { name: 'やめる' }))
     expect(
-      screen.getByRole('button', { name: /魔方陣の実力テスト/ }),
+      screen.getByRole('button', { name: /3×3魔方陣：実力テスト/ }),
     ).toHaveTextContent('最高1問')
   })
 

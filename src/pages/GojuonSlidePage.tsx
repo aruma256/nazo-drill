@@ -3,10 +3,9 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
-  ModeButton,
+  DrillStartScreen,
   AnswerInputArea,
   PracticeAnswerArea,
-  SectionHeader,
 } from '../components'
 import {
   usePracticeDrill,
@@ -20,9 +19,10 @@ import {
   generateSlideQuestion,
   parseSlideQuestion,
 } from '../drills/gojuonSlide'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 
 const DRILL_NAME = '50on-slide'
+const DRILL_TITLE = '五十音表スライド'
+const PRACTICE_MODES = [{ mode: 'practice', label: '練習モード' }] as const
 
 /**
  * 問題表示コンポーネント
@@ -50,60 +50,33 @@ function StartScreen({
   onStartChallenge: () => void
 }) {
   return (
-    <>
-      {/* ルール説明 */}
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-2 pl-3 text-gray-700">
-          <p>ひらがなと矢印が表示されます。</p>
-          <p>
-            五十音表の中でそのひらがなから矢印の方向に
-            <span className="font-bold text-drill-primary">1マス移動</span>
-            した先のひらがなを答えてください。
-          </p>
-          <div className="mt-3 rounded-lg bg-white/50 p-3">
-            <p className="mb-3 text-center text-sm text-gray-500">例：</p>
-            <div className="text-center">
-              <div className="font-display mb-2 text-4xl font-bold text-drill-primary">
-                あ
-              </div>
-              <div className="mb-3 text-4xl text-gray-700">↓</div>
-              <p className="text-sm text-gray-600">
-                「あ」から下に1マス移動すると...
-              </p>
-              <p className="mt-1 text-xl font-bold text-green-600">答え：い</p>
-            </div>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+    >
+      <p>ひらがなと矢印が表示されます。</p>
+      <p>
+        五十音表の中でそのひらがなから矢印の方向に
+        <span className="font-bold text-drill-primary">1マス移動</span>
+        した先のひらがなを答えてください。
+      </p>
+      <div className="mt-3 rounded-lg bg-white/50 p-3">
+        <p className="mb-3 text-center text-sm text-gray-500">例：</p>
+        <div className="text-center">
+          <div className="font-display mb-2 text-4xl font-bold text-drill-primary">
+            あ
           </div>
+          <div className="mb-3 text-4xl text-gray-700">↓</div>
+          <p className="text-sm text-gray-600">
+            「あ」から下に1マス移動すると...
+          </p>
+          <p className="mt-1 text-xl font-bold text-green-600">答え：い</p>
         </div>
-      </section>
-
-      {/* モードを選択 */}
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            mode="challenge"
-            drillName={DRILL_NAME}
-            onClick={onStartChallenge}
-            icon="⏱️"
-            variant="challenge"
-          />
-
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-
-          <ModeButton
-            label="練習モード"
-            mode="practice"
-            drillName={DRILL_NAME}
-            onClick={() => {
-              onStartDrill('practice')
-            }}
-            icon="✏️"
-          />
-        </div>
-      </section>
-    </>
+      </div>
+    </DrillStartScreen>
   )
 }
 
@@ -256,7 +229,7 @@ export function GojuonSlidePage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="五十音表スライド"
+      title={DRILL_TITLE}
       description="矢印の方向に移動した文字を答えよう"
       controller={page}
       startScreen={

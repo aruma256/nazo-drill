@@ -2,10 +2,8 @@ import {
   DrillPageLayout,
   DrillScreenLayout,
   PracticeAnswerArea,
-  ModeButton,
-  SectionHeader,
+  DrillStartScreen,
 } from '../components'
-import { CHALLENGE_TIME_LIMIT } from '../constants/challenge'
 import { useChallenge, useDrillSession, useDrillPage } from '../hooks'
 import type { HistoryEntry } from '../hooks'
 import {
@@ -16,6 +14,7 @@ import {
 } from '../drills/magicSquare'
 
 const DRILL_NAME = 'magic-square'
+const DRILL_TITLE = '3×3魔方陣'
 const CHALLENGE_MODE = 'two-clues-challenge'
 const PRACTICE_MODES = [
   { mode: 'first-three', label: '1・2・3が埋まっている', icon: '🌱' },
@@ -176,46 +175,20 @@ function StartScreen({
   onStartChallenge: () => void
 }) {
   return (
-    <>
-      <section className="mb-8">
-        <SectionHeader>ルール</SectionHeader>
-        <div className="space-y-3 pl-3 text-gray-700">
-          <p>1〜9を1回ずつ使い、たて・よこ・ななめの合計をすべて15にします。</p>
-          <MagicSquareBoard cells={MAGIC_SQUARES[0]} size="small" />
-          <p>
-            このドリルでは、2～3マスのみが埋まった状態の魔方陣を素早く完成させるトレーニングができます。
-          </p>
-        </div>
-      </section>
-      <section className="mb-6">
-        <SectionHeader>モードを選択</SectionHeader>
-        <div className="space-y-3">
-          <ModeButton
-            label={`実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            ariaLabel={`3×3魔方陣の実力テスト（${CHALLENGE_TIME_LIMIT}秒）`}
-            drillName={DRILL_NAME}
-            mode={CHALLENGE_MODE}
-            icon="⏱️"
-            variant="challenge"
-            onClick={onStartChallenge}
-          />
-          <div className="border-t-4 border-[var(--drill-primary-light)]"></div>
-          {PRACTICE_MODES.map(({ mode, label, icon }) => (
-            <ModeButton
-              key={mode}
-              label={label}
-              ariaLabel={`${label}魔方陣の練習`}
-              drillName={DRILL_NAME}
-              mode={mode}
-              icon={icon}
-              onClick={() => {
-                onStartDrill(mode)
-              }}
-            />
-          ))}
-        </div>
-      </section>
-    </>
+    <DrillStartScreen
+      drillId={DRILL_NAME}
+      title={DRILL_TITLE}
+      practiceModes={PRACTICE_MODES}
+      onStartDrill={onStartDrill}
+      onStartChallenge={onStartChallenge}
+      challengeMode={CHALLENGE_MODE}
+    >
+      <p>1〜9を1回ずつ使い、たて・よこ・ななめの合計をすべて15にします。</p>
+      <MagicSquareBoard cells={MAGIC_SQUARES[0]} size="small" />
+      <p>
+        このドリルでは、2～3マスのみが埋まった状態の魔方陣を素早く完成させるトレーニングができます。
+      </p>
+    </DrillStartScreen>
   )
 }
 
@@ -227,7 +200,7 @@ export function MagicSquarePage() {
   return (
     <DrillPageLayout
       drillId={DRILL_NAME}
-      title="3×3魔方陣"
+      title={DRILL_TITLE}
       description="数字を小さい順に置いて、魔方陣を完成させよう"
       controller={page}
       startScreen={
