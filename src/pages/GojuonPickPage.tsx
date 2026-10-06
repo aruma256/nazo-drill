@@ -5,6 +5,7 @@ import {
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
+  PracticeAnswerArea,
   GojuonTable,
   SectionHeader,
 } from '../components'
@@ -158,6 +159,8 @@ function DrillScreen({
     userAnswer,
     setUserAnswer,
     feedback,
+    revealed,
+    revealAnswer,
     submitAnswer,
     nextQuestion,
   } = usePracticeDrill(generateQuestion, {
@@ -179,15 +182,23 @@ function DrillScreen({
           isTaMoMode={mode === 'ta-mo'}
         />
 
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={submitAnswer}
+        <PracticeAnswerArea
+          revealed={revealed}
+          answer={currentQuestion?.answer}
+          onReveal={revealAnswer}
           onNext={nextQuestion}
-          feedback={feedback}
-          placeholder="ひらがなで入力"
-          maxLength={10}
-        />
+          disabled={!!feedback}
+        >
+          <AnswerInputArea
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={submitAnswer}
+            onNext={nextQuestion}
+            feedback={feedback}
+            placeholder="ひらがなで入力"
+            maxLength={10}
+          />
+        </PracticeAnswerArea>
       </DrillScreenLayout>
 
       {/* フィードバックモーダル */}

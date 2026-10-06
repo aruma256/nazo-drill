@@ -3,7 +3,7 @@ import { useDrill } from './useDrill'
 import type { DrillSessionOptions } from './useDrillSession'
 import type { Feedback, QuestionGenerator } from '../types/drill'
 
-/** 文字入力の練習。正解後は次問へ進み、不正解後は同じ問題を続ける。 */
+/** 文字入力の練習。正解・答え表示後は次問へ進み、不正解後は同じ問題を続ける。 */
 export function usePracticeDrill(
   generateQuestion: QuestionGenerator,
   options: DrillSessionOptions = {},

@@ -143,27 +143,45 @@ describe('3×3魔方陣の画面', () => {
     ).toBeNull()
   })
 
-  it('答えを見ると完成形を表示して停止し、ポイントは加算しない', () => {
-    renderPage()
-    fireEvent.click(
-      screen.getByRole('button', { name: /1・2・3が埋まっている/ }),
-    )
-    fireEvent.click(cell(6))
-    fireEvent.click(
-      screen.getByRole('button', { name: 'わからないので答えを見る' }),
-    )
-    expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
-    expect(cell(0)).toHaveTextContent('8')
-    expect(cell(7)).toHaveTextContent('9')
-    advance(1000)
-    expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
-    expect(
-      localStorage.getItem('magic-square-first-three-correctCount'),
-    ).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
-    expect(screen.getByRole('status')).toHaveTextContent('4を置こう')
-    expect(cell(0)).toHaveAccessibleName('1行1列、空欄')
-  })
+  it.each([
+    ['1・2・3が埋まっている', 'first-three', [1, 2, 3]],
+    ['3マス埋まっている', 'three-clues', [8, 1, 6]],
+    ['2マス埋まっている', 'two-clues', [8, 1]],
+  ] as const)(
+    '%s練習で答えを見ると完成形を表示して停止し、ポイントは加算しない',
+    (label, mode, givens) => {
+      renderPage()
+      fireEvent.click(
+        screen.getByRole('button', { name: `${label}魔方陣の練習` }),
+      )
+      const solution = [8, 1, 6, 3, 5, 7, 4, 9, 2]
+      const clueNumbers: readonly number[] = givens
+      const nextNumber = Math.min(
+        ...solution.filter((number) => !clueNumbers.includes(number)),
+      )
+      fireEvent.click(cell(solution.indexOf(nextNumber)))
+      fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
+      expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
+      solution.forEach((number, index) => {
+        expect(cell(index)).toHaveTextContent(String(number))
+        expect(cell(index)).toBeDisabled()
+      })
+      expect(screen.getByRole('button', { name: '次の問題へ' })).toHaveFocus()
+      advance(1000)
+      expect(screen.getByRole('status')).toHaveTextContent('答えを確認しよう')
+      expect(
+        localStorage.getItem(`magic-square-${mode}-correctCount`),
+      ).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
+      expect(screen.getByRole('status')).toHaveTextContent('を置こう')
+      expect(screen.getByRole('button', { name: '答えを見る' })).toBeEnabled()
+      expect(
+        within(screen.getByRole('group'))
+          .getAllByRole('button')
+          .filter((button) => button.hasAttribute('disabled')),
+      ).toHaveLength(givens.length)
+    },
+  )
 
   it('実力テストは2マス提示で、ペナルティ表示中も同じ盤面に再回答できる', () => {
     renderPage()

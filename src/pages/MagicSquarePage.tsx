@@ -1,6 +1,7 @@
 import {
   DrillPageLayout,
   DrillScreenLayout,
+  PracticeAnswerArea,
   ModeButton,
   SectionHeader,
 } from '../components'
@@ -89,26 +90,12 @@ function PracticeScreen({
   return (
     <DrillScreenLayout onBack={onBack} drillLabel="3×3魔方陣">
       <RoundView round={round} onSelect={handleSelect} />
-      <div className="text-center">
-        {round.phase === 'revealed' ? (
-          <button
-            type="button"
-            onClick={round.nextQuestion}
-            className="rounded-xl bg-drill-primary px-6 py-3 font-bold text-white"
-          >
-            次の問題へ
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={round.revealAnswer}
-            disabled={!round.canPlaceNumber}
-            className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary disabled:opacity-40"
-          >
-            わからないので答えを見る
-          </button>
-        )}
-      </div>
+      <PracticeAnswerArea
+        revealed={round.phase === 'revealed'}
+        onReveal={round.revealAnswer}
+        onNext={round.nextQuestion}
+        disabled={!round.canPlaceNumber}
+      />
     </DrillScreenLayout>
   )
 }

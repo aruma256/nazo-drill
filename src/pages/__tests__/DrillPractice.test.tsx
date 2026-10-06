@@ -146,6 +146,61 @@ afterEach(() => {
 })
 
 describe('練習モードの共通進行', () => {
+  it.each(cases)(
+    '$drillName / $mode は答えを見た問題を加点せず、次問から回答を再開できる',
+    ({ Page, drillName, mode, label, answer: correctAnswer }) => {
+      const key = `${drillName}-${mode}-correctCount`
+      localStorage.setItem(key, '3')
+      render(
+        <StrictMode>
+          <MemoryRouter>
+            <Page />
+          </MemoryRouter>
+        </StrictMode>,
+      )
+      fireEvent.click(
+        screen.getByRole('button', { name: (name) => name.includes(label) }),
+      )
+      const value = correctAnswer()
+
+      answer('?')
+      expect(screen.getByRole('button', { name: '答えを見る' })).toBeDisabled()
+      fireEvent.click(screen.getByTestId('feedback-modal'))
+      fireEvent.change(screen.getByRole('textbox'), { target: { value } })
+      fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
+      expect(screen.getByRole('status')).toHaveTextContent(value)
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: '回答する' }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: '答えを見る' }),
+      ).not.toBeInTheDocument()
+      expect(screen.queryByTestId('feedback-modal')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: '次の問題へ' })).toHaveFocus()
+      expect(localStorage.getItem(key)).toBe('3')
+
+      vi.mocked(Math.random).mockReturnValue(0.5)
+      fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
+      expect(screen.queryByRole('status')).not.toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toHaveValue('')
+      expect(screen.getByRole('textbox')).toHaveFocus()
+      expect(screen.getByRole('button', { name: '答えを見る' })).toBeEnabled()
+      answer(value)
+      expect(screen.getByText('もう一度！')).toBeInTheDocument()
+      expect(localStorage.getItem(key)).toBe('3')
+      fireEvent.click(screen.getByTestId('feedback-modal'))
+      fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
+      const nextAnswer = screen.getByRole('status').textContent
+      vi.mocked(Math.random).mockReturnValue(0)
+      fireEvent.click(screen.getByRole('button', { name: '次の問題へ' }))
+      answer(value)
+      expect(screen.getByText('正解！')).toBeInTheDocument()
+      expect(nextAnswer).not.toBe(value)
+      expect(localStorage.getItem(key)).toBe('4')
+    },
+  )
+
   it('EJOTYのヒントは5問目まで維持し、6問目からフェードする', () => {
     render(
       <StrictMode>

@@ -6,6 +6,7 @@ import {
   ModeButton,
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
+  PracticeAnswerArea,
   DrillMiniHeader,
   SectionHeader,
 } from '../components'
@@ -341,6 +342,8 @@ function DrillScreen({
     userAnswer,
     setUserAnswer,
     feedback,
+    revealed,
+    revealAnswer,
     submitAnswer,
     nextQuestion,
   } = usePracticeDrill(generateQuestion, {
@@ -381,23 +384,31 @@ function DrillScreen({
           )}
         </div>
 
-        <PrefectureAnswerInput
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={submitAnswer}
+        <PracticeAnswerArea
+          revealed={revealed}
+          answer={currentQuestion?.answer}
+          onReveal={revealAnswer}
           onNext={nextQuestion}
-          feedback={feedback}
-          inputPrefix={
-            revealedPrefecture && (
-              <span className="flex items-center justify-center gap-3 whitespace-nowrap">
-                <span className="font-display text-2xl font-bold text-drill-primary-dark">
-                  {revealedPrefecture}
+          disabled={!!feedback}
+        >
+          <PrefectureAnswerInput
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={submitAnswer}
+            onNext={nextQuestion}
+            feedback={feedback}
+            inputPrefix={
+              revealedPrefecture && (
+                <span className="flex items-center justify-center gap-3 whitespace-nowrap">
+                  <span className="font-display text-2xl font-bold text-drill-primary-dark">
+                    {revealedPrefecture}
+                  </span>
+                  <span className="text-xl font-bold text-gray-600">と</span>
                 </span>
-                <span className="text-xl font-bold text-gray-600">と</span>
-              </span>
-            )
-          }
-        />
+              )
+            }
+          />
+        </PracticeAnswerArea>
       </DrillScreenLayout>
 
       {/* フィードバックモーダル */}

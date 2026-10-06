@@ -5,6 +5,7 @@ import {
   FeedbackModal,
   ModeButton,
   AnswerInputArea,
+  PracticeAnswerArea,
   DrillMiniHeader,
   SectionHeader,
 } from '../components'
@@ -402,6 +403,8 @@ function DrillScreen({
     userAnswer,
     setUserAnswer,
     feedback,
+    revealed,
+    revealAnswer,
     submitAnswer,
     nextQuestion,
     totalQuestions,
@@ -433,17 +436,25 @@ function DrillScreen({
         {/* アルファベット参照表（1文字モードのみ） */}
         {mode === 'single' && <AlphaTable />}
 
-        <AnswerInputArea
-          value={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={submitAnswer}
+        <PracticeAnswerArea
+          revealed={revealed}
+          answer={currentQuestion?.answer}
+          onReveal={revealAnswer}
           onNext={nextQuestion}
-          feedback={feedback}
-          placeholder="答えを入力"
-          maxLength={10}
-          inputTransform={(value) => value.toUpperCase()}
-          inputClassName="uppercase"
-        />
+          disabled={!!feedback}
+        >
+          <AnswerInputArea
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={submitAnswer}
+            onNext={nextQuestion}
+            feedback={feedback}
+            placeholder="答えを入力"
+            maxLength={10}
+            inputTransform={(value) => value.toUpperCase()}
+            inputClassName="uppercase"
+          />
+        </PracticeAnswerArea>
       </DrillScreenLayout>
 
       {/* フィードバックモーダル */}

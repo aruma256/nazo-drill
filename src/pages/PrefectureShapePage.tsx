@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import {
   PrefectureAnswerGuide,
   PrefectureAnswerInput,
+  PracticeAnswerArea,
   DrillPageLayout,
   DrillScreenLayout,
   FeedbackModal,
@@ -89,71 +90,51 @@ function PracticeScreen({ onBack }: { onBack: () => void }) {
     <>
       <DrillScreenLayout onBack={onBack} drillLabel="都道府県 (形)">
         <ShapeQuestion prefecture={prefecture} />
-        {revealed ? (
-          <div className="text-center">
-            <p
-              role="status"
-              className="rounded-xl bg-drill-primary-light p-4 font-medium text-drill-primary-dark"
-            >
-              {explanation}
-            </p>
-            <button
-              onClick={handleNext}
-              className="mt-4 rounded-xl bg-drill-primary px-6 py-3 font-bold text-white"
-            >
-              次の問題へ
-            </button>
-          </div>
-        ) : (
-          <>
-            <PrefectureAnswerInput
-              value={userAnswer}
-              onChange={setUserAnswer}
-              onSubmit={submitAnswer}
-              onNext={handleNext}
-              feedback={feedback}
-            />
-            {prefecture && (
-              <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
-                <div aria-live="polite" className="space-y-2 text-sm">
-                  {hintLevel >= 1 && (
-                    <p className="text-drill-primary-dark">
-                      <span className="font-bold">ヒント1：</span>
-                      {prefecture.region}
-                    </p>
-                  )}
-                  {hintLevel >= 2 && (
-                    <p className="text-drill-primary-dark">
-                      <span className="font-bold">ヒント2：</span>
-                      頭文字は「{prefecture.reading[0]}」
-                    </p>
-                  )}
-                </div>
-                {hintLevel < 2 && (
-                  <button
-                    onClick={() => {
-                      setHintLevel((level) => level + 1)
-                    }}
-                    disabled={!!feedback}
-                    className={`w-full cursor-pointer rounded-lg border-2 border-dashed border-drill-accent bg-white px-4 py-3 text-sm font-bold text-drill-primary-dark transition-colors hover:bg-drill-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${hintLevel > 0 ? 'mt-3' : ''}`}
-                  >
-                    <span aria-hidden="true">💡 </span>
-                    ヒント{hintLevel + 1}を見る
-                  </button>
+        <PracticeAnswerArea
+          revealed={revealed}
+          answer={explanation}
+          onReveal={revealAnswer}
+          onNext={handleNext}
+          disabled={!!feedback}
+        >
+          <PrefectureAnswerInput
+            value={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={submitAnswer}
+            onNext={handleNext}
+            feedback={feedback}
+          />
+          {prefecture && (
+            <div className="rounded-xl border-2 border-drill-accent bg-drill-primary-light/40 p-3">
+              <div aria-live="polite" className="space-y-2 text-sm">
+                {hintLevel >= 1 && (
+                  <p className="text-drill-primary-dark">
+                    <span className="font-bold">ヒント1：</span>
+                    {prefecture.region}
+                  </p>
+                )}
+                {hintLevel >= 2 && (
+                  <p className="text-drill-primary-dark">
+                    <span className="font-bold">ヒント2：</span>
+                    頭文字は「{prefecture.reading[0]}」
+                  </p>
                 )}
               </div>
-            )}
-            <div className="text-center">
-              <button
-                onClick={revealAnswer}
-                disabled={!!feedback}
-                className="rounded-full px-4 py-2 text-sm text-gray-500 underline decoration-gray-300 underline-offset-4 hover:text-drill-primary"
-              >
-                わからないので答えを見る
-              </button>
+              {hintLevel < 2 && (
+                <button
+                  onClick={() => {
+                    setHintLevel((level) => level + 1)
+                  }}
+                  disabled={!!feedback}
+                  className={`w-full cursor-pointer rounded-lg border-2 border-dashed border-drill-accent bg-white px-4 py-3 text-sm font-bold text-drill-primary-dark transition-colors hover:bg-drill-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${hintLevel > 0 ? 'mt-3' : ''}`}
+                >
+                  <span aria-hidden="true">💡 </span>
+                  ヒント{hintLevel + 1}を見る
+                </button>
+              )}
             </div>
-          </>
-        )}
+          )}
+        </PracticeAnswerArea>
       </DrillScreenLayout>
       <FeedbackModal
         isOpen={!!feedback}

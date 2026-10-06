@@ -60,6 +60,9 @@ describe('ドリルページの共通画面遷移', () => {
       )
       fireEvent.click(screen.getByRole('button', { name: /実力テスト/ }))
       completeCountdown()
+      expect(
+        screen.queryByRole('button', { name: '答えを見る' }),
+      ).not.toBeInTheDocument()
       advance(CHALLENGE_TIME_LIMIT * 1000)
       expect(
         screen.getByRole('heading', { name: '結果発表' }),

@@ -148,9 +148,7 @@ describe('都道府県の形の画面', () => {
     fireEvent.click(screen.getByRole('button', { name: /都道府県名の練習/ }))
     fireEvent.click(screen.getByRole('button', { name: 'ヒント1を見る' }))
     fireEvent.click(screen.getByRole('button', { name: 'ヒント2を見る' }))
-    fireEvent.click(
-      screen.getByRole('button', { name: 'わからないので答えを見る' }),
-    )
+    fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
     expect(screen.getByRole('status')).toHaveTextContent(/^北海道$/)
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
@@ -163,9 +161,7 @@ describe('都道府県の形の画面', () => {
     expect(screen.getByRole('button', { name: 'ヒント1を見る' })).toBeEnabled()
     expect(screen.queryByText(/ヒント1：/)).not.toBeInTheDocument()
     expect(screen.queryByText(/頭文字は/)).not.toBeInTheDocument()
-    fireEvent.click(
-      screen.getByRole('button', { name: 'わからないので答えを見る' }),
-    )
+    fireEvent.click(screen.getByRole('button', { name: '答えを見る' }))
     expect(screen.getByRole('status')).toHaveTextContent('青森県')
   })
 
