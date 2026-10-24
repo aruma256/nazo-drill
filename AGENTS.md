@@ -29,7 +29,7 @@
 - **スタイリング**: Tailwind CSS v4
 - **ルーティング**: React Router v7（HashRouter）
 - **テスト**: Vitest + Testing Library
-- **デプロイ環境**: ロリポップ！デプロイナウ（静的サイト、GitHub 連携）
+- **デプロイ環境**: Cloudflare Workers（静的アセット、Workers Builds による GitHub 連携）
 - **カスタムドメイン**: nazo-drill.aruma256.dev
 
 ## ディレクトリ構成
@@ -47,18 +47,19 @@
 ## デプロイ
 
 - **本番 URL**: https://nazo-drill.aruma256.dev/
-- **自動デプロイ**: `main` ブランチへの push をデプロイナウの GitHub 連携が検知し、ビルドと公開を行う
+- **自動デプロイ**: `main` ブランチへの push を Cloudflare Workers Builds が検知し、ビルドと公開を行う
+- **設定ファイル**: `wrangler.jsonc`（`dist/` を静的アセットとして配信）
+- **Node バージョン**: `.node-version` で指定
+- **キャッシュ設定**: `public/_headers` でハッシュ付きアセット（`/assets/*`）を長期キャッシュ
 
 | 設定 | 値 |
 |------|----|
-| フレームワーク | `static` |
-| インストールコマンド | `npm ci` |
 | ビルドコマンド | `npm run build` |
-| 出力ディレクトリ | `dist` |
+| デプロイコマンド | `npx wrangler deploy` |
 
-ビルド設定・GitHub 連携・独自ドメインはデプロイナウのダッシュボードで管理する。
+GitHub 連携・独自ドメインは Cloudflare ダッシュボードで管理する。
 
-詳細は[GitHub 連携](https://deploy.lolipop.jp/docs/integrations/github.md)と[独自ドメイン](https://deploy.lolipop.jp/docs/configuration/custom-domains.md)の公式ドキュメントを参照する。
+詳細は[Static Assets](https://developers.cloudflare.com/workers/static-assets/)・[Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)・[Custom Domains](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/)の公式ドキュメントを参照する。
 
 ## 対象となる変換パターン
 
